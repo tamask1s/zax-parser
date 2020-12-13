@@ -2,7 +2,7 @@
 :toc:
 :icons: font
 
-image:images/ZaxJSONParser.png[Zax JSON Parser]
+image:images/ZaxJSONParserb.png[Zax JSON Parser]
 
 Zax is a very basic JSON parser implemented in C++11 with probably the simplest possible interface, providing a kind of a struct to JSON and JSON to struct conversion. I have tried it out only with 64 bit GCC compilers.
 The library seems to work, but it has no tests, and its error handling was not even tried out. I made it public because I was searching for something similar in pass:[C++] previously without luck, and I hope it will be useful for someone. The implementation is missing some features, as I have implemented only the features I needed.
