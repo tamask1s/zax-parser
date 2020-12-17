@@ -237,7 +237,10 @@ ZaxJsonFlatParser::ZaxJsonFlatParser(const char* a_json, bool a_in_situ, bool* a
                                 if (const char* _next_number_start = next_number_start(colon_key_stop + 1))
                                 {
                                     *((char*)next_number_delimiter) = 0;
-                                    m_values.insert(std::make_pair<ZaxStringWrap, const char*>(ZaxStringWrap(colon_key_start + 1), _next_number_start + 0));
+                                    if (*((int*)(_next_number_start + 0)) == 1819047278) /** null */
+                                        m_values.insert(std::make_pair<ZaxStringWrap, const char*>(ZaxStringWrap(colon_key_start + 1), 0));
+                                    else
+                                        m_values.insert(std::make_pair<ZaxStringWrap, const char*>(ZaxStringWrap(colon_key_start + 1), _next_number_start + 0));
                                     number = true;
                                     l_json = (char*)next_number_delimiter;
                                 }
@@ -275,7 +278,10 @@ ZaxJsonFlatParser::ZaxJsonFlatParser(const char* a_json, bool a_in_situ, bool* a
                             if (const char* _next_number_start = next_number_start(colon_key_stop + 1))
                             {
                                 *((char*)next_number_delimiter) = 0;
-                                m_values.insert(std::make_pair<ZaxStringWrap, const char*>(ZaxStringWrap(colon_key_start + 1), _next_number_start + 0));
+                                if (*((int*)(_next_number_start + 0)) == 1819047278) /** null */
+                                    m_values.insert(std::make_pair<ZaxStringWrap, const char*>(ZaxStringWrap(colon_key_start + 1), 0));
+                                else
+                                    m_values.insert(std::make_pair<ZaxStringWrap, const char*>(ZaxStringWrap(colon_key_start + 1), _next_number_start + 0));
                                 l_json = (char*)next_number_delimiter;
                             }
                         }

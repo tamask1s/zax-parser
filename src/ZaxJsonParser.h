@@ -17,6 +17,8 @@
 #ifndef _ZAXJSONPARSER_H_
 #define _ZAXJSONPARSER_H_
 
+#include <iostream>
+
 struct ZaxStringWrap
 {
     const char* m_str;
@@ -91,6 +93,15 @@ class ZaxJsonParser
             return (snprintf(a_json, a_json_buffer_end - a_json, "%I64u, ", a_val) < a_json_buffer_end - a_json);
         else
             return (snprintf(a_json, a_json_buffer_end - a_json, "%I64u", a_val) < a_json_buffer_end - a_json);
+    }
+
+    static bool print_val(char* a_json, const char* a_json_buffer_end, const bool a_val, bool a_add_comma = true)
+    {
+        const char* tmp = a_val ? "true" : "false";
+        if (a_add_comma)
+            return (snprintf(a_json, a_json_buffer_end - a_json, "%s, ", tmp) < a_json_buffer_end - a_json);
+        else
+            return (snprintf(a_json, a_json_buffer_end - a_json, "%s", tmp) < a_json_buffer_end - a_json);
     }
 
     static bool print_val(char* a_json, const char* a_json_buffer_end, const char a_val, bool a_add_comma = true)
@@ -185,6 +196,16 @@ class ZaxJsonParser
             return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":%I64u", a_key, a_val) < a_json_buffer_end - _current_json);
     }
 
+    static bool print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const bool a_val, bool a_add_comma = true)
+    {
+        const char* tmp = a_val ? "true" : "false";
+        char* _current_json = a_json + strlen(a_json);
+        if (a_add_comma)
+            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":%s, ", a_key, tmp) < a_json_buffer_end - _current_json);
+        else
+            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":%s", a_key, tmp) < a_json_buffer_end - _current_json);
+    }
+
     static bool print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const char a_val, bool a_add_comma = true)
     {
         char* _current_json = a_json + strlen(a_json);
@@ -228,54 +249,103 @@ class ZaxJsonParser
 
     static void get_val(std::string& a_dst, const char* a_json, std::string* a_error_output)
     {
-        a_dst = a_json;
+        if (a_json)
+            a_dst = a_json;
+        else
+            a_dst = "";
     }
 
     static void get_val(char* a_dst, const char* a_json, std::string* a_error_output)
     {
-        strcpy(a_dst, a_json);
+        if (a_json)
+            strcpy(a_dst, a_json);
+        else
+            a_dst[0] = 0;
     }
 
     static void get_val(int& a_dst, const char* a_json, std::string* a_error_output)
     {
-        a_dst = atoi(a_json);
+        if (a_json)
+            a_dst = atoi(a_json);
+        else
+            a_dst = 0;
     }
 
     static void get_val(unsigned int& a_dst, const char* a_json, std::string* a_error_output)
     {
-        a_dst = atoi(a_json);
+        if (a_json)
+            a_dst = atoi(a_json);
+        else
+            a_dst = 0;
     }
 
     static void get_val(double& a_dst, const char* a_json, std::string* a_error_output)
     {
-        a_dst = atof(a_json);
+        if (a_json)
+            a_dst = atof(a_json);
+        else
+            a_dst = 0.0;
     }
 
     static void get_val(long long& a_dst, const char* a_json, std::string* a_error_output)
     {
-        a_dst = atoll(a_json);
+        if (a_json)
+            a_dst = atoll(a_json);
+        else
+            a_dst = 0;
+    }
+
+    static void get_val(bool& a_dst, const char* a_json, std::string* a_error_output)
+    {
+        if (a_json)
+        {
+            switch (*((int*)a_json))
+            {
+            case 1702195828: /** true */
+                a_dst = true;
+                break;
+            case 1936482662: /** false */
+                a_dst = false;
+                break;
+            default:
+                if (a_error_output)
+                    (*a_error_output) += std::string("ERROR: '") + a_json + "' is not a boolean\n";
+            }
+        }
+        else
+            a_dst = false;
     }
 
     static void get_val(char& a_dst, const char* a_json, std::string* a_error_output)
     {
-        a_dst = atoi(a_json);
+        if (a_json)
+            a_dst = atoi(a_json);
+        else
+            a_dst = 0;
     }
 
     static void get_val(float& a_dst, const char* a_json, std::string* a_error_output)
     {
-        a_dst = atof(a_json);
+        if (a_json)
+            a_dst = atof(a_json);
+        else
+            a_dst = 0.0;
     }
 
     template <typename vet>
     static void get_val(std::vector<vet>& a_dst, const char* a_json, std::string* a_error_output)
     {
-        ZaxJsonParser::parse(a_dst, " unnamed list", a_json, a_error_output);
+        if (a_json)
+            ZaxJsonParser::parse(a_dst, " unnamed list", a_json, a_error_output);
+        else
+            a_dst.clear();
     }
 
     template <typename vtype>
     static void get_val(vtype& a_dst, const char* a_json, std::string* a_error_output)
     {
-        a_dst.from_json(a_json);
+        if (a_json)
+            a_dst.from_json(a_json);
     }
 
 public:
@@ -339,10 +409,7 @@ public:
     template <typename type>
     static void parse(type& a_dst, const char* a_property, const char* a_json, std::string* a_error_output)
     {
-        if (a_json)
-            get_val(a_dst, a_json, a_error_output);
-        else if (a_error_output)
-            (*a_error_output) += std::string("WARNING: JSON property is missing: '") + a_property + "'\n";
+        get_val(a_dst, a_json, a_error_output);
     }
 
     template <typename vt>
@@ -354,15 +421,12 @@ public:
             ZaxJsonFlatParser vector_data(a_json, true, &success);
             if (!success)
                 (*a_error_output) += std::string("ERROR: error parsing JSON: '") + a_json + "'\n";
-            if (vector_data.m_list_values.size())
-            {
-                a_vect.resize(vector_data.m_list_values.size());
-                for (unsigned int i = 0; i < vector_data.m_list_values.size(); ++i)
-                    get_val(a_vect[i], vector_data.m_list_values[i], a_error_output);
-            }
+            a_vect.resize(vector_data.m_list_values.size());
+            for (unsigned int i = 0; i < vector_data.m_list_values.size(); ++i)
+                get_val(a_vect[i], vector_data.m_list_values[i], a_error_output);
         }
-        else if (a_error_output)
-            (*a_error_output) += std::string("WARNING: JSON property is missing: '") + a_property + "'\n";
+        else
+            a_vect.clear();
     }
 };
 
@@ -403,7 +467,7 @@ zax_to_json(char* a_json, const char* a_json_buffer_end, bool& a_result, std::tu
             a_result = ZaxJsonParser::append(a_json, a_json_buffer_end, std::get<I>(a_tuple).first.c_str(), *std::get<I>(a_tuple).second, false);
         if (!a_result)
             return;
-        zax_to_json <I + 1, Tp...> (a_json, a_json_buffer_end, a_result, a_tuple, a_insert_object_trails);
+        zax_to_json < I + 1, Tp... > (a_json, a_json_buffer_end, a_result, a_tuple, a_insert_object_trails);
         if (!a_result)
             return;
         if ((I == sizeof...(Tp) - 1) && a_insert_object_trails)
@@ -446,8 +510,14 @@ zax_from_json(const char* a_json, std::tuple<Tp...> a_tuple, ZaxJsonFlatParser* 
             (*a_error_output) += std::string("ERROR: error parsing JSON: '") + a_json + "'\n";
     }
     if (I < sizeof...(Tp))
-        ZaxJsonParser::parse(*std::get<I>(a_tuple).second, std::get<I>(a_tuple).first.c_str(), parsed_json->m_values[std::get<I>(a_tuple).first.c_str()], a_error_output);
-    zax_from_json <I + 1, Tp...> (a_json, a_tuple, parsed_json, a_error_output);
+    {
+        std::map<ZaxStringWrap, const char*>::iterator it = parsed_json->m_values.find(std::get<I>(a_tuple).first.c_str());
+        if (it != parsed_json->m_values.end())
+            ZaxJsonParser::parse(*std::get<I>(a_tuple).second, std::get<I>(a_tuple).first.c_str(), parsed_json->m_values[std::get<I>(a_tuple).first.c_str()], a_error_output);
+        else if (a_error_output)
+            (*a_error_output) += std::string("WARNING: JSON property is missing: '") + std::get<I>(a_tuple).first.c_str() + "'\n";
+    }
+    zax_from_json < I + 1, Tp... > (a_json, a_tuple, parsed_json, a_error_output);
     if (I == sizeof...(Tp) - 1)
         delete parsed_json;
 }
@@ -469,8 +539,14 @@ zax_from_json(char* a_json, std::tuple<Tp...> a_tuple, ZaxJsonFlatParser* parsed
             (*a_error_output) += std::string("ERROR: error parsing JSON: '") + a_json + "'\n";
     }
     if (I < sizeof...(Tp))
-        ZaxJsonParser::parse(*std::get<I>(a_tuple).second, std::get<I>(a_tuple).first.c_str(), parsed_json->m_values[std::get<I>(a_tuple).first.c_str()], a_error_output);
-    zax_from_json <I + 1, Tp...> (a_json, a_tuple, parsed_json, a_error_output);
+    {
+        std::map<ZaxStringWrap, const char*>::iterator it = parsed_json->m_values.find(std::get<I>(a_tuple).first.c_str());
+        if (it != parsed_json->m_values.end())
+            ZaxJsonParser::parse(*std::get<I>(a_tuple).second, std::get<I>(a_tuple).first.c_str(), parsed_json->m_values[std::get<I>(a_tuple).first.c_str()], a_error_output);
+        else if (a_error_output)
+            (*a_error_output) += std::string("WARNING: JSON property is missing: '") + std::get<I>(a_tuple).first.c_str() + "'\n";
+    }
+    zax_from_json < I + 1, Tp... > (a_json, a_tuple, parsed_json, a_error_output);
     if (I == sizeof...(Tp) - 1)
         delete parsed_json;
 }
