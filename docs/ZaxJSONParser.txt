@@ -4,7 +4,7 @@
 
 image:images/ZaxJSONParserb.png[Zax JSON Parser]
 
-Zax is a very basic JSON parser implemented in C++11 with probably the simplest possible interface, providing a kind of a struct to JSON and JSON to struct conversion. I have tried it out only with 64 bit GCC compilers.
+Zax is a very basic JSON parser implemented in C++ 11 with probably the simplest possible interface, providing a kind of a struct to JSON and JSON to struct conversion. GCC or CLang compilers are needed in order to compile, Microsoft's compiler is not supported due to some bugs in its variadic macro handling.
 The library seems to work, but it has no tests, and its error handling was not even tried out. I made it public because I was searching for something similar in pass:[C++] previously without luck, and I hope it will be useful for someone. The implementation is missing some features, as I have implemented only the features I needed.
 
 == Architecture
@@ -599,4 +599,6 @@ Json string computed after assignment:
 
 ----------
 
-NOTE: As I was implementing the features I needed only, the implementations might be incomplete. Booleans for example are not suported at all. I have implemented the possibility of error handling, but I have skipped to implement the error handling itself in most of the cases, therefore while parsing invalid JSON strings the library might just cause your application to crash.
+NOTE: As I was implementing the features I needed only, the implementations might be incomplete. I have implemented the possibility of error handling, but I have skipped to implement the error handling itself in most of the cases, therefore while parsing invalid JSON strings the library might just cause your application to crash.
+
+NOTE: For the outter layers, the 'null' value support is special. As no structures with pointers are supported, 'null' to struct member "conversion" is type specific: numbers get a value of '0', string lengths are set to zero, and vectors are cleared.
