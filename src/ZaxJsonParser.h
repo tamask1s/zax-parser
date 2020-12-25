@@ -136,8 +136,8 @@ class ZaxJsonParser
             return (snprintf(a_json, a_json_buffer_end - a_json, "\"%s\"", a_val.c_str()) < a_json_buffer_end - a_json);
     }
 
-    template <typename vet>
-    static bool print_val(char* a_json, const char* a_json_buffer_end, const std::vector<vet>& a_vals, bool a_add_comma = true)
+    template <template <typename, typename... > class ct,  class vt>
+    static bool print_val(char* a_json, const char* a_json_buffer_end, const ct<vt>& a_vals, bool a_add_comma = true)
     {
         return ZaxJsonParser::append(a_json, a_json_buffer_end, "", a_vals, a_add_comma);
     }
@@ -332,8 +332,8 @@ class ZaxJsonParser
             a_dst = 0.0;
     }
 
-    template <typename vet>
-    static void get_val(std::vector<vet>& a_dst, const char* a_json, std::string* a_error_output)
+    template <template <typename, typename... > class ct,  class vt>
+    static void get_val(ct<vt>& a_dst, const char* a_json, std::string* a_error_output)
     {
         if (a_json)
             ZaxJsonParser::parse(a_dst, " unnamed list", a_json, a_error_output);
@@ -360,8 +360,13 @@ public:
         return print_key_and_val(a_json, a_json_buffer_end, a_key, a_value, a_add_comma);
     }
 
-    template <typename vt>
-    static bool append(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::vector<vt>& a_values, bool a_add_comma = true)
+    static bool append(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::string& a_value, bool a_add_comma = true)
+    {
+        return print_key_and_val(a_json, a_json_buffer_end, a_key, a_value, a_add_comma);
+    }
+
+    template <template <typename, typename... > class ct,  class vt>
+    static bool append(char* a_json, const char* a_json_buffer_end, const char* a_key, const ct<vt>& a_values, bool a_add_comma = true)
     {
         bool _result = true;
         char* _current_json = a_json + strlen(a_json);
@@ -377,31 +382,25 @@ public:
         if (_result)
         {
             a_json += strlen(a_json);
-            unsigned int nr_vals = a_values.size();
-            if (nr_vals > 1)
-                for (unsigned int i = 0; i < nr_vals - 1; ++i)
-                {
-                    if (!print_val(a_json, a_json_buffer_end, a_values[i]))
-                    {
-                        _result = false;
-                        break;
-                    }
-                    a_json += strlen(a_json);
-                }
-            if (_result)
+            auto last_elem = --a_values.end();
+            for (auto r = a_values.begin(); r != a_values.end(); ++r)
             {
-                if (nr_vals)
-                    _result = print_val(a_json, a_json_buffer_end, a_values[nr_vals - 1], false);
-                if (_result && (a_json_buffer_end - _current_json > 3))
+                if (!print_val(a_json, a_json_buffer_end, *r, r == last_elem ? false : true))
                 {
-                    if (a_add_comma)
-                        strcat(a_json, "], ");
-                    else
-                        strcat(a_json, "]");
-                }
-                else
                     _result = false;
+                    break;
+                }
+                a_json += strlen(a_json);
             }
+            if (_result && (a_json_buffer_end - _current_json > 3))
+            {
+                if (a_add_comma)
+                    strcat(a_json, "], ");
+                else
+                    strcat(a_json, "]");
+            }
+            else
+                _result = false;
         }
         return _result;
     }
@@ -412,8 +411,13 @@ public:
         get_val(a_dst, a_json, a_error_output);
     }
 
-    template <typename vt>
-    static void parse(std::vector<vt>& a_vect, const char* a_property, const char* a_json, std::string* a_error_output)
+    static void parse(std::string& a_dst, const char* a_property, const char* a_json, std::string* a_error_output)
+    {
+        get_val(a_dst, a_json, a_error_output);
+    }
+
+    template <template <typename, typename... > class ct,  class vt>
+    static void parse(ct<vt>& a_vect, const char* a_property, const char* a_json, std::string* a_error_output)
     {
         if (a_json)
         {
@@ -422,8 +426,9 @@ public:
             if (!success)
                 (*a_error_output) += std::string("ERROR: error parsing JSON: '") + a_json + "'\n";
             a_vect.resize(vector_data.m_list_values.size());
+            auto r = a_vect.begin();
             for (unsigned int i = 0; i < vector_data.m_list_values.size(); ++i)
-                get_val(a_vect[i], vector_data.m_list_values[i], a_error_output);
+                get_val(*r++, vector_data.m_list_values[i], a_error_output);
         }
         else
             a_vect.clear();
@@ -461,10 +466,7 @@ zax_to_json(char* a_json, const char* a_json_buffer_end, bool& a_result, std::tu
         }
         if (!a_result)
             return;
-        if (I < sizeof...(Tp) - 1)
-            a_result = ZaxJsonParser::append(a_json, a_json_buffer_end, std::get<I>(a_tuple).first.c_str(), *std::get<I>(a_tuple).second);
-        else
-            a_result = ZaxJsonParser::append(a_json, a_json_buffer_end, std::get<I>(a_tuple).first.c_str(), *std::get<I>(a_tuple).second, false);
+        a_result = ZaxJsonParser::append(a_json, a_json_buffer_end, std::get<I>(a_tuple).first.c_str(), *std::get<I>(a_tuple).second, I < sizeof...(Tp) - 1 ? true : false);
         if (!a_result)
             return;
         zax_to_json < I + 1, Tp... > (a_json, a_json_buffer_end, a_result, a_tuple, a_insert_object_trails);

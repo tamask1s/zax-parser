@@ -4,8 +4,16 @@
 
 image:images/ZaxJSONParserb.png[Zax JSON Parser]
 
-Zax is a very basic JSON parser implemented in C++ 11 with probably the simplest possible interface, providing a kind of a struct to JSON and JSON to struct conversion. GCC or CLang compilers are needed in order to compile, Microsoft's compiler is not supported due to some bugs in its variadic macro handling.
+Zax is a very basic JSON parser implemented in C++ 11 with probably the simplest possible interface, providing a kind of a struct to JSON and JSON to struct conversion. GCC, CLang or Intel compilers are needed in order to compile, Microsoft's compiler is not supported due to some bugs in its variadic macro handling.
 The library seems to work, but it has no tests, and its error handling was not even tried out. I made it public because I was searching for something similar in pass:[C++] previously without luck, and I hope it will be useful for someone. The implementation is missing some features, as I have implemented only the features I needed.
+
+Compiles with these compilers (and probably with newer versions):
+
+* Intel compiler (ICC) version 19 to 21
+* GCC version 6 to 10
+* Clang version 6 to 11
+
+(https://gcc.godbolt.org/)
 
 == Architecture
 
@@ -369,7 +377,17 @@ cout << some_obj << endl;
 
 {nbsp} +
 
-Currently 'std::vectors' are supported:
+The following std containers are supported:
+
+* 'vector'
+* 'deque'
+* 'list'
+
+You may use your own containers. Requisits are:
+
+* 'begin()' and 'end()' std like iterators
+* 'resize()' function
+* 'clear()' function
 
 {nbsp} +
 
