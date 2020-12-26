@@ -312,53 +312,15 @@ public:
     static void set_initial_alloc_size(unsigned int a_size);
     static void set_maximum_alloc_size(unsigned int a_size);
 
-    template <typename vt>
-    static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const vt& a_value)
-    {
-        return print_key_and_val(a_json, a_json_buffer_end, a_key, a_value);
-    }
-
     static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::string& a_value)
     {
         return print_key_and_val(a_json, a_json_buffer_end, a_key, a_value);
     }
 
-    template <template <typename, typename... > class ct,  class vt>
-    static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const ct<vt>& a_values)
+    template <typename vt>
+    static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const vt& a_value)
     {
-        int _result = 0;
-        if (a_json < a_json_buffer_end)
-        {
-            if (a_key && a_key[0])
-                _result += snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":[", a_key);
-            else
-                cat_char_noinc(a_json, _result, '[');
-            if (_result > 0)
-            {
-                a_json += _result;
-                bool first_it = true;
-                for (auto r = a_values.begin(); r != a_values.end(); ++r)
-                {
-                    if (!first_it)
-                        cat_comma_space(a_json, _result);
-                    else
-                        first_it = false;
-                    int written = print_val(a_json, a_json_buffer_end, *r);
-                    if (written < 0)
-                    {
-                        _result = false;
-                        break;
-                    }
-                    a_json += written;
-                    _result += written;
-                }
-                if (a_json_buffer_end - a_json > 1)
-                    _result += sprintf(a_json, "]");
-                else
-                    _result = false;
-            }
-        }
-        return _result;
+        return print_key_and_val(a_json, a_json_buffer_end, a_key, a_value);
     }
 
     template <typename mt>
@@ -371,20 +333,17 @@ public:
                 _result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":{", a_key);
             else
                 cat_char_noinc(a_json, _result, '{');
-            if (_result)
+            if (_result > 0)
             {
                 a_json += _result;
-                bool first_it = true;
-                for (auto r = a_values.begin(); r != a_values.end(); ++r)
+                for (typename std::map<std::string, mt>::const_iterator r = a_values.begin(); r != a_values.end(); ++r)
                 {
-                    if (!first_it)
+                    if (r != a_values.begin())
                         cat_comma_space(a_json, _result);
-                    else
-                        first_it = false;
                     int written = print_key_and_val(a_json, a_json_buffer_end, r->first.c_str(), r->second);
-                    if (written < 0)
+                    if (written <= 0)
                     {
-                        _result = false;
+                        _result = 0;
                         break;
                     }
                     a_json += written;
@@ -393,7 +352,42 @@ public:
                 if (_result && (a_json_buffer_end - a_json > 1))
                     _result += sprintf(a_json, "}");
                 else
-                    _result = false;
+                    _result = 0;
+            }
+        }
+        return _result;
+    }
+
+    template <template <typename, typename... > class ct,  class vt>
+    static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const ct<vt>& a_values)
+    {
+        int _result = 0;
+        if (a_json < a_json_buffer_end)
+        {
+            if (a_key && a_key[0])
+                _result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":[", a_key);
+            else
+                cat_char_noinc(a_json, _result, '[');
+            if (_result > 0)
+            {
+                a_json += _result;
+                for (typename ct<vt>::const_iterator r = a_values.begin(); r != a_values.end(); ++r)
+                {
+                    if (r != a_values.begin())
+                        cat_comma_space(a_json, _result);
+                    int written = print_val(a_json, a_json_buffer_end, *r);
+                    if (written <= 0)
+                    {
+                        _result = 0;
+                        break;
+                    }
+                    a_json += written;
+                    _result += written;
+                }
+                if (_result && (a_json_buffer_end - a_json > 1))
+                    _result += sprintf(a_json, "]");
+                else
+                    _result = 0;
             }
         }
         return _result;
@@ -483,7 +477,7 @@ zax_to_json(char* a_json, const char* a_json_buffer_end, int& a_result, std::tup
                 a_json[0] = 0;
         }
         else
-            a_result = false;
+            a_result = 0;
     }
     int l_result = ZaxJsonParser::append(a_json, a_json_buffer_end, std::get<I>(a_tuple).first.c_str(), *std::get<I>(a_tuple).second);
     if (!l_result)
@@ -503,7 +497,7 @@ zax_to_json(char* a_json, const char* a_json_buffer_end, int& a_result, std::tup
             ++a_result;
         }
         else
-            a_result = false;
+            a_result = 0;
     }
 }
 
