@@ -1217,6 +1217,11 @@ cout &lt;&lt; some_obj &lt;&lt; endl;</code></pre>
 <em>list</em>
 </p>
 </li>
+<li>
+<p>
+<em>forward_list</em>
+</p>
+</li>
 </ul></div>
 <div class="paragraph"><p>You may use your own containers. Requisits are:</p></div>
 <div class="ulist"><ul>
@@ -1325,6 +1330,38 @@ void json_example_03()
 <div class="listingblock">
 <div class="content">
 <pre><code>{"x":99, "options":[1, 2, 3]}</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="Object_parsing_as_std_map">Object parsing as std::map</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>&#160;<br /></p></div>
+<div class="paragraph"><p>Homogenous objects can also be parsed as std::maps. The key must be an std::string, while the values in the JSON must be convertable to the map&#8217;s value type.</p></div>
+<div class="paragraph"><p>A value of <em>null</em> in the JSON will erase the pair from the map.</p></div>
+<div class="paragraph"><p>&#160;<br /></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>#define some_json_properties3 JSON_PROPERTY(assets)
+
+struct some_class3
+{
+    map&lt;string, string&gt; assets = {{"Darth Vader", "Death Star"}, {"Lyra Belacqua", "Alethiometer"}};
+
+    ZAX_JSON_SERIALIZABLE(some_class3, some_json_properties3)
+};
+
+void some_example3()
+{
+    some_class3 some_obj3 = "{\"assets\":{\"Marquez\": \"Semantic dementia\", \"Lyra Belacqua\":null}}";
+
+    cout &lt;&lt; some_obj3 &lt;&lt; endl;
+}</code></pre>
+</div></div>
+<div class="paragraph"><p><em>Result:</em></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>{"assets":{"Darth Vader":"Death Star", "Marquez":"Semantic dementia"}}</code></pre>
 </div></div>
 </div>
 </div>
@@ -1462,7 +1499,7 @@ Json string computed after assignment:
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-12-25 18:59:14 Central Europe Standard Time
+Last updated 2020-12-26 03:23:46 Central Europe Standard Time
 </div>
 </div>
 </body>

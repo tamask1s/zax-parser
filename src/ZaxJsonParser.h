@@ -17,8 +17,6 @@
 #ifndef _ZAXJSONPARSER_H_
 #define _ZAXJSONPARSER_H_
 
-#include <iostream>
-
 struct ZaxStringWrap
 {
     const char* m_str;
@@ -42,9 +40,9 @@ class ZaxJsonParser
     static unsigned int maximum_alloc_size_;
 
     template <typename vtype>
-    static bool print_val(char* a_json, const char* a_json_buffer_end, const vtype& a_val, bool a_add_comma = true)
+    static int print_val(char* a_json, const char* a_json_buffer_end, const vtype& a_val)
     {
-        bool result = true;
+        int result = 0;
         unsigned int alloc_size = initial_alloc_size();
         char* json = new char[alloc_size];
         while (!a_val.to_json(json, json + alloc_size - 1))
@@ -55,179 +53,119 @@ class ZaxJsonParser
                 return false;
             json = new char[alloc_size];
         }
-        if (a_add_comma)
-            result = (snprintf(a_json, a_json_buffer_end - a_json, "%s, ", json) < a_json_buffer_end - a_json);
-        else
-            result = (snprintf(a_json, a_json_buffer_end - a_json, "%s", json) < a_json_buffer_end - a_json);
+        result = snprintf(a_json, a_json_buffer_end - a_json, "%s", json);
         delete[] json;
         return result;
     }
 
-    static bool print_val(char* a_json, const char* a_json_buffer_end, const int a_val, bool a_add_comma = true)
+    static int print_val(char* a_json, const char* a_json_buffer_end, const int a_val)
     {
-        if (a_add_comma)
-            return (snprintf(a_json, a_json_buffer_end - a_json, "%d, ", a_val) < a_json_buffer_end - a_json);
-        else
-            return (snprintf(a_json, a_json_buffer_end - a_json, "%d", a_val) < a_json_buffer_end - a_json);
+        return snprintf(a_json, a_json_buffer_end - a_json, "%d", a_val);
     }
 
-    static bool print_val(char* a_json, const char* a_json_buffer_end, const unsigned int a_val, bool a_add_comma = true)
+    static int print_val(char* a_json, const char* a_json_buffer_end, const unsigned int a_val)
     {
-        if (a_add_comma)
-            return (snprintf(a_json, a_json_buffer_end - a_json, "%u, ", a_val) < a_json_buffer_end - a_json);
-        else
-            return (snprintf(a_json, a_json_buffer_end - a_json, "%u", a_val) < a_json_buffer_end - a_json);
+        return snprintf(a_json, a_json_buffer_end - a_json, "%u", a_val);
     }
 
-    static bool print_val(char* a_json, const char* a_json_buffer_end, const double a_val, bool a_add_comma = true)
+    static int print_val(char* a_json, const char* a_json_buffer_end, const double a_val)
     {
-        if (a_add_comma)
-            return (snprintf(a_json, a_json_buffer_end - a_json, "%lf, ", a_val) < a_json_buffer_end - a_json);
-        else
-            return (snprintf(a_json, a_json_buffer_end - a_json, "%lf", a_val) < a_json_buffer_end - a_json);
+        return snprintf(a_json, a_json_buffer_end - a_json, "%lf", a_val);
     }
 
-    static bool print_val(char* a_json, const char* a_json_buffer_end, const long long a_val, bool a_add_comma = true)
+    static int print_val(char* a_json, const char* a_json_buffer_end, const long long a_val)
     {
-        if (a_add_comma)
-            return (snprintf(a_json, a_json_buffer_end - a_json, "%I64u, ", a_val) < a_json_buffer_end - a_json);
-        else
-            return (snprintf(a_json, a_json_buffer_end - a_json, "%I64u", a_val) < a_json_buffer_end - a_json);
+        return snprintf(a_json, a_json_buffer_end - a_json, "%I64u", a_val);
     }
 
-    static bool print_val(char* a_json, const char* a_json_buffer_end, const bool a_val, bool a_add_comma = true)
+    static int print_val(char* a_json, const char* a_json_buffer_end, const bool a_val)
     {
         const char* tmp = a_val ? "true" : "false";
-        if (a_add_comma)
-            return (snprintf(a_json, a_json_buffer_end - a_json, "%s, ", tmp) < a_json_buffer_end - a_json);
-        else
-            return (snprintf(a_json, a_json_buffer_end - a_json, "%s", tmp) < a_json_buffer_end - a_json);
+        return snprintf(a_json, a_json_buffer_end - a_json, "%s", tmp);
     }
 
-    static bool print_val(char* a_json, const char* a_json_buffer_end, const char a_val, bool a_add_comma = true)
+    static int print_val(char* a_json, const char* a_json_buffer_end, const char a_val)
     {
-        if (a_add_comma)
-            return (snprintf(a_json, a_json_buffer_end - a_json, "%c, ", a_val) < a_json_buffer_end - a_json);
-        else
-            return (snprintf(a_json, a_json_buffer_end - a_json, "%c", a_val) < a_json_buffer_end - a_json);
+        return snprintf(a_json, a_json_buffer_end - a_json, "%c", a_val);
     }
 
-    static bool print_val(char* a_json, const char* a_json_buffer_end, const float a_val, bool a_add_comma = true)
+    static int print_val(char* a_json, const char* a_json_buffer_end, const float a_val)
     {
-        if (a_add_comma)
-            return (snprintf(a_json, a_json_buffer_end - a_json, "%f, ", a_val) < a_json_buffer_end - a_json);
-        else
-            return (snprintf(a_json, a_json_buffer_end - a_json, "%f", a_val) < a_json_buffer_end - a_json);
+        return snprintf(a_json, a_json_buffer_end - a_json, "%f", a_val);
     }
 
-    static bool print_val(char* a_json, const char* a_json_buffer_end, const char* a_val, bool a_add_comma = true)
+    static int print_val(char* a_json, const char* a_json_buffer_end, const char* a_val)
     {
-        if (a_add_comma)
-            return (snprintf(a_json, a_json_buffer_end - a_json, "\"%s\", ", a_val) < a_json_buffer_end - a_json);
-        else
-            return (snprintf(a_json, a_json_buffer_end - a_json, "\"%s\"", a_val) < a_json_buffer_end - a_json);
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\"", a_val);
     }
 
-    static bool print_val(char* a_json, const char* a_json_buffer_end, const std::string& a_val, bool a_add_comma = true)
+    static int print_val(char* a_json, const char* a_json_buffer_end, const std::string& a_val)
     {
-        if (a_add_comma)
-            return (snprintf(a_json, a_json_buffer_end - a_json, "\"%s\", ", a_val.c_str()) < a_json_buffer_end - a_json);
-        else
-            return (snprintf(a_json, a_json_buffer_end - a_json, "\"%s\"", a_val.c_str()) < a_json_buffer_end - a_json);
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\"", a_val.c_str());
     }
 
     template <template <typename, typename... > class ct,  class vt>
-    static bool print_val(char* a_json, const char* a_json_buffer_end, const ct<vt>& a_vals, bool a_add_comma = true)
+    static int print_val(char* a_json, const char* a_json_buffer_end, const ct<vt>& a_vals)
     {
-        return ZaxJsonParser::append(a_json, a_json_buffer_end, "", a_vals, a_add_comma);
+        return ZaxJsonParser::append(a_json, a_json_buffer_end, "", a_vals);
     }
 
-    static bool print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const char* a_val, bool a_add_comma = true)
+    template <typename mt>
+    static int print_val(char* a_json, const char* a_json_buffer_end, const std::map<std::string, mt>& a_vals)
     {
-        char* _current_json = a_json + strlen(a_json);
-        if (a_add_comma)
-            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":\"%s\", ", a_key, a_val) < a_json_buffer_end - _current_json);
-        else
-            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":\"%s\"", a_key, a_val) < a_json_buffer_end - _current_json);
+        return ZaxJsonParser::append(a_json, a_json_buffer_end, "", a_vals);
     }
 
-    static bool print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::string& a_val, bool a_add_comma = true)
+    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const char* a_val)
     {
-        char* _current_json = a_json + strlen(a_json);
-        if (a_add_comma)
-            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":\"%s\", ", a_key, a_val.c_str()) < a_json_buffer_end - _current_json);
-        else
-            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":\"%s\"", a_key, a_val.c_str()) < a_json_buffer_end - _current_json);
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":\"%s\"", a_key, a_val);
     }
 
-    static bool print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const int a_val, bool a_add_comma = true)
+    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::string& a_val)
     {
-        char* _current_json = a_json + strlen(a_json);
-        if (a_add_comma)
-            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":%d, ", a_key, a_val) < a_json_buffer_end - _current_json);
-        else
-            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":%d", a_key, a_val) < a_json_buffer_end - _current_json);
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":\"%s\"", a_key, a_val.c_str());
     }
 
-    static bool print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const unsigned int a_val, bool a_add_comma = true)
+    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const int a_val)
     {
-        char* _current_json = a_json + strlen(a_json);
-        if (a_add_comma)
-            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":%d, ", a_key, a_val) < a_json_buffer_end - _current_json);
-        else
-            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":%d", a_key, a_val) < a_json_buffer_end - _current_json);
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%d", a_key, a_val);
     }
 
-    static bool print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const double a_val, bool a_add_comma = true)
+    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const unsigned int a_val)
     {
-        char* _current_json = a_json + strlen(a_json);
-        if (a_add_comma)
-            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":%lf, ", a_key, a_val) < a_json_buffer_end - _current_json);
-        else
-            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":%lf", a_key, a_val) < a_json_buffer_end - _current_json);
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%d", a_key, a_val);
     }
 
-    static bool print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const long long a_val, bool a_add_comma = true)
+    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const double a_val)
     {
-        char* _current_json = a_json + strlen(a_json);
-        if (a_add_comma)
-            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":%I64u, ", a_key, a_val) < a_json_buffer_end - _current_json);
-        else
-            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":%I64u", a_key, a_val) < a_json_buffer_end - _current_json);
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%lf", a_key, a_val);
     }
 
-    static bool print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const bool a_val, bool a_add_comma = true)
+    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const long long a_val)
+    {
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%I64u", a_key, a_val);
+    }
+
+    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const bool a_val)
     {
         const char* tmp = a_val ? "true" : "false";
-        char* _current_json = a_json + strlen(a_json);
-        if (a_add_comma)
-            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":%s, ", a_key, tmp) < a_json_buffer_end - _current_json);
-        else
-            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":%s", a_key, tmp) < a_json_buffer_end - _current_json);
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%s", a_key, tmp);
     }
 
-    static bool print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const char a_val, bool a_add_comma = true)
+    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const char a_val)
     {
-        char* _current_json = a_json + strlen(a_json);
-        if (a_add_comma)
-            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":%c, ", a_key, a_val) < a_json_buffer_end - _current_json);
-        else
-            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":%c", a_key, a_val) < a_json_buffer_end - _current_json);
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%c", a_key, a_val);
     }
 
-    static bool print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const float a_val, bool a_add_comma = true)
+    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const float a_val)
     {
-        char* _current_json = a_json + strlen(a_json);
-        if (a_add_comma)
-            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":%f, ", a_key, a_val) < a_json_buffer_end - _current_json);
-        else
-            return (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":%f", a_key, a_val) < a_json_buffer_end - _current_json);
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%f", a_key, a_val);
     }
 
     template <typename vtype>
-    static bool print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const vtype& a_val, bool a_add_comma = true)
+    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const vtype& a_val)
     {
-        bool result = true;
+        int result = 0;
         unsigned int alloc_size = initial_alloc_size();
         char* json = new char[alloc_size];
         while (!a_val.to_json(json, json + alloc_size - 1))
@@ -238,11 +176,7 @@ class ZaxJsonParser
                 return false;
             json = new char[alloc_size];
         }
-        char* _current_json = a_json + strlen(a_json);
-        if (a_add_comma)
-            result = (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":%s, ", a_key, json) < a_json_buffer_end - _current_json);
-        else
-            result = (snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":%s", a_key, json) < a_json_buffer_end - _current_json);
+        result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%s", a_key, json);
         delete[] json;
         return result;
     }
@@ -341,6 +275,15 @@ class ZaxJsonParser
             a_dst.clear();
     }
 
+    template <typename mt>
+    static void get_val(std::map<std::string, mt>& a_dst, const char* a_json, std::string* a_error_output)
+    {
+        if (a_json)
+            ZaxJsonParser::parse(a_dst, " unnamed map", a_json, a_error_output);
+        else
+            a_dst.clear();
+    }
+
     template <typename vtype>
     static void get_val(vtype& a_dst, const char* a_json, std::string* a_error_output)
     {
@@ -349,58 +292,114 @@ class ZaxJsonParser
     }
 
 public:
+    static inline void cat_comma_space(char*& a_json, int& _result)
+    {
+        *a_json = ',';
+        *++a_json = ' ';
+        *++a_json = 0;
+        _result += 2;
+    }
+
+    static inline void cat_char_noinc(char* a_json, int& _result, char a_char)
+    {
+        *a_json = a_char;
+        a_json[1] = 0;
+        ++_result;
+    }
+
     static unsigned int initial_alloc_size();
     static unsigned int maximum_alloc_size();
     static void set_initial_alloc_size(unsigned int a_size);
     static void set_maximum_alloc_size(unsigned int a_size);
 
     template <typename vt>
-    static bool append(char* a_json, const char* a_json_buffer_end, const char* a_key, const vt& a_value, bool a_add_comma = true)
+    static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const vt& a_value)
     {
-        return print_key_and_val(a_json, a_json_buffer_end, a_key, a_value, a_add_comma);
+        int len = strlen(a_json);
+        int res = print_key_and_val(a_json + len, a_json_buffer_end, a_key, a_value);
+        return res;
     }
 
-    static bool append(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::string& a_value, bool a_add_comma = true)
+    static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::string& a_value)
     {
-        return print_key_and_val(a_json, a_json_buffer_end, a_key, a_value, a_add_comma);
+        int len = strlen(a_json);
+        return print_key_and_val(a_json + len, a_json_buffer_end, a_key, a_value);
     }
 
     template <template <typename, typename... > class ct,  class vt>
-    static bool append(char* a_json, const char* a_json_buffer_end, const char* a_key, const ct<vt>& a_values, bool a_add_comma = true)
+    static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const ct<vt>& a_values)
     {
-        bool _result = true;
-        char* _current_json = a_json + strlen(a_json);
-        if (a_key && strlen(a_key))
-            _result = snprintf(_current_json, a_json_buffer_end - _current_json, "\"%s\":[", a_key) < a_json_buffer_end - _current_json;
-        else
+        int _result = 0;
+        a_json += strlen(a_json);
+        if (a_json < a_json_buffer_end)
         {
-            if (a_json_buffer_end - _current_json > 1)
-                strcat(a_json, "[");
+            if (a_key && strlen(a_key))
+                _result += snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":[", a_key);
             else
-                _result = false;
-        }
-        if (_result)
-        {
-            a_json += strlen(a_json);
-            auto last_elem = --a_values.end();
-            for (auto r = a_values.begin(); r != a_values.end(); ++r)
+                cat_char_noinc(a_json, _result, '[');
+            if (_result > 0)
             {
-                if (!print_val(a_json, a_json_buffer_end, *r, r == last_elem ? false : true))
+                a_json += _result;
+                bool first_it = true;
+                for (auto r = a_values.begin(); r != a_values.end(); ++r)
                 {
-                    _result = false;
-                    break;
+                    if (!first_it)
+                        cat_comma_space(a_json, _result);
+                    else
+                        first_it = false;
+                    int written = print_val(a_json, a_json_buffer_end, *r);
+                    if (written < 0)
+                    {
+                        _result = false;
+                        break;
+                    }
+                    a_json += written;
+                    _result += written;
                 }
-                a_json += strlen(a_json);
-            }
-            if (_result && (a_json_buffer_end - _current_json > 3))
-            {
-                if (a_add_comma)
-                    strcat(a_json, "], ");
+                if (a_json_buffer_end - a_json > 1)
+                    _result += sprintf(a_json, "]");
                 else
-                    strcat(a_json, "]");
+                    _result = false;
             }
+        }
+        return _result;
+    }
+
+    template <typename mt>
+    static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::map<std::string, mt>& a_values)
+    {
+        int _result = 0;
+        a_json += strlen(a_json);
+        if (a_json < a_json_buffer_end)
+        {
+            if (a_key && strlen(a_key))
+                _result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":{", a_key);// < a_json_buffer_end - a_json;
             else
-                _result = false;
+                cat_char_noinc(a_json, _result, '{');
+            if (_result)
+            {
+                a_json += _result;
+                bool first_it = true;
+                for (auto r = a_values.begin(); r != a_values.end(); ++r)
+                {
+                    if (!first_it)
+                        cat_comma_space(a_json, _result);
+                    else
+                        first_it = false;
+                    int written = print_key_and_val(a_json, a_json_buffer_end, r->first.c_str(), r->second);
+                    if (written < 0)
+                    {
+                        _result = false;
+                        break;
+                    }
+                    a_json += written;
+                    _result += written;
+                }
+                if (_result && (a_json_buffer_end - a_json > 1))
+                    _result += sprintf(a_json, "}");
+                else
+                    _result = false;
+            }
         }
         return _result;
     }
@@ -424,11 +423,36 @@ public:
             bool success = false;
             ZaxJsonFlatParser vector_data(a_json, true, &success);
             if (!success)
-                (*a_error_output) += std::string("ERROR: error parsing JSON: '") + a_json + "'\n";
+                (*a_error_output) += std::string("ERROR: error parsing a vector in JSON: '") + a_json + "'\n";
             a_vect.resize(vector_data.m_list_values.size());
             auto r = a_vect.begin();
             for (unsigned int i = 0; i < vector_data.m_list_values.size(); ++i)
                 get_val(*r++, vector_data.m_list_values[i], a_error_output);
+        }
+        else
+            a_vect.clear();
+    }
+
+    template <typename mt>
+    static void parse(std::map<std::string, mt>& a_vect, const char* a_property, const char* a_json, std::string* a_error_output)
+    {
+        if (a_json)
+        {
+            bool success = false;
+            ZaxJsonFlatParser vector_data(a_json, true, &success);
+            if (!success)
+                (*a_error_output) += std::string("ERROR: error parsing a map in JSON: '") + a_json + "'\n";
+            for (std::map<ZaxStringWrap, const char*>::iterator ite = vector_data.m_values.begin(); ite != vector_data.m_values.end(); ++ite)
+            {
+                if (!ite->second)
+                    a_vect.erase(ite->first.m_str);
+                else
+                {
+                    mt tmp;
+                    get_val(tmp, ite->second, a_error_output);
+                    a_vect[ite->first.m_str] = tmp;
+                }
+            }
         }
         else
             a_vect.clear();
@@ -443,42 +467,48 @@ std::pair<std::string, mt*> json_property(std::string a_name, mt& a_obj)
 
 template<std::size_t I = 0, typename... Tp>
 inline typename std::enable_if<I == sizeof...(Tp), void>::type
-zax_to_json(char* a_json, const char* a_json_buffer_end, bool& a_result, std::tuple<Tp...> a_tuple, bool a_insert_object_trails = true)
+zax_to_json(char* a_json, const char* a_json_buffer_end, int& a_result, std::tuple<Tp...> a_tuple, bool a_insert_object_trails = true)
 {}
 
 template<std::size_t I = 0, typename... Tp>
 inline typename std::enable_if < I < sizeof...(Tp), void>::type
-zax_to_json(char* a_json, const char* a_json_buffer_end, bool& a_result, std::tuple<Tp...> a_tuple, bool a_insert_object_trails = true)
+zax_to_json(char* a_json, const char* a_json_buffer_end, int& a_result, std::tuple<Tp...> a_tuple, bool a_insert_object_trails = true)
 {
-    if (a_result)
+    if (!I)
     {
-        if (!I)
+        if (a_json_buffer_end - a_json > 1)
         {
-            if (a_json_buffer_end - a_json > 1)
+            if (a_insert_object_trails)
             {
-                if (a_insert_object_trails)
-                    strcpy(a_json, "{");
-                else
-                    a_json[0] = 0;
+                strcpy(a_json, "{");
+                ++a_result;
+                ++a_json;
             }
             else
-                a_result = false;
+                a_json[0] = 0;
         }
-        if (!a_result)
-            return;
-        a_result = ZaxJsonParser::append(a_json, a_json_buffer_end, std::get<I>(a_tuple).first.c_str(), *std::get<I>(a_tuple).second, I < sizeof...(Tp) - 1 ? true : false);
-        if (!a_result)
-            return;
-        zax_to_json < I + 1, Tp... > (a_json, a_json_buffer_end, a_result, a_tuple, a_insert_object_trails);
-        if (!a_result)
-            return;
-        if ((I == sizeof...(Tp) - 1) && a_insert_object_trails)
+        else
+            a_result = false;
+    }
+    int l_result = ZaxJsonParser::append(a_json, a_json_buffer_end, std::get<I>(a_tuple).first.c_str(), *std::get<I>(a_tuple).second);
+    if (!l_result)
+        return;
+    a_json += l_result;
+    a_result += l_result;
+    if (I < sizeof...(Tp) - 1)
+        ZaxJsonParser::cat_comma_space(a_json, a_result);
+    zax_to_json < I + 1, Tp... > (a_json, a_json_buffer_end, a_result, a_tuple, a_insert_object_trails);
+    if (!a_result)
+        return;
+    if ((I == sizeof...(Tp) - 1) && a_insert_object_trails)
+    {
+        if ((a_json_buffer_end - (a_json + strlen(a_json))) > 1)
         {
-            if ((a_json_buffer_end - (a_json + strlen(a_json))) > 1)
-                strcat(a_json, "}");
-            else
-                a_result = false;
+            strcat(a_json, "}");
+            ++a_result;
         }
+        else
+            a_result = false;
     }
 }
 
@@ -488,7 +518,7 @@ zax_to_json(char* a_json, const char* a_json_buffer_end, bool& a_result, std::tu
 #define JSON_PROPERTY(...) JSON_PROPERTY_CHOOSER(no_arg,##__VA_ARGS__, JSON_PROPERTY_NAME(__VA_ARGS__), JSON_PROPERTY_(__VA_ARGS__))
 
 #define zax_convert_to_json(arg_json, a_json_buffer_length, arg_obj, arg_json_properties, ...) ({\
-    bool _result = true;\
+    int _result = 0;\
     decltype(arg_obj)& object_to_convert = arg_obj; \
     const char* _json_buffer_end = arg_json + a_json_buffer_length; \
     zax_to_json(arg_json, _json_buffer_end, _result, std::make_tuple(arg_json_properties), ##__VA_ARGS__);\
@@ -560,7 +590,7 @@ zax_from_json(char* a_json, std::tuple<Tp...> a_tuple, ZaxJsonFlatParser* parsed
     {\
         zax_convert_from_json(a_json, *this, ##__VA_ARGS__);\
     }\
-    virtual bool to_json(char* a_json, const char* a_json_buffer_end) const\
+    virtual int to_json(char* a_json, const char* a_json_buffer_end) const\
     {\
         return zax_convert_to_json(a_json, (a_json_buffer_end - a_json), *this, ##__VA_ARGS__);\
     }\

@@ -382,6 +382,7 @@ The following std containers are supported:
 * 'vector'
 * 'deque'
 * 'list'
+* 'forward_list'
 
 You may use your own containers. Requisits are:
 
@@ -493,6 +494,45 @@ void json_example_03()
 ----------
 
 {"x":99, "options":[1, 2, 3]}
+
+----------
+
+[[Object_parsing_as_std_map]]
+== Object parsing as std::map
+
+{nbsp} +
+
+Homogenous objects can also be parsed as std::maps. The key must be an std::string, while the values in the JSON must be convertable to the map's value type.
+
+A value of 'null' in the JSON will erase the pair from the map.
+
+{nbsp} +
+
+----------
+
+#define some_json_properties3 JSON_PROPERTY(assets)
+
+struct some_class3
+{
+    map<string, string> assets = {{"Darth Vader", "Death Star"}, {"Lyra Belacqua", "Alethiometer"}};
+
+    ZAX_JSON_SERIALIZABLE(some_class3, some_json_properties3)
+};
+
+void some_example3()
+{
+    some_class3 some_obj3 = "{\"assets\":{\"Marquez\": \"Semantic dementia\", \"Lyra Belacqua\":null}}";
+
+    cout << some_obj3 << endl;
+}
+
+----------
+
+'Result:'
+
+----------
+
+{"assets":{"Darth Vader":"Death Star", "Marquez":"Semantic dementia"}}
 
 ----------
 
