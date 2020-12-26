@@ -315,25 +315,21 @@ public:
     template <typename vt>
     static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const vt& a_value)
     {
-        int len = strlen(a_json);
-        int res = print_key_and_val(a_json + len, a_json_buffer_end, a_key, a_value);
-        return res;
+        return print_key_and_val(a_json, a_json_buffer_end, a_key, a_value);
     }
 
     static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::string& a_value)
     {
-        int len = strlen(a_json);
-        return print_key_and_val(a_json + len, a_json_buffer_end, a_key, a_value);
+        return print_key_and_val(a_json, a_json_buffer_end, a_key, a_value);
     }
 
     template <template <typename, typename... > class ct,  class vt>
     static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const ct<vt>& a_values)
     {
         int _result = 0;
-        a_json += strlen(a_json);
         if (a_json < a_json_buffer_end)
         {
-            if (a_key && strlen(a_key))
+            if (a_key && a_key[0])
                 _result += snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":[", a_key);
             else
                 cat_char_noinc(a_json, _result, '[');
@@ -369,11 +365,10 @@ public:
     static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::map<std::string, mt>& a_values)
     {
         int _result = 0;
-        a_json += strlen(a_json);
         if (a_json < a_json_buffer_end)
         {
-            if (a_key && strlen(a_key))
-                _result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":{", a_key);// < a_json_buffer_end - a_json;
+            if (a_key && a_key[0])
+                _result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":{", a_key);
             else
                 cat_char_noinc(a_json, _result, '{');
             if (_result)
@@ -502,9 +497,9 @@ zax_to_json(char* a_json, const char* a_json_buffer_end, int& a_result, std::tup
         return;
     if ((I == sizeof...(Tp) - 1) && a_insert_object_trails)
     {
-        if ((a_json_buffer_end - (a_json + strlen(a_json))) > 1)
+        if ((a_json_buffer_end - a_json) > 1)
         {
-            strcat(a_json, "}");
+            strcpy(a_json, "}");
             ++a_result;
         }
         else
