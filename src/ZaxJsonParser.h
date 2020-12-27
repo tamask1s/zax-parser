@@ -291,7 +291,35 @@ class ZaxJsonParser
             a_dst.from_json(a_json);
     }
 
+    static inline void json_begin(int& _result, char* a_json, const char* a_json_buffer_end, const char* a_key, char a_brace)
+    {
+        if (a_json < a_json_buffer_end)
+        {
+            if (a_key && a_key[0])
+                _result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%c", a_key, a_brace);
+            else
+            {
+                *a_json = a_brace;
+                a_json[1] = 0;
+                ++_result;
+            }
+        }
+    }
+
+    static inline void json_end(int& _result, char* a_json, const char* a_json_buffer_end, char a_brace)
+    {
+        if (_result++ && (a_json_buffer_end - a_json > 1))
+            *a_json = a_brace;
+        else
+            _result = 0;
+    }
+
 public:
+    static unsigned int initial_alloc_size();
+    static unsigned int maximum_alloc_size();
+    static void set_initial_alloc_size(unsigned int a_size);
+    static void set_maximum_alloc_size(unsigned int a_size);
+
     static inline void cat_comma_space(char*& a_json, int& _result)
     {
         *a_json = ',';
@@ -299,18 +327,6 @@ public:
         *++a_json = 0;
         _result += 2;
     }
-
-    static inline void cat_char_noinc(char* a_json, int& _result, char a_char)
-    {
-        *a_json = a_char;
-        a_json[1] = 0;
-        ++_result;
-    }
-
-    static unsigned int initial_alloc_size();
-    static unsigned int maximum_alloc_size();
-    static void set_initial_alloc_size(unsigned int a_size);
-    static void set_maximum_alloc_size(unsigned int a_size);
 
     static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::string& a_value)
     {
@@ -327,33 +343,24 @@ public:
     static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::map<std::string, mt>& a_values)
     {
         int _result = 0;
-        if (a_json < a_json_buffer_end)
+        json_begin(_result, a_json, a_json_buffer_end, a_key, '{');
+        if (_result > 0)
         {
-            if (a_key && a_key[0])
-                _result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":{", a_key);
-            else
-                cat_char_noinc(a_json, _result, '{');
-            if (_result > 0)
+            a_json += _result;
+            for (typename std::map<std::string, mt>::const_iterator r = a_values.begin(); r != a_values.end(); ++r)
             {
-                a_json += _result;
-                for (typename std::map<std::string, mt>::const_iterator r = a_values.begin(); r != a_values.end(); ++r)
+                if (r != a_values.begin())
+                    cat_comma_space(a_json, _result);
+                int written = print_key_and_val(a_json, a_json_buffer_end, r->first.c_str(), r->second);
+                if (written <= 0)
                 {
-                    if (r != a_values.begin())
-                        cat_comma_space(a_json, _result);
-                    int written = print_key_and_val(a_json, a_json_buffer_end, r->first.c_str(), r->second);
-                    if (written <= 0)
-                    {
-                        _result = 0;
-                        break;
-                    }
-                    a_json += written;
-                    _result += written;
-                }
-                if (_result && (a_json_buffer_end - a_json > 1))
-                    _result += sprintf(a_json, "}");
-                else
                     _result = 0;
+                    break;
+                }
+                a_json += written;
+                _result += written;
             }
+            json_end(_result, a_json, a_json_buffer_end, '}');
         }
         return _result;
     }
@@ -362,33 +369,24 @@ public:
     static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const ct<vt>& a_values)
     {
         int _result = 0;
-        if (a_json < a_json_buffer_end)
+        json_begin(_result, a_json, a_json_buffer_end, a_key, '[');
+        if (_result > 0)
         {
-            if (a_key && a_key[0])
-                _result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":[", a_key);
-            else
-                cat_char_noinc(a_json, _result, '[');
-            if (_result > 0)
+            a_json += _result;
+            for (typename ct<vt>::const_iterator r = a_values.begin(); r != a_values.end(); ++r)
             {
-                a_json += _result;
-                for (typename ct<vt>::const_iterator r = a_values.begin(); r != a_values.end(); ++r)
+                if (r != a_values.begin())
+                    cat_comma_space(a_json, _result);
+                int written = print_val(a_json, a_json_buffer_end, *r);
+                if (written <= 0)
                 {
-                    if (r != a_values.begin())
-                        cat_comma_space(a_json, _result);
-                    int written = print_val(a_json, a_json_buffer_end, *r);
-                    if (written <= 0)
-                    {
-                        _result = 0;
-                        break;
-                    }
-                    a_json += written;
-                    _result += written;
-                }
-                if (_result && (a_json_buffer_end - a_json > 1))
-                    _result += sprintf(a_json, "]");
-                else
                     _result = 0;
+                    break;
+                }
+                a_json += written;
+                _result += written;
             }
+            json_end(_result, a_json, a_json_buffer_end, ']');
         }
         return _result;
     }
