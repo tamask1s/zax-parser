@@ -68,16 +68,6 @@ class ZaxJsonParser
         return snprintf(a_json, a_json_buffer_end - a_json, "%u", a_val);
     }
 
-    static int print_val(char* a_json, const char* a_json_buffer_end, const double a_val)
-    {
-        return snprintf(a_json, a_json_buffer_end - a_json, "%lf", a_val);
-    }
-
-    static int print_val(char* a_json, const char* a_json_buffer_end, const long long a_val)
-    {
-        return snprintf(a_json, a_json_buffer_end - a_json, "%I64u", a_val);
-    }
-
     static int print_val(char* a_json, const char* a_json_buffer_end, const bool a_val)
     {
         const char* tmp = a_val ? "true" : "false";
@@ -134,16 +124,6 @@ class ZaxJsonParser
     static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const unsigned int a_val)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%d", a_key, a_val);
-    }
-
-    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const double a_val)
-    {
-        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%lf", a_key, a_val);
-    }
-
-    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const long long a_val)
-    {
-        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%I64u", a_key, a_val);
     }
 
     static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const bool a_val)
@@ -209,22 +189,6 @@ class ZaxJsonParser
     {
         if (a_json)
             a_dst = atoi(a_json);
-        else
-            a_dst = 0;
-    }
-
-    static void get_val(double& a_dst, const char* a_json, std::string* a_error_output)
-    {
-        if (a_json)
-            a_dst = atof(a_json);
-        else
-            a_dst = 0.0;
-    }
-
-    static void get_val(long long& a_dst, const char* a_json, std::string* a_error_output)
-    {
-        if (a_json)
-            a_dst = atoll(a_json);
         else
             a_dst = 0;
     }
