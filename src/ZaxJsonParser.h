@@ -163,34 +163,22 @@ class ZaxJsonParser
 
     static void get_val(std::string& a_dst, const char* a_json, std::string* a_error_output)
     {
-        if (a_json)
-            a_dst = a_json;
-        else
-            a_dst = "";
+        a_dst = a_json ? a_json : "";
     }
 
     static void get_val(char* a_dst, const char* a_json, std::string* a_error_output)
     {
-        if (a_json)
-            strcpy(a_dst, a_json);
-        else
-            a_dst[0] = 0;
+        a_json ? strcpy(a_dst, a_json) : strcpy(a_dst, "");
     }
 
     static void get_val(int& a_dst, const char* a_json, std::string* a_error_output)
     {
-        if (a_json)
-            a_dst = atoi(a_json);
-        else
-            a_dst = 0;
+        a_dst = a_json ? atoi(a_json) : 0;
     }
 
     static void get_val(unsigned int& a_dst, const char* a_json, std::string* a_error_output)
     {
-        if (a_json)
-            a_dst = atoi(a_json);
-        else
-            a_dst = 0;
+        a_dst = a_json ? atoi(a_json) : 0;
     }
 
     static void get_val(bool& a_dst, const char* a_json, std::string* a_error_output)
@@ -216,43 +204,30 @@ class ZaxJsonParser
 
     static void get_val(char& a_dst, const char* a_json, std::string* a_error_output)
     {
-        if (a_json)
-            a_dst = atoi(a_json);
-        else
-            a_dst = 0;
+        a_dst = a_json ? atoi(a_json) : 0;
     }
 
     static void get_val(float& a_dst, const char* a_json, std::string* a_error_output)
     {
-        if (a_json)
-            a_dst = atof(a_json);
-        else
-            a_dst = 0.0;
+        a_dst = a_json ? atof(a_json) : 0.0;
     }
 
     template <template <typename, typename... > class ct,  class vt>
     static void get_val(ct<vt>& a_dst, const char* a_json, std::string* a_error_output)
     {
-        if (a_json)
-            ZaxJsonParser::parse(a_dst, " unnamed list", a_json, a_error_output);
-        else
-            a_dst.clear();
+        a_json ? ZaxJsonParser::parse(a_dst, " unnamed list", a_json, a_error_output) : a_dst.clear();
     }
 
     template <typename mt>
     static void get_val(std::map<std::string, mt>& a_dst, const char* a_json, std::string* a_error_output)
     {
-        if (a_json)
-            ZaxJsonParser::parse(a_dst, " unnamed map", a_json, a_error_output);
-        else
-            a_dst.clear();
+        a_json ? ZaxJsonParser::parse(a_dst, " unnamed map", a_json, a_error_output) : a_dst.clear();
     }
 
     template <typename vtype>
     static void get_val(vtype& a_dst, const char* a_json, std::string* a_error_output)
     {
-        if (a_json)
-            a_dst.from_json(a_json);
+        a_dst.from_json(a_json);
     }
 
     static inline void json_begin(int& _result, char* a_json, const char* a_json_buffer_end, const char* a_key, char a_brace)
@@ -284,12 +259,12 @@ public:
     static void set_initial_alloc_size(unsigned int a_size);
     static void set_maximum_alloc_size(unsigned int a_size);
 
-    static inline void cat_comma_space(char*& a_json, int& _result)
+    static inline void cat_comma_space(char*& a_json, int& a_result)
     {
         *a_json = ',';
         *++a_json = ' ';
         *++a_json = 0;
-        _result += 2;
+        a_result += 2;
     }
 
     static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::string& a_value)
@@ -416,14 +391,14 @@ std::pair<std::string, mt*> json_property(std::string a_name, mt& a_obj)
     return std::make_pair(a_name, &a_obj);
 }
 
-template<std::size_t I = 0, typename... Tp>
-inline typename std::enable_if<I == sizeof...(Tp), void>::type
-zax_to_json(char* a_json, const char* a_json_buffer_end, int& a_result, std::tuple<Tp...> a_tuple, bool a_insert_object_trails = true)
+template<std::size_t I = 0, typename... vt>
+inline typename std::enable_if<I == sizeof...(vt), void>::type
+zax_to_json(char* a_json, const char* a_json_buffer_end, int& a_result, std::tuple<vt...> a_tuple, bool a_insert_object_trails = true)
 {}
 
-template<std::size_t I = 0, typename... Tp>
-inline typename std::enable_if < I < sizeof...(Tp), void>::type
-zax_to_json(char* a_json, const char* a_json_buffer_end, int& a_result, std::tuple<Tp...> a_tuple, bool a_insert_object_trails = true)
+template<std::size_t I = 0, typename... vt>
+inline typename std::enable_if < I < sizeof...(vt), void>::type
+zax_to_json(char* a_json, const char* a_json_buffer_end, int& a_result, std::tuple<vt...> a_tuple, bool a_insert_object_trails = true)
 {
     if (!I)
     {
@@ -446,12 +421,12 @@ zax_to_json(char* a_json, const char* a_json_buffer_end, int& a_result, std::tup
         return;
     a_json += l_result;
     a_result += l_result;
-    if (I < sizeof...(Tp) - 1)
+    if (I < sizeof...(vt) - 1)
         ZaxJsonParser::cat_comma_space(a_json, a_result);
-    zax_to_json < I + 1, Tp... > (a_json, a_json_buffer_end, a_result, a_tuple, a_insert_object_trails);
+    zax_to_json < I + 1, vt... > (a_json, a_json_buffer_end, a_result, a_tuple, a_insert_object_trails);
     if (!a_result)
         return;
-    if ((I == sizeof...(Tp) - 1) && a_insert_object_trails)
+    if ((I == sizeof...(vt) - 1) && a_insert_object_trails)
     {
         if ((a_json_buffer_end - a_json) > 1)
         {
@@ -476,14 +451,14 @@ zax_to_json(char* a_json, const char* a_json_buffer_end, int& a_result, std::tup
     _result;\
 })
 
-template<std::size_t I = 0, typename... Tp>
-inline typename std::enable_if<I == sizeof...(Tp), void>::type
-zax_from_json(const char* a_json, std::tuple<Tp...> a_tuple, ZaxJsonFlatParser* parsed_json, std::string* a_error_output = 0)
+template<std::size_t I = 0, typename... vt>
+inline typename std::enable_if<I == sizeof...(vt), void>::type
+zax_from_json(const char* a_json, std::tuple<vt...> a_tuple, ZaxJsonFlatParser* parsed_json, std::string* a_error_output = 0)
 {}
 
-template<std::size_t I = 0, typename... Tp>
-inline typename std::enable_if < I < sizeof...(Tp), void>::type
-zax_from_json(const char* a_json, std::tuple<Tp...> a_tuple, ZaxJsonFlatParser* parsed_json, std::string* a_error_output = 0)
+template<std::size_t I = 0, typename... vt>
+inline typename std::enable_if < I < sizeof...(vt), void>::type
+zax_from_json(const char* a_json, std::tuple<vt...> a_tuple, ZaxJsonFlatParser* parsed_json, std::string* a_error_output = 0)
 {
     if (!parsed_json)
     {
@@ -492,7 +467,7 @@ zax_from_json(const char* a_json, std::tuple<Tp...> a_tuple, ZaxJsonFlatParser* 
         if (!success)
             (*a_error_output) += std::string("ERROR: error parsing JSON: '") + a_json + "'\n";
     }
-    if (I < sizeof...(Tp))
+    if (I < sizeof...(vt))
     {
         std::map<ZaxStringWrap, const char*>::iterator it = parsed_json->m_values.find(std::get<I>(a_tuple).first.c_str());
         if (it != parsed_json->m_values.end())
@@ -500,19 +475,19 @@ zax_from_json(const char* a_json, std::tuple<Tp...> a_tuple, ZaxJsonFlatParser* 
         else if (a_error_output)
             (*a_error_output) += std::string("WARNING: JSON property is missing: '") + std::get<I>(a_tuple).first.c_str() + "'\n";
     }
-    zax_from_json < I + 1, Tp... > (a_json, a_tuple, parsed_json, a_error_output);
-    if (I == sizeof...(Tp) - 1)
+    zax_from_json < I + 1, vt... > (a_json, a_tuple, parsed_json, a_error_output);
+    if (I == sizeof...(vt) - 1)
         delete parsed_json;
 }
 
-template<std::size_t I = 0, typename... Tp>
-inline typename std::enable_if<I == sizeof...(Tp), void>::type
-zax_from_json(char* a_json, std::tuple<Tp...> a_tuple, ZaxJsonFlatParser* parsed_json, std::string* a_error_output = 0)
+template<std::size_t I = 0, typename... vt>
+inline typename std::enable_if<I == sizeof...(vt), void>::type
+zax_from_json(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonFlatParser* parsed_json, std::string* a_error_output = 0)
 {}
 
-template<std::size_t I = 0, typename... Tp>
-inline typename std::enable_if < I < sizeof...(Tp), void>::type
-zax_from_json(char* a_json, std::tuple<Tp...> a_tuple, ZaxJsonFlatParser* parsed_json, std::string* a_error_output = 0)
+template<std::size_t I = 0, typename... vt>
+inline typename std::enable_if < I < sizeof...(vt), void>::type
+zax_from_json(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonFlatParser* parsed_json, std::string* a_error_output = 0)
 {
     if (!parsed_json)
     {
@@ -521,7 +496,7 @@ zax_from_json(char* a_json, std::tuple<Tp...> a_tuple, ZaxJsonFlatParser* parsed
         if (!success)
             (*a_error_output) += std::string("ERROR: error parsing JSON: '") + a_json + "'\n";
     }
-    if (I < sizeof...(Tp))
+    if (I < sizeof...(vt))
     {
         std::map<ZaxStringWrap, const char*>::iterator it = parsed_json->m_values.find(std::get<I>(a_tuple).first.c_str());
         if (it != parsed_json->m_values.end())
@@ -529,8 +504,8 @@ zax_from_json(char* a_json, std::tuple<Tp...> a_tuple, ZaxJsonFlatParser* parsed
         else if (a_error_output)
             (*a_error_output) += std::string("WARNING: JSON property is missing: '") + std::get<I>(a_tuple).first.c_str() + "'\n";
     }
-    zax_from_json < I + 1, Tp... > (a_json, a_tuple, parsed_json, a_error_output);
-    if (I == sizeof...(Tp) - 1)
+    zax_from_json < I + 1, vt... > (a_json, a_tuple, parsed_json, a_error_output);
+    if (I == sizeof...(vt) - 1)
         delete parsed_json;
 }
 
