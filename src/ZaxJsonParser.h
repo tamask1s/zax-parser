@@ -70,8 +70,7 @@ class ZaxJsonParser
 
     static int print_val(char* a_json, const char* a_json_buffer_end, const bool a_val)
     {
-        const char* tmp = a_val ? "true" : "false";
-        return snprintf(a_json, a_json_buffer_end - a_json, "%s", tmp);
+        return snprintf(a_json, a_json_buffer_end - a_json, "%s", a_val ? "true" : "false");
     }
 
     static int print_val(char* a_json, const char* a_json_buffer_end, const char a_val)
@@ -128,8 +127,7 @@ class ZaxJsonParser
 
     static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const bool a_val)
     {
-        const char* tmp = a_val ? "true" : "false";
-        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%s", a_key, tmp);
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%s", a_key, a_val ? "true" : "false");
     }
 
     static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const char a_val)
@@ -230,27 +228,27 @@ class ZaxJsonParser
         a_dst.from_json(a_json);
     }
 
-    static inline void json_begin(int& _result, char* a_json, const char* a_json_buffer_end, const char* a_key, char a_brace)
+    static inline void json_begin(int& a_result, char* a_json, const char* a_json_buffer_end, const char* a_key, char a_brace)
     {
         if (a_json < a_json_buffer_end)
         {
             if (a_key && a_key[0])
-                _result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%c", a_key, a_brace);
+                a_result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%c", a_key, a_brace);
             else
             {
                 *a_json = a_brace;
                 a_json[1] = 0;
-                ++_result;
+                ++a_result;
             }
         }
     }
 
-    static inline void json_end(int& _result, char* a_json, const char* a_json_buffer_end, char a_brace)
+    static inline void json_end(int& a_result, char* a_json, const char* a_json_buffer_end, char a_brace)
     {
-        if (_result++ && (a_json_buffer_end - a_json > 1))
+        if (a_result++ && (a_json_buffer_end - a_json > 1))
             *a_json = a_brace;
         else
-            _result = 0;
+            a_result = 0;
     }
 
 public:
