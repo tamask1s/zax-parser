@@ -48,7 +48,7 @@ Constructor Syntax: **ZaxJsonFlatParser([a_json], [a_in_situ], [a_success])**
 
 .'Parameters'
 
-* 'a_json': (input)(const char*) json string. Even it is passed as const, the string content might be changed during parsing.
+* 'a_json': (input)(const, char*) json string. Even it is passed as const, the string content might be changed during parsing.
 * 'a_in_situ': (input)(boolean) if 'true', the input string will be altered during parsing, resulting in a better performance. If you want to have your input string untouched, please set it to 'false'. Default value is 'true'.
 * 'a_success': (output)(boolean*) if used, the passed parameter will get a value of 'true' if the parsing was successful, and a value of 'false' otherwise. Default value is 0. 
 
@@ -139,7 +139,7 @@ NOTE: Mixed lists like *[3, \"7\", \"11\"]* are not supported.
 
 {nbsp} +
 
-In order for these functions to work, a macro needs to be defined describing meta information on the 'names' of the fields of the object to be converted to- or from json strings. Pls see the examples.
+In order for these functions to work, a macro needs to be defined describing meta information on the 'names' of the members of the class of the object to be converted to- or from json strings. Pls see the examples.
 
 {nbsp} +
 
@@ -158,9 +158,9 @@ Syntax: **zax_convert_to_json([a_json], [a_obj], [a_json_properties])**
 
 .'Parameters'
 
-* 'a_json': (output)(const char*) json string. Needs to be allocated by the caller.
+* 'a_json': (output)(const, char*) json string. Needs to be allocated by the caller.
 * 'a_json_buffer_length': (input)(int) the length of the memory field allocated for the json string passed as first argument.
-* 'a_obj': (input)(const some 'class' with public members) The input object to be converted to a JSON string.
+* 'a_obj': (input)(const, some 'class' with public members) The input object to be converted to a JSON string.
 * 'a_json_properties': (input)(descriptor macro) meta information on the members of the 'class' of the object passed as 'a_obj'.
 
 .'Returns'
@@ -227,7 +227,7 @@ Syntax: **zax_convert_from_json([a_json], [a_obj], [a_json_properties])**
 
 .'Parameters'
 
-* 'a_json': (input)(const char*) json string. Even it is passed as const, the string content might be changed during parsing.
+* 'a_json': (input)(const, char*) json string. Even it is passed as const, the string content might be changed during parsing.
 * 'a_obj': (output)(some 'class' with public members) The output object. The fields of this object will be filled with the values in the JSON string.
 * 'a_json_properties': (input)(descriptor macro) meta information on the members of the 'class' of the object passed as 'a_obj'.
 
@@ -268,7 +268,7 @@ NOTE: Possible extra elements in the input JSON string are ignored
 
 {nbsp} +
 
-These macros are adding some constructors and operators to your class, making your objects assignable with JSON strings, and printable to "cout".
+These macros are adding some constructors and operators to your class, making your objects assignable with JSON strings, and even printable to "cout".
 
 {nbsp} +
 
@@ -320,7 +320,8 @@ cout << some_obj << endl;
 {"int1":11, "int2":7, "string1":"eleven", "string2":"seven"}
 ----------
 
-NOTE: ZAX parsable classes needs to have a default constructor, and ZAX_JSON_SERIALIZABLE will try to add one to your code. Therefore, in case you already have your own default constructor, ZAX_JSON_SERIALIZABLE will not work. In this case please use the ZAX_JSON_SERIALIZABLE_WDC macro.
+NOTE: In order to have such simple structures, your classes needs to have a default constructor, which simple classes are having by default. But ZAX_JSON_SERIALIZABLE adds other constructors, which inhibits the compiler to add a the default constructor to your class. 
+Therefore, ZAX_JSON_SERIALIZABLE will try to add a default constructor to your code. This might be a problem in case you already have your own default constructor, because ZAX_JSON_SERIALIZABLE will fail to add another one. In this case please use the ZAX_JSON_SERIALIZABLE_WDC macro.
 
 [[ZAX_JSON_SERIALIZABLE_WDC]]
 === ZAX_JSON_SERIALIZABLE_WDC

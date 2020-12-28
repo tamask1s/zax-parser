@@ -829,7 +829,7 @@ Using ZaxJsonFlatParser class, a kind of a lazy parsing can be achieved.</p></di
 <div class="ulist"><div class="title"><em>Parameters</em></div><ul>
 <li>
 <p>
-<em>a_json</em>: (input)(const char*) json string. Even it is passed as const, the string content might be changed during parsing.
+<em>a_json</em>: (input)(const, char*) json string. Even it is passed as const, the string content might be changed during parsing.
 </p>
 </li>
 <li>
@@ -947,7 +947,7 @@ cout &lt;&lt; json_doc.m_list_values[2] &lt;&lt; endl;</code></pre>
 <h2 id="Converter_functions">Converter functions</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>&#160;<br /></p></div>
-<div class="paragraph"><p>In order for these functions to work, a macro needs to be defined describing meta information on the <em>names</em> of the fields of the object to be converted to- or from json strings. Pls see the examples.</p></div>
+<div class="paragraph"><p>In order for these functions to work, a macro needs to be defined describing meta information on the <em>names</em> of the members of the class of the object to be converted to- or from json strings. Pls see the examples.</p></div>
 <div class="paragraph"><p>&#160;<br /></p></div>
 <div class="paragraph"><p><strong><em>By using these functions, existing code does not need to be changed, therefore these might be used even for classes located in 3rd parties, or other places where no code change is desirable.</em></strong></p></div>
 <div class="sect2">
@@ -959,7 +959,7 @@ cout &lt;&lt; json_doc.m_list_values[2] &lt;&lt; endl;</code></pre>
 <div class="ulist"><div class="title"><em>Parameters</em></div><ul>
 <li>
 <p>
-<em>a_json</em>: (output)(const char*) json string. Needs to be allocated by the caller.
+<em>a_json</em>: (output)(const, char*) json string. Needs to be allocated by the caller.
 </p>
 </li>
 <li>
@@ -969,7 +969,7 @@ cout &lt;&lt; json_doc.m_list_values[2] &lt;&lt; endl;</code></pre>
 </li>
 <li>
 <p>
-<em>a_obj</em>: (input)(const some <em>class</em> with public members) The input object to be converted to a JSON string.
+<em>a_obj</em>: (input)(const, some <em>class</em> with public members) The input object to be converted to a JSON string.
 </p>
 </li>
 <li>
@@ -1042,7 +1042,7 @@ cout &lt;&lt; json_string &lt;&lt; endl;</code></pre>
 <div class="ulist"><div class="title"><em>Parameters</em></div><ul>
 <li>
 <p>
-<em>a_json</em>: (input)(const char*) json string. Even it is passed as const, the string content might be changed during parsing.
+<em>a_json</em>: (input)(const, char*) json string. Even it is passed as const, the string content might be changed during parsing.
 </p>
 </li>
 <li>
@@ -1101,7 +1101,7 @@ cout &lt;&lt; json_string2 &lt;&lt; endl;</code></pre>
 <h2 id="SERIALIZABLE_macros">SERIALIZABLE macros:</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>&#160;<br /></p></div>
-<div class="paragraph"><p>These macros are adding some constructors and operators to your class, making your objects assignable with JSON strings, and printable to "cout".</p></div>
+<div class="paragraph"><p>These macros are adding some constructors and operators to your class, making your objects assignable with JSON strings, and even printable to "cout".</p></div>
 <div class="paragraph"><p>&#160;<br /></p></div>
 <div class="paragraph"><p><strong><em>These macros are recommended if you are the one writing the code of the classes that needs to be JSON serializable, you need at least one of the features it provides, and the features does not interfere with other aspects of your design.</em></strong></p></div>
 <div class="paragraph"><p>&#160;<br /></p></div>
@@ -1147,7 +1147,8 @@ cout &lt;&lt; some_obj &lt;&lt; endl;</code></pre>
 <td class="icon">
 <img src="./images/icons/note.png" alt="Note" />
 </td>
-<td class="content">ZAX parsable classes needs to have a default constructor, and ZAX_JSON_SERIALIZABLE will try to add one to your code. Therefore, in case you already have your own default constructor, ZAX_JSON_SERIALIZABLE will not work. In this case please use the ZAX_JSON_SERIALIZABLE_WDC macro.</td>
+<td class="content">In order to have such simple structures, your classes needs to have a default constructor, which simple classes are having by default. But ZAX_JSON_SERIALIZABLE adds other constructors, which inhibits the compiler to add a the default constructor to your class.
+Therefore, ZAX_JSON_SERIALIZABLE will try to add a default constructor to your code. This might be a problem in case you already have your own default constructor, because ZAX_JSON_SERIALIZABLE will fail to add another one. In this case please use the ZAX_JSON_SERIALIZABLE_WDC macro.</td>
 </tr></table>
 </div>
 </div>
@@ -1499,7 +1500,7 @@ Json string computed after assignment:
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-12-26 03:23:46 Central Europe Standard Time
+Last updated 2020-12-28 23:22:03 Central Europe Standard Time
 </div>
 </div>
 </body>
