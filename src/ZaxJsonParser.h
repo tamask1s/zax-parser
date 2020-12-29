@@ -42,18 +42,12 @@ class ZaxJsonParser
     template <typename vtype>
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const vtype& a_val)
     {
-        int result = 0;
         unsigned int alloc_size = initial_alloc_size();
         char* json = new char[alloc_size];
         while (!a_val.to_json(json, json + alloc_size - 1))
-        {
-            delete[] json;
-            alloc_size *= 2;
-            if (alloc_size > maximum_alloc_size())
-                return false;
-            json = new char[alloc_size];
-        }
-        result = snprintf(a_json, a_json_buffer_end - a_json, "%s", json);
+            if (reallocate_json(json, alloc_size))
+                break;
+        int result = snprintf(a_json, a_json_buffer_end - a_json, "%s", json ? json : "");
         delete[] json;
         return result;
     }
@@ -143,18 +137,12 @@ class ZaxJsonParser
     template <typename vtype>
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const vtype& a_val)
     {
-        int result = 0;
         unsigned int alloc_size = initial_alloc_size();
         char* json = new char[alloc_size];
         while (!a_val.to_json(json, json + alloc_size - 1))
-        {
-            delete[] json;
-            alloc_size *= 2;
-            if (alloc_size > maximum_alloc_size())
-                return false;
-            json = new char[alloc_size];
-        }
-        result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%s", a_key, json);
+            if (reallocate_json(json, alloc_size))
+                break;
+        int result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%s", a_key, json ? json : "");
         delete[] json;
         return result;
     }
@@ -235,11 +223,7 @@ class ZaxJsonParser
             if (a_key && a_key[0])
                 a_result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%c", a_key, a_brace);
             else
-            {
-                *a_json = a_brace;
-                a_json[1] = 0;
-                ++a_result;
-            }
+                cat_char_noinc(a_json, a_result, a_brace);
         }
     }
 
@@ -263,6 +247,22 @@ public:
         *++a_json = ' ';
         *++a_json = 0;
         a_result += 2;
+    }
+
+    static inline void cat_char_noinc(char* a_json, int& a_result, char a_char)
+    {
+        *a_json = a_char;
+        a_json[1] = 0;
+        ++a_result;
+    }
+
+    static inline bool reallocate_json(char*& a_json, unsigned int& a_alloc_size)
+    {
+        delete[] a_json;
+        a_alloc_size *= 2;
+        if (a_alloc_size > maximum_alloc_size())
+            return (a_json = 0);
+        return (a_json = new char[a_alloc_size]);
     }
 
     static inline int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::string& a_value)
@@ -399,21 +399,13 @@ inline typename std::enable_if < I < sizeof...(vt), void>::type
 zax_to_json(char* a_json, const char* a_json_buffer_end, int& a_result, std::tuple<vt...> a_tuple, bool a_insert_object_trails = true)
 {
     if (!I)
-    {
-        if (a_json_buffer_end - a_json > 1)
+        if ((a_result = a_json_buffer_end - a_json > 1))
         {
             if (a_insert_object_trails)
-            {
-                strcpy(a_json, "{");
-                ++a_result;
-                ++a_json;
-            }
+                ZaxJsonParser::cat_char_noinc(a_json++, a_result, '{');
             else
                 a_json[0] = 0;
         }
-        else
-            a_result = 0;
-    }
     int l_result = ZaxJsonParser::append(a_json, a_json_buffer_end, std::get<I>(a_tuple).first.c_str(), *std::get<I>(a_tuple).second);
     if (!l_result)
         return;
@@ -427,10 +419,7 @@ zax_to_json(char* a_json, const char* a_json_buffer_end, int& a_result, std::tup
     if ((I == sizeof...(vt) - 1) && a_insert_object_trails)
     {
         if ((a_json_buffer_end - a_json) > 1)
-        {
-            strcpy(a_json, "}");
-            ++a_result;
-        }
+            ZaxJsonParser::cat_char_noinc(a_json, a_result, '}');
         else
             a_result = 0;
     }
@@ -539,14 +528,9 @@ zax_from_json(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonFlatParser* parsed
         unsigned int alloc_size = ZaxJsonParser::initial_alloc_size();\
         char* json = new char[alloc_size];\
         while (!zax_convert_to_json(json, alloc_size - 1, *this, ##__VA_ARGS__))\
-        {\
-            delete[] json;\
-            alloc_size *= 2;\
-            json = new char[alloc_size];\
-            if (alloc_size > ZaxJsonParser::maximum_alloc_size())\
+            if (!ZaxJsonParser::reallocate_json(json, alloc_size))\
                 break;\
-        }\
-        string result(json);\
+        string result(json ? json : "");\
         delete[] json;\
         return result;\
     }\
