@@ -40,7 +40,7 @@ class ZaxJsonParser
     static unsigned int maximum_alloc_size_;
 
     template <typename vtype>
-    static int print_val(char* a_json, const char* a_json_buffer_end, const vtype& a_val)
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const vtype& a_val)
     {
         int result = 0;
         unsigned int alloc_size = initial_alloc_size();
@@ -58,90 +58,90 @@ class ZaxJsonParser
         return result;
     }
 
-    static int print_val(char* a_json, const char* a_json_buffer_end, const int a_val)
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const int a_val)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "%d", a_val);
     }
 
-    static int print_val(char* a_json, const char* a_json_buffer_end, const unsigned int a_val)
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const unsigned int a_val)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "%u", a_val);
     }
 
-    static int print_val(char* a_json, const char* a_json_buffer_end, const bool a_val)
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const bool a_val)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "%s", a_val ? "true" : "false");
     }
 
-    static int print_val(char* a_json, const char* a_json_buffer_end, const char a_val)
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const char a_val)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "%c", a_val);
     }
 
-    static int print_val(char* a_json, const char* a_json_buffer_end, const float a_val)
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const float a_val)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "%f", a_val);
     }
 
-    static int print_val(char* a_json, const char* a_json_buffer_end, const char* a_val)
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const char* a_val)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\"", a_val);
     }
 
-    static int print_val(char* a_json, const char* a_json_buffer_end, const std::string& a_val)
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const std::string& a_val)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\"", a_val.c_str());
     }
 
     template <template <typename, typename... > class ct,  class vt>
-    static int print_val(char* a_json, const char* a_json_buffer_end, const ct<vt>& a_vals)
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const ct<vt>& a_vals)
     {
         return ZaxJsonParser::append(a_json, a_json_buffer_end, "", a_vals);
     }
 
     template <typename mt>
-    static int print_val(char* a_json, const char* a_json_buffer_end, const std::map<std::string, mt>& a_vals)
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const std::map<std::string, mt>& a_vals)
     {
         return ZaxJsonParser::append(a_json, a_json_buffer_end, "", a_vals);
     }
 
-    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const char* a_val)
+    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const char* a_val)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":\"%s\"", a_key, a_val);
     }
 
-    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::string& a_val)
+    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::string& a_val)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":\"%s\"", a_key, a_val.c_str());
     }
 
-    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const int a_val)
+    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const int a_val)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%d", a_key, a_val);
     }
 
-    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const unsigned int a_val)
+    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const unsigned int a_val)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%d", a_key, a_val);
     }
 
-    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const bool a_val)
+    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const bool a_val)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%s", a_key, a_val ? "true" : "false");
     }
 
-    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const char a_val)
+    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const char a_val)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%c", a_key, a_val);
     }
 
-    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const float a_val)
+    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const float a_val)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%f", a_key, a_val);
     }
 
     template <typename vtype>
-    static int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const vtype& a_val)
+    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const vtype& a_val)
     {
         int result = 0;
         unsigned int alloc_size = initial_alloc_size();
@@ -159,27 +159,27 @@ class ZaxJsonParser
         return result;
     }
 
-    static void get_val(std::string& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(std::string& a_dst, const char* a_json, std::string* a_error_output)
     {
         a_dst = a_json ? a_json : "";
     }
 
-    static void get_val(char* a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(char* a_dst, const char* a_json, std::string* a_error_output)
     {
         a_json ? strcpy(a_dst, a_json) : strcpy(a_dst, "");
     }
 
-    static void get_val(int& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(int& a_dst, const char* a_json, std::string* a_error_output)
     {
         a_dst = a_json ? atoi(a_json) : 0;
     }
 
-    static void get_val(unsigned int& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(unsigned int& a_dst, const char* a_json, std::string* a_error_output)
     {
         a_dst = a_json ? atoi(a_json) : 0;
     }
 
-    static void get_val(bool& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(bool& a_dst, const char* a_json, std::string* a_error_output)
     {
         if (a_json)
         {
@@ -200,30 +200,30 @@ class ZaxJsonParser
             a_dst = false;
     }
 
-    static void get_val(char& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(char& a_dst, const char* a_json, std::string* a_error_output)
     {
         a_dst = a_json ? atoi(a_json) : 0;
     }
 
-    static void get_val(float& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(float& a_dst, const char* a_json, std::string* a_error_output)
     {
         a_dst = a_json ? atof(a_json) : 0.0;
     }
 
     template <template <typename, typename... > class ct,  class vt>
-    static void get_val(ct<vt>& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(ct<vt>& a_dst, const char* a_json, std::string* a_error_output)
     {
         a_json ? ZaxJsonParser::parse(a_dst, " unnamed list", a_json, a_error_output) : a_dst.clear();
     }
 
     template <typename mt>
-    static void get_val(std::map<std::string, mt>& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(std::map<std::string, mt>& a_dst, const char* a_json, std::string* a_error_output)
     {
         a_json ? ZaxJsonParser::parse(a_dst, " unnamed map", a_json, a_error_output) : a_dst.clear();
     }
 
     template <typename vtype>
-    static void get_val(vtype& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(vtype& a_dst, const char* a_json, std::string* a_error_output)
     {
         a_dst.from_json(a_json);
     }
@@ -265,19 +265,19 @@ public:
         a_result += 2;
     }
 
-    static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::string& a_value)
+    static inline int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::string& a_value)
     {
         return print_key_and_val(a_json, a_json_buffer_end, a_key, a_value);
     }
 
     template <typename vt>
-    static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const vt& a_value)
+    static inline int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const vt& a_value)
     {
         return print_key_and_val(a_json, a_json_buffer_end, a_key, a_value);
     }
 
     template <typename mt>
-    static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::map<std::string, mt>& a_values)
+    static inline int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::map<std::string, mt>& a_values)
     {
         int _result = 0;
         json_begin(_result, a_json, a_json_buffer_end, a_key, '{');
@@ -303,7 +303,7 @@ public:
     }
 
     template <template <typename, typename... > class ct,  class vt>
-    static int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const ct<vt>& a_values)
+    static inline int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const ct<vt>& a_values)
     {
         int _result = 0;
         json_begin(_result, a_json, a_json_buffer_end, a_key, '[');
@@ -329,18 +329,18 @@ public:
     }
 
     template <typename type>
-    static void parse(type& a_dst, const char* a_property, const char* a_json, std::string* a_error_output)
+    static inline void parse(type& a_dst, const char* a_property, const char* a_json, std::string* a_error_output)
     {
         get_val(a_dst, a_json, a_error_output);
     }
 
-    static void parse(std::string& a_dst, const char* a_property, const char* a_json, std::string* a_error_output)
+    static inline void parse(std::string& a_dst, const char* a_property, const char* a_json, std::string* a_error_output)
     {
         get_val(a_dst, a_json, a_error_output);
     }
 
     template <template <typename, typename... > class ct,  class vt>
-    static void parse(ct<vt>& a_vect, const char* a_property, const char* a_json, std::string* a_error_output)
+    static inline void parse(ct<vt>& a_vect, const char* a_property, const char* a_json, std::string* a_error_output)
     {
         if (a_json)
         {
@@ -358,7 +358,7 @@ public:
     }
 
     template <typename mt>
-    static void parse(std::map<std::string, mt>& a_vect, const char* a_property, const char* a_json, std::string* a_error_output)
+    static inline void parse(std::map<std::string, mt>& a_vect, const char* a_property, const char* a_json, std::string* a_error_output)
     {
         if (a_json)
         {
