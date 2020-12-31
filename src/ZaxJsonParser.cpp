@@ -21,7 +21,7 @@
 #include <vector>
 #include "ZaxJsonParser.h"
 
-inline const char* nextTokenOpen(const char* a_str_to_find, char* a_close_token_pair)
+const char* nextTokenOpen(const char* a_str_to_find, char* a_close_token_pair)
 {
     while (*a_str_to_find)
     {
@@ -44,7 +44,7 @@ inline const char* nextTokenOpen(const char* a_str_to_find, char* a_close_token_
     return 0;
 }
 
-inline const char* next_number_end(const char* a_str_to_find)
+const char* next_number_end(const char* a_str_to_find)
 {
     while (*a_str_to_find)
     {
@@ -64,7 +64,7 @@ inline const char* next_number_end(const char* a_str_to_find)
     return 0;
 }
 
-inline const char* next_number_start(const char* a_str_to_find)
+const char* next_number_start(const char* a_str_to_find)
 {
     while (*a_str_to_find)
     {
@@ -82,7 +82,7 @@ inline const char* next_number_start(const char* a_str_to_find)
     return 0;
 }
 
-inline const char* nextTokenClose(const char* a_str_to_find, char a_close_token, char a_open_token)
+const char* nextTokenClose(const char* a_str_to_find, char a_close_token, char a_open_token)
 {
     int equilibrium = 0;
     while (*a_str_to_find)
@@ -104,7 +104,7 @@ inline const char* nextTokenClose(const char* a_str_to_find, char a_close_token,
     return 0;
 }
 
-inline char* nextQuotMark(const char* a_colon_value_start)
+char* nextQuotMark(const char* a_colon_value_start)
 {
     if (char* colon_value_stop = strchr((char*)a_colon_value_start + 1, '"'))
     {
@@ -115,7 +115,7 @@ inline char* nextQuotMark(const char* a_colon_value_start)
     return 0;
 }
 
-inline char* nextSqBraceOpen(const char* a_colon_value_start)
+char* nextSqBraceOpen(const char* a_colon_value_start)
 {
     if (char* colon_value_stop = strchr((char*)a_colon_value_start, '['))
     {
