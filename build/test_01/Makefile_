@@ -1,0 +1,32 @@
+appname := test_01
+
+CXX := g++
+CXXFLAGS := -Wall -O2 -I ../../src
+
+srcfiles := $(shell find ../../ -maxdepth 3 -name "*.cpp")
+objects  := $(patsubst %.cpp, %.o, $(srcfiles))
+#objects2  := $(srcfiles:%.cpp=$(OBJ)/%.o)
+
+
+all: $(appname)
+
+$(appname): $(objects)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $(appname) $(objects) $(LDLIBS)
+
+depend: .depend
+
+.depend: $(srcfiles)
+	rm -f ./.depend
+	$(CXX) $(CXXFLAGS) -MM $^>>./.depend;
+
+clean:
+	rm -f $(objects)
+	rm -f $(appname)
+	rm -f *~ .depend
+
+dist-clean: clean
+	rm -f $(objects)
+	rm -f $(appname)
+	rm -f *~ .depend
+
+include .depend

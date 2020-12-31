@@ -1,0 +1,36 @@
+sizeof(json_string)1000
+{"x":7, "b":true, "name":"some str", "weights":[1, 2, 3]}
+{"x":0, "b":false, "name":"", "weights":[]}
+1702195828
+1936482662
+1819047278
+{"x":11, "b":true, "name":"eleven", "weights":[1, 2, 3]}
+{"int1":11, "int2":7, "string1":"eleven", "string2":"seven"}
+{"int1":11, "int2":7, "string1":"eleven", "string2":"seven"}
+{"title":"some other title", "options":["option1", "option2", "option3"], "criteria":["criteria1", "criteria2"], "scores":[[1, 2, 3], [7, 8, 9]], "x":17, "inside":{"x":9, "y":11}, "weights":[1, 2, 3]}
+some_obj.inside.x: 11
+some_obj.inside.x2 : {"title":"test bible title", "options":["option 1", "option 2", "option 3"], "criteria":["criteria1", "criteria2"], "scores":[[1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3]], "x":6, "inside":{"x":11, "y":7}, "weights":[]}
+{"title":"test bible title", "options":["option 1", "option 2", "option 3"], "criteria":["criteria1", "criteria2"], "scores":[[1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3]], "x":6, "inside":{"x":11, "y":7}, "weights":[]}
+
+{"title":"test bible title", "options":["option 1", "option 2", "option 3"], "criteria":["criteria1", "criteria2"], "scores":[[1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3]], "x":6, "inside":{"x":9, "y":11}, "weights":[1, 2, 3, 4]}
+
+Json string to be assigned to object:
+{"x":99, "criteria":["aspect x"], "title":"test title", "options":["option 1", "option 2", "option 3"], "nonexisting_field":"", "scores":[[1, 1, 2], [3, 5, 8], [13, 21], [34, 55]], "weights":[4, 3, 2, 1], "inside":{"x":"11", "y":"9"}}
+
+Values before assignment: 
+{"title":"some title", "options":["option1", "option2", "option3"], "criteria":["criteria1", "criteria2"], "scores":[[1, 2, 3], [7, 8, 9]], "x":6, "inside":{"x":11, "y":7}, "weights":[1, 2, 3]}
+
+Json string computed after assignment: 
+{"title":"test title", "options":["option 1", "option 2", "option 3"], "criteria":["aspect x"], "scores":[[1, 1, 2], [3, 5, 8], [13, 21], [34, 55]], "x":99, "inside":{"x":11, "y":9}, "weights":[4, 3, 2, 1]}
+
+some title
+17
+0
+3
+7
+11
+{"x":99, "options":["1", "2", "3"]}
+{"x":99, "options":[]}
+{"x":17, "title":"test title", "scores":[[1, 1, 2], [3, 5, 8], [13, 21], [34, 55]]}
+{"x":17, "dmap":{"AAA":5.500000, "BBB":9.900000}, "title":"test", "scores":[[1, 1, 2], [3], [5, 8], [13, 21]]}
+{"assets":{"Darth Vader":"Death Star", "Marquez":"Semantic dementia"}}
