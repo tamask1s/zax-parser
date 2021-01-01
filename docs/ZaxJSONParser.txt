@@ -29,6 +29,7 @@ Zax parser has a layered architecture. All the layers are accessible via an API.
 . <<SERIALIZABLE_macros, "SERIALIZABLE" macros:>>
 * <<ZAX_JSON_SERIALIZABLE, ZAX_JSON_SERIALIZABLE>>
 * <<ZAX_JSON_SERIALIZABLE_WDC, ZAX_JSON_SERIALIZABLE_WDC>>
+* <<ZAX_JSON_SERIALIZABLE_BASIC, ZAX_JSON_SERIALIZABLE_BASIC>>
 
 [[ZaxJsonFlatParser]]
 == ZaxJsonFlatParser
@@ -321,7 +322,7 @@ cout << some_obj << endl;
 ----------
 
 NOTE: In order to have such simple structures, your classes needs to have a default constructor, which simple classes are having by default. But ZAX_JSON_SERIALIZABLE adds other constructors, which inhibits the compiler to add a the default constructor to your class. 
-Therefore, ZAX_JSON_SERIALIZABLE will try to add a default constructor to your code. This might be a problem in case you already have your own default constructor, because ZAX_JSON_SERIALIZABLE will fail to add another one. In this case please use the ZAX_JSON_SERIALIZABLE_WDC macro.
+Therefore, ZAX_JSON_SERIALIZABLE will try to add a default constructor to your code. This might be a problem in case you already have your own default constructor, because ZAX_JSON_SERIALIZABLE will fail to add another one. In this case please use the ZAX_JSON_SERIALIZABLE_WDC or ZAX_JSON_SERIALIZABLE_BASIC macros.
 
 [[ZAX_JSON_SERIALIZABLE_WDC]]
 === ZAX_JSON_SERIALIZABLE_WDC
@@ -371,6 +372,45 @@ cout << some_obj << endl;
 ----------
 {"int1":11, "int2":7, "string1":"eleven", "string2":"seven"}
 {"int1":11, "int2":7, "string1":"eleven", "string2":"seven"}
+----------
+
+[[ZAX_JSON_SERIALIZABLE_BASIC]]
+=== ZAX_JSON_SERIALIZABLE_BASIC
+
+{nbsp} +
+
+This macro adds only 2 converter functions, and adds no operators nor constructors.
+
+{nbsp} +
+
+'Example 1:'
+
+{nbsp} +
+
+----------
+#define struct2_json_properties\
+    JSON_PROPERTY(int1),\
+    JSON_PROPERTY(int2),\
+    JSON_PROPERTY(string1),\
+    JSON_PROPERTY(string2)
+
+struct struct2
+{
+    int int1;
+    int int2;
+    string string1;
+    string string2;
+    
+    struct2()
+        :int1(10)
+    {}
+
+    ZAX_JSON_SERIALIZABLE_BASIC(struct2_json_properties)
+};
+
+struct2 some_obj;
+some_obj.zax_from_json("{\"int1\":11, \"int2\":7, \"string1\":\"eleven\", \"string2\":\"seven\"}");
+
 ----------
 
 [[Parsing_of_data_structures]]

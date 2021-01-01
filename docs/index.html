@@ -811,6 +811,11 @@ Clang version 6 to 11
 <a href="#ZAX_JSON_SERIALIZABLE_WDC">ZAX_JSON_SERIALIZABLE_WDC</a>
 </p>
 </li>
+<li>
+<p>
+<a href="#ZAX_JSON_SERIALIZABLE_BASIC">ZAX_JSON_SERIALIZABLE_BASIC</a>
+</p>
+</li>
 </ul></div>
 </li>
 </ol></div>
@@ -1148,7 +1153,7 @@ cout &lt;&lt; some_obj &lt;&lt; endl;</code></pre>
 <img src="./images/icons/note.png" alt="Note" />
 </td>
 <td class="content">In order to have such simple structures, your classes needs to have a default constructor, which simple classes are having by default. But ZAX_JSON_SERIALIZABLE adds other constructors, which inhibits the compiler to add a the default constructor to your class.
-Therefore, ZAX_JSON_SERIALIZABLE will try to add a default constructor to your code. This might be a problem in case you already have your own default constructor, because ZAX_JSON_SERIALIZABLE will fail to add another one. In this case please use the ZAX_JSON_SERIALIZABLE_WDC macro.</td>
+Therefore, ZAX_JSON_SERIALIZABLE will try to add a default constructor to your code. This might be a problem in case you already have your own default constructor, because ZAX_JSON_SERIALIZABLE will fail to add another one. In this case please use the ZAX_JSON_SERIALIZABLE_WDC or ZAX_JSON_SERIALIZABLE_BASIC macros.</td>
 </tr></table>
 </div>
 </div>
@@ -1193,6 +1198,39 @@ cout &lt;&lt; some_obj &lt;&lt; endl;</code></pre>
 <div class="content">
 <pre><code>{"int1":11, "int2":7, "string1":"eleven", "string2":"seven"}
 {"int1":11, "int2":7, "string1":"eleven", "string2":"seven"}</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="ZAX_JSON_SERIALIZABLE_BASIC">ZAX_JSON_SERIALIZABLE_BASIC</h3>
+<div class="paragraph"><p>&#160;<br /></p></div>
+<div class="paragraph"><p>This macro adds only 2 converter functions, and adds no operators nor constructors.</p></div>
+<div class="paragraph"><p>&#160;<br /></p></div>
+<div class="paragraph"><p><em>Example 1:</em></p></div>
+<div class="paragraph"><p>&#160;<br /></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>#define struct2_json_properties\
+    JSON_PROPERTY(int1),\
+    JSON_PROPERTY(int2),\
+    JSON_PROPERTY(string1),\
+    JSON_PROPERTY(string2)
+
+struct struct2
+{
+    int int1;
+    int int2;
+    string string1;
+    string string2;
+
+    struct2()
+        :int1(10)
+    {}
+
+    ZAX_JSON_SERIALIZABLE_BASIC(struct2_json_properties)
+};
+
+struct2 some_obj;
+some_obj.zax_from_json("{\"int1\":11, \"int2\":7, \"string1\":\"eleven\", \"string2\":\"seven\"}");</code></pre>
 </div></div>
 </div>
 </div>
@@ -1500,7 +1538,7 @@ Json string computed after assignment:
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-12-28 23:22:03 Central Europe Standard Time
+Last updated 2021-01-01 16:23:22 Central Europe Standard Time
 </div>
 </div>
 </body>
