@@ -44,7 +44,7 @@ class ZaxJsonParser
     {
         unsigned int alloc_size = initial_alloc_size();
         char* json = new char[alloc_size];
-        while (!a_val.to_json(json, json + alloc_size - 1))
+        while (!a_val.zax_to_json(json, alloc_size - 1))
             if (reallocate_json(json, alloc_size))
                 break;
         int result = snprintf(a_json, a_json_buffer_end - a_json, "%s", json ? json : "");
@@ -139,7 +139,7 @@ class ZaxJsonParser
     {
         unsigned int alloc_size = initial_alloc_size();
         char* json = new char[alloc_size];
-        while (!a_val.to_json(json, json + alloc_size - 1))
+        while (!a_val.zax_to_json(json, alloc_size - 1))
             if (reallocate_json(json, alloc_size))
                 break;
         int result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%s", a_key, json ? json : "");
@@ -213,26 +213,24 @@ class ZaxJsonParser
     template <typename vtype>
     static inline void get_val(vtype& a_dst, const char* a_json, std::string* a_error_output)
     {
-        a_dst.from_json(a_json);
+        a_dst.zax_from_json(a_json);
     }
 
-    static inline void json_begin(int& a_result, char* a_json, const char* a_json_buffer_end, const char* a_key, char a_brace)
+    static inline void json_begin(int& a_result, char* a_json, const char* a_json_buffer_end, const char* a_key, const char* a_brace)
     {
         if (a_json < a_json_buffer_end)
         {
             if (a_key && a_key[0])
-                a_result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%c", a_key, a_brace);
+                a_result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%s", a_key, a_brace);
             else
-                cat_char_noinc(a_json, a_result, a_brace);
+                cat_char_noinc(a_json, a_result, a_brace[0]);
         }
     }
 
-    static inline void json_end(int& a_result, char* a_json, const char* a_json_buffer_end, char a_brace)
+    static inline void json_end(int& a_result, char* a_json, const char* a_json_buffer_end, const char* a_brace)
     {
-        if (a_result++ && (a_json_buffer_end - a_json > 1))
-            *a_json = a_brace;
-        else
-            a_result = 0;
+        if (snprintf(a_json + strlen(a_json), a_json_buffer_end - a_json, "%s", a_brace) == 1)
+            ++a_result;
     }
 
 public:
@@ -280,7 +278,7 @@ public:
     static inline int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::map<std::string, mt>& a_values)
     {
         int _result = 0;
-        json_begin(_result, a_json, a_json_buffer_end, a_key, '{');
+        json_begin(_result, a_json, a_json_buffer_end, a_key, "{");
         if (_result > 0)
         {
             a_json += _result;
@@ -297,7 +295,7 @@ public:
                 a_json += written;
                 _result += written;
             }
-            json_end(_result, a_json, a_json_buffer_end, '}');
+            json_end(_result, a_json, a_json_buffer_end, "}");
         }
         return _result;
     }
@@ -306,7 +304,7 @@ public:
     static inline int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const ct<vt>& a_values)
     {
         int _result = 0;
-        json_begin(_result, a_json, a_json_buffer_end, a_key, '[');
+        json_begin(_result, a_json, a_json_buffer_end, a_key, "[");
         if (_result > 0)
         {
             a_json += _result;
@@ -323,7 +321,7 @@ public:
                 a_json += written;
                 _result += written;
             }
-            json_end(_result, a_json, a_json_buffer_end, ']');
+            json_end(_result, a_json, a_json_buffer_end, "]");
         }
         return _result;
     }
@@ -391,12 +389,12 @@ std::pair<std::string, mt*> json_property(std::string a_name, mt& a_obj)
 
 template<std::size_t I = 0, typename... vt>
 inline typename std::enable_if<I == sizeof...(vt), void>::type
-zax_to_json(char* a_json, const char* a_json_buffer_end, int& a_result, std::tuple<vt...> a_tuple, bool a_insert_object_trails = true)
+zax_to_json_(char* a_json, const char* a_json_buffer_end, int& a_result, std::tuple<vt...> a_tuple, bool a_insert_object_trails = true)
 {}
 
 template<std::size_t I = 0, typename... vt>
 inline typename std::enable_if < I < sizeof...(vt), void>::type
-zax_to_json(char* a_json, const char* a_json_buffer_end, int& a_result, std::tuple<vt...> a_tuple, bool a_insert_object_trails = true)
+zax_to_json_(char* a_json, const char* a_json_buffer_end, int& a_result, std::tuple<vt...> a_tuple, bool a_insert_object_trails = true)
 {
     if (!I)
         if ((a_result = a_json_buffer_end - a_json > 1))
@@ -413,7 +411,7 @@ zax_to_json(char* a_json, const char* a_json_buffer_end, int& a_result, std::tup
     a_result += l_result;
     if (I < sizeof...(vt) - 1)
         ZaxJsonParser::cat_comma_space(a_json, a_result);
-    zax_to_json < I + 1, vt... > (a_json, a_json_buffer_end, a_result, a_tuple, a_insert_object_trails);
+    zax_to_json_ < I + 1, vt... > (a_json, a_json_buffer_end, a_result, a_tuple, a_insert_object_trails);
     if (!a_result)
         return;
     if ((I == sizeof...(vt) - 1) && a_insert_object_trails)
@@ -430,22 +428,23 @@ zax_to_json(char* a_json, const char* a_json_buffer_end, int& a_result, std::tup
 #define JSON_PROPERTY_CHOOSER(no_arg,member,name_in_json,FUNC, ...) FUNC
 #define JSON_PROPERTY(...) JSON_PROPERTY_CHOOSER(no_arg,##__VA_ARGS__, JSON_PROPERTY_NAME(__VA_ARGS__), JSON_PROPERTY_(__VA_ARGS__))
 
-#define zax_convert_to_json(arg_json, a_json_buffer_length, arg_obj, arg_json_properties, ...) ({\
+#define zax_convert_to_json_trails(arg_json, a_json_buffer_length, arg_obj, insert_trails, ...) ({\
     int _result = 0;\
     decltype(arg_obj)& object_to_convert = arg_obj; \
     const char* _json_buffer_end = arg_json + a_json_buffer_length; \
-    zax_to_json(arg_json, _json_buffer_end, _result, std::make_tuple(arg_json_properties), ##__VA_ARGS__);\
+    zax_to_json_(arg_json, _json_buffer_end, _result, std::make_tuple(__VA_ARGS__), insert_trails);\
     _result;\
 })
+#define zax_convert_to_json(arg_json, a_json_buffer_length, arg_obj, ...) zax_convert_to_json_trails(arg_json, a_json_buffer_length, arg_obj, true, __VA_ARGS__)
 
 template<std::size_t I = 0, typename... vt>
 inline typename std::enable_if<I == sizeof...(vt), void>::type
-zax_from_json(const char* a_json, std::tuple<vt...> a_tuple, ZaxJsonFlatParser* parsed_json, std::string* a_error_output = 0)
+zax_from_json_(const char* a_json, std::tuple<vt...> a_tuple, ZaxJsonFlatParser* parsed_json, std::string* a_error_output = 0)
 {}
 
 template<std::size_t I = 0, typename... vt>
 inline typename std::enable_if < I < sizeof...(vt), void>::type
-zax_from_json(const char* a_json, std::tuple<vt...> a_tuple, ZaxJsonFlatParser* parsed_json, std::string* a_error_output = 0)
+zax_from_json_(const char* a_json, std::tuple<vt...> a_tuple, ZaxJsonFlatParser* parsed_json, std::string* a_error_output = 0)
 {
     if (!parsed_json)
     {
@@ -462,19 +461,19 @@ zax_from_json(const char* a_json, std::tuple<vt...> a_tuple, ZaxJsonFlatParser* 
         else if (a_error_output)
             (*a_error_output) += std::string("WARNING: JSON property is missing: '") + std::get<I>(a_tuple).first.c_str() + "'\n";
     }
-    zax_from_json < I + 1, vt... > (a_json, a_tuple, parsed_json, a_error_output);
+    zax_from_json_ < I + 1, vt... > (a_json, a_tuple, parsed_json, a_error_output);
     if (I == sizeof...(vt) - 1)
         delete parsed_json;
 }
 
 template<std::size_t I = 0, typename... vt>
 inline typename std::enable_if<I == sizeof...(vt), void>::type
-zax_from_json(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonFlatParser* parsed_json, std::string* a_error_output = 0)
+zax_from_json_(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonFlatParser* parsed_json, std::string* a_error_output = 0)
 {}
 
 template<std::size_t I = 0, typename... vt>
 inline typename std::enable_if < I < sizeof...(vt), void>::type
-zax_from_json(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonFlatParser* parsed_json, std::string* a_error_output = 0)
+zax_from_json_(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonFlatParser* parsed_json, std::string* a_error_output = 0)
 {
     if (!parsed_json)
     {
@@ -491,40 +490,37 @@ zax_from_json(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonFlatParser* parsed
         else if (a_error_output)
             (*a_error_output) += std::string("WARNING: JSON property is missing: '") + std::get<I>(a_tuple).first.c_str() + "'\n";
     }
-    zax_from_json < I + 1, vt... > (a_json, a_tuple, parsed_json, a_error_output);
+    zax_from_json_ < I + 1, vt... > (a_json, a_tuple, parsed_json, a_error_output);
     if (I == sizeof...(vt) - 1)
         delete parsed_json;
 }
 
-#define zax_convert_from_json(arg_json, arg_obj, arg_json_properties, ...) decltype(arg_obj)& object_to_convert = arg_obj; zax_from_json(arg_json, std::make_tuple(arg_json_properties), 0, ##__VA_ARGS__);
+#define zax_convert_from_json(arg_json, arg_obj, ...) decltype(arg_obj)& object_to_convert = arg_obj; zax_from_json_(arg_json, std::make_tuple(__VA_ARGS__), 0);
+#define zax_convert_from_json_err(arg_json, arg_obj, err_stream, ...) decltype(arg_obj)& object_to_convert = arg_obj; zax_from_json_(arg_json, std::make_tuple(__VA_ARGS__), 0, err_stream);
+
+#define ZAX_JSON_SERIALIZABLE_BASIC(...)\
+    virtual void zax_from_json(const char* a_json) {\
+        zax_convert_from_json(a_json, *this, ##__VA_ARGS__);\
+    }\
+    virtual int zax_to_json(char* a_json, int a_alloc_size) const {\
+        return zax_convert_to_json(a_json, a_alloc_size, *this, ##__VA_ARGS__);\
+    }\
 
 #define ZAX_JSON_SERIALIZABLE_WDC(class_name, ...)\
-    virtual void from_json(const char* a_json)\
-    {\
-        zax_convert_from_json(a_json, *this, ##__VA_ARGS__);\
-    }\
-    virtual int to_json(char* a_json, const char* a_json_buffer_end) const\
-    {\
-        return zax_convert_to_json(a_json, (a_json_buffer_end - a_json), *this, ##__VA_ARGS__);\
-    }\
-    class_name(const char* a_json)\
-    {\
+    ZAX_JSON_SERIALIZABLE_BASIC(__VA_ARGS__)\
+    class_name(const char* a_json) {\
         *this = a_json;\
     }\
-    class_name(const string& a_json)\
-    {\
+    class_name(const string& a_json) {\
         *this = a_json;\
     }\
-    void operator = (const char* a_json)\
-    {\
+    void operator = (const char* a_json) {\
         zax_convert_from_json(a_json, *this, ##__VA_ARGS__);\
     }\
-    void operator = (const string& a_json)\
-    {\
+    void operator = (const string& a_json) {\
         zax_convert_from_json(a_json.c_str(), *this, ##__VA_ARGS__);\
     }\
-    template <typename T> operator T() const\
-    {\
+    template <typename T> operator T() const {\
         unsigned int alloc_size = ZaxJsonParser::initial_alloc_size();\
         char* json = new char[alloc_size];\
         while (!zax_convert_to_json(json, alloc_size - 1, *this, ##__VA_ARGS__))\
@@ -534,8 +530,7 @@ zax_from_json(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonFlatParser* parsed
         delete[] json;\
         return result;\
     }\
-    friend std::ostream& operator<<(std::ostream& os, const class_name& a_obj)\
-    {\
+    friend std::ostream& operator<<(std::ostream& os, const class_name& a_obj) {\
         string s = a_obj;\
         return os << s;\
     }\

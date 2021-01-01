@@ -56,6 +56,7 @@ void json_example2()
 
     char json_string[] = R"({"x":null, "name":null, "b":null, "weights":null})";
     //char json_string[] = R"({"x":11, "int2":12, "name":"eleven", "string2":"twelve"})";
+    //zax_convert_from_json(json_string, some_obj, (JSON_PROPERTY(x), JSON_PROPERTY(b), JSON_PROPERTY(name), JSON_PROPERTY(weights)));
     zax_convert_from_json(json_string, some_obj, struct1_json_properties);
 
     char json_string2[10000];
@@ -101,6 +102,7 @@ struct struct2
     {}
 
     ZAX_JSON_SERIALIZABLE_WDC(struct2, struct2_json_properties)
+    //ZAX_JSON_SERIALIZABLE_WDC(struct2, JSON_PROPERTY(int1), JSON_PROPERTY(int2), JSON_PROPERTY(string1), JSON_PROPERTY(string2))
 };
 
 void json_example4()
@@ -129,7 +131,7 @@ struct CMxTableData
     std::deque<std::deque<int>> scores;
     deque<int> weights;
 
-    ZAX_JSON_SERIALIZABLE_WDC(CMxTableData, CMxTableData_JOSONProps)
+    ZAX_JSON_SERIALIZABLE_BASIC(CMxTableData_JOSONProps)
 };
 
 #define CClassInside_JOSONProps\
@@ -141,7 +143,7 @@ struct CClassInside
     int x = 11;
     int y = 7;
 
-    ZAX_JSON_SERIALIZABLE(CClassInside, CClassInside_JOSONProps)
+    ZAX_JSON_SERIALIZABLE_BASIC(CClassInside_JOSONProps)
 };
 
 #define CClass_JOSONProps\
