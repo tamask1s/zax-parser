@@ -18,4 +18,6 @@ jobs:
         cd build/test_01/
         make
     - name: test_01
-      run: /bin/testes
+      run: |
+        cd build/test_01/bin
+        ./testes
