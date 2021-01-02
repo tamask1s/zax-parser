@@ -16,7 +16,7 @@ struct some_class
     ZAX_JSON_SERIALIZABLE(some_class, some_json_properties)
 };
 
-some_class some_obj = "{\"x\":17, \"title\":\"test text\", \"scores\":[[1, 1, 2], [3], [5, 8], [13, 21]]}";
+some_class some_obj = R"({"x":17, "title":"test text", "scores":[[1, 1, 2], [3], [5, 8], [13, 21]]})";
 
 string some_json = some_obj;
 
@@ -32,3 +32,5 @@ cout << some_json << endl;
 ```
 
 [Please check the documentation](https://tamask1s.github.io/zax-parser/index.html)
+
+version 1.0
