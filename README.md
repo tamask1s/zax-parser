@@ -3,6 +3,24 @@ Zax is a very basic JSON parser implemented in C++11 with probably the simplest 
 
 ### Code:
 
+#### Example1:
+
+```cpp
+
+struct some_class
+{
+    int x = 9;
+    string title = "some title";
+    ZAX_JSON_SERIALIZABLE_BASIC(JSON_PROPERTY(x), JSON_PROPERTY(title))
+};
+
+some_class some_obj;
+some_obj.zax_from_json(R"({"x":17, "title":"test text"})");
+
+```
+
+#### Example2:
+
 ```cpp
 
 #define some_json_properties JSON_PROPERTY(x), JSON_PROPERTY(title), JSON_PROPERTY(scores)
