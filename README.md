@@ -1,9 +1,7 @@
 # zax-parser
 Zax is a very basic JSON parser implemented in C++11 with probably the simplest possible interface, providing a kind of a struct to JSON and JSON to struct conversion.
 
-### Code:
-
-#### Example1:
+### Example1:
 
 ```cpp
 
@@ -19,7 +17,9 @@ some_obj.zax_from_json(R"({"x":17, "title":"test text"})");
 
 ```
 
-#### Example2:
+### Example2:
+
+#### Code:
 
 ```cpp
 
@@ -41,7 +41,7 @@ string some_json = some_obj;
 cout << some_json << endl;
 
 ```
-### Result:
+#### Result:
 
 ```cpp
 
