@@ -17,6 +17,41 @@ struct some_class
 some_class some_obj;
 some_obj.zax_from_json("{\"x\":17, \"title\":\"new title\"}");
 
+```
+
+### Example2:
+
+#### Code:
+
+```cpp
+
+struct some_class
+{
+    int x = 9;
+    std::string title = "some title";
+};
+
+#define some_json_properties JSON_PROPERTY(x), JSON_PROPERTY(title)
+
+some_class some_obj;
+zax_convert_from_json("{\"x\":17, \"title\":\"new title\"}", some_obj, some_json_properties);
+
+```
+
+### Example3:
+
+#### Code:
+
+```cpp
+
+struct some_class
+{
+    int x = 9;
+    std::string title = "some title";
+    ZAX_JSON_SERIALIZABLE_BASIC(JSON_PROPERTY(x), JSON_PROPERTY(title))
+};
+
+some_class some_obj;
 std::string some_json;
 some_obj.zax_to_json(some_json);
 std::cout << some_json << std::endl;
@@ -26,11 +61,12 @@ std::cout << some_json << std::endl;
 
 ```cpp
 
-{"x":17, "title":"new title"}
+{"x":9, "title":"some title"}
 
 ```
 
-### Example2:
+
+### Example4:
 
 #### Code:
 
@@ -63,3 +99,5 @@ std::cout << some_json << std::endl;
 [Please check the documentation](https://tamask1s.github.io/zax-parser/index.html)
 
 version 1.0
+
+
