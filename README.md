@@ -31,10 +31,8 @@ struct some_class
     std::string title = "some title";
 };
 
-#define some_json_properties JSON_PROPERTY(x), JSON_PROPERTY(title)
-
 some_class some_obj;
-zax_convert_from_json("{\"x\":17, \"title\":\"new title\"}", some_obj, some_json_properties);
+zax_convert_from_json("{\"x\":17, \"title\":\"new title\"}", some_obj, JSON_PROPERTY(x), JSON_PROPERTY(title));
 
 ```
 
