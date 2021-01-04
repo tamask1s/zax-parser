@@ -33,7 +33,7 @@ struct some_class
 };
 
 some_class some_obj;
-some_obj.zax_from_json("{\"x\":17, \"title\":\"new title\"}");
+some_obj.zax_from_json("{\"x\":7, \"title\":\"new title\"}");
 
 ```
 
@@ -93,6 +93,32 @@ std::cout << some_json << std::endl;
 ```cpp
 
 {"x":17, "title":"new title", "scores":[[1, 1, 2], [3], [5, 8], [13, 21]]}
+
+```
+
+### Example5:
+
+#### Code:
+
+```cpp
+
+struct some_class
+{
+    int x = 9;
+    int scores[2][3] = {{1, 2, 3}, {4, 5, 6}};
+
+    ZAX_JSON_SERIALIZABLE(some_class, JSON_PROPERTY(x), JSON_PROPERTY(scores))
+};
+
+some_class some_obj = R"({"x":17, "scores":[[11, 12, 13], [14, 15, 16]]})";
+cout << some_obj << endl;
+
+```
+#### Result:
+
+```cpp
+
+{"x":17, "scores":[[11, 12, 13], [14, 15, 16]]}
 
 ```
 
