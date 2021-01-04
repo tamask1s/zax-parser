@@ -499,8 +499,8 @@ zax_from_json_(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonFlatParser* parse
 #define zax_convert_from_json_err(arg_json, arg_obj, err_stream, ...) decltype(arg_obj)& object_to_convert = arg_obj; zax_from_json_(arg_json, std::make_tuple(__VA_ARGS__), 0, err_stream);
 
 #define ZAX_JSON_SERIALIZABLE_BASIC(...)\
-    virtual void zax_from_json(const char* a_json) {\
-        zax_convert_from_json(a_json, *this, ##__VA_ARGS__);\
+    virtual void zax_from_json(const char* a_json, std::string* a_err_stream = 0) {\
+        zax_convert_from_json_err(a_json, *this, a_err_stream, ##__VA_ARGS__);\
     }\
     virtual int zax_to_json(char* a_json, int a_alloc_size) const {\
         return zax_convert_to_json(a_json, a_alloc_size, *this, ##__VA_ARGS__);\
