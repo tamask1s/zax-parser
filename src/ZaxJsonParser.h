@@ -39,6 +39,12 @@ class ZaxJsonParser
     static unsigned int initial_alloc_size_;
     static unsigned int maximum_alloc_size_;
 
+    template<typename T, size_t N>
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const T (&a_dst)[N])
+    {
+        return append(a_json, a_json_buffer_end, 0, a_dst);
+    }
+
     template <typename vtype>
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const vtype& a_val)
     {
@@ -152,9 +158,16 @@ class ZaxJsonParser
         a_dst = a_json ? a_json : "";
     }
 
-    static inline void get_val(char* a_dst, const char* a_json, std::string* a_error_output)
+    template<size_t N>
+    static inline void get_val(char (&a_dst)[N], const char* a_json, std::string* a_error_output)
     {
-        a_json ? strcpy(a_dst, a_json) : strcpy(a_dst, "");
+        a_json ? strncpy(a_dst, a_json, N) : strncpy(a_dst, "", N);
+    }
+
+    template<typename T, size_t N>
+    static inline void get_val(T (&a_dst)[N], const char* a_json, std::string* a_error_output)
+    {
+        parse(a_dst, 0, a_json, a_error_output);
     }
 
     static inline void get_val(int& a_dst, const char* a_json, std::string* a_error_output)
@@ -274,6 +287,38 @@ public:
         return print_key_and_val(a_json, a_json_buffer_end, a_key, a_value);
     }
 
+    template<size_t N>
+    static inline int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const char (&a_values)[N])
+    {
+        return print_key_and_val(a_json, a_json_buffer_end, a_key, a_values);
+    }
+
+    template<typename T, size_t N>
+    static inline int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const T (&a_values)[N])
+    {
+        int _result = 0;
+        json_begin(_result, a_json, a_json_buffer_end, a_key, "[");
+        if (_result > 0)
+        {
+            a_json += _result;
+            for (unsigned int i = 0; i < N; ++i)
+            {
+                if (i)
+                    cat_comma_space(a_json, _result);
+                int written = print_val(a_json, a_json_buffer_end, a_values[i]);
+                if (written <= 0)
+                {
+                    _result = 0;
+                    break;
+                }
+                a_json += written;
+                _result += written;
+            }
+            json_end(_result, a_json, a_json_buffer_end, "]");
+        }
+        return _result;
+    }
+
     template <typename mt>
     static inline int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::map<std::string, mt>& a_values)
     {
@@ -335,6 +380,30 @@ public:
     static inline void parse(std::string& a_dst, const char* a_property, const char* a_json, std::string* a_error_output)
     {
         get_val(a_dst, a_json, a_error_output);
+    }
+
+    template<size_t N>
+    static inline void parse(char (&a_vect)[N], const char* a_property, const char* a_json, std::string* a_error_output)
+    {
+        get_val(a_vect, a_json, a_error_output);
+    }
+
+    template<typename T, size_t N>
+    static inline void parse(T (&a_vect)[N], const char* a_property, const char* a_json, std::string* a_error_output)
+    {
+        if (a_json)
+        {
+            bool success = false;
+            ZaxJsonFlatParser vector_data(a_json, true, &success);
+            if (!success)
+                (*a_error_output) += std::string("ERROR: error parsing a vector in JSON: '") + a_json + "'\n";
+            unsigned int l_size = N > vector_data.m_list_values.size() ? vector_data.m_list_values.size() : N;
+            for (unsigned int i = 0; i < l_size; ++i)
+                get_val(a_vect[i], vector_data.m_list_values[i], a_error_output);
+        }
+        else
+            for (unsigned int i = 0; i < N; ++i)
+                get_val(a_vect[i], 0, a_error_output);
     }
 
     template <template <typename, typename... > class ct,  class vt>
@@ -514,7 +583,6 @@ zax_from_json_(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonFlatParser* parse
         a_json = json ? json : "";\
         delete[] json;\
     }
-
 
 #define ZAX_JSON_SERIALIZABLE_WDC(class_name, ...)\
     ZAX_JSON_SERIALIZABLE_BASIC(__VA_ARGS__)\

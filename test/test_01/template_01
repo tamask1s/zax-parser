@@ -34,3 +34,4 @@ some title
 {"x":17, "title":"test title", "scores":[[1, 1, 2], [3, 5, 8], [13, 21], [34, 55]]}
 {"x":17, "dmap":{"AAA":5.500000, "BBB":9.900000}, "title":"test", "scores":[[1, 1, 2], [3], [5, 8], [13, 21]]}
 {"assets":{"Darth Vader":"Death Star", "Marquez":"Semantic dementia"}}
+{"x":17, "scores":[[11, 12, 13], [14, 15, 16]]}

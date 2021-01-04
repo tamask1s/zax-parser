@@ -134,16 +134,12 @@ struct CMxTableData
     ZAX_JSON_SERIALIZABLE_BASIC(CMxTableData_JOSONProps)
 };
 
-#define CClassInside_JOSONProps\
-    JSON_PROPERTY(x),\
-    JSON_PROPERTY(y)
-
 struct CClassInside
 {
     int x = 11;
     int y = 7;
 
-    ZAX_JSON_SERIALIZABLE_BASIC(CClassInside_JOSONProps)
+    ZAX_JSON_SERIALIZABLE_BASIC(JSON_PROPERTY(x), JSON_PROPERTY(y))
 };
 
 #define CClass_JOSONProps\
@@ -266,7 +262,7 @@ void json_example_04()
 struct some_class
 {
     int x = 9;
-    string title = "some title";
+    char title[200];
     std::vector<std::vector<int>> scores = {{1, 2, 3}, {4, 5, 6}};
 
     ZAX_JSON_SERIALIZABLE(some_class, some_json_properties)
@@ -313,6 +309,24 @@ void some_example3()
     some_class3 some_obj3 = R"({"assets":{"Marquez": "Semantic dementia", "Lyra Belacqua":null}})";
 
     cout << some_obj3 << endl;
+
+    string jstr;
+    some_obj3.zax_to_json(jstr);
+    //cout << jstr << endl;
+}
+
+struct some2_class
+{
+    int x = 9;
+    int scores[2][3] = {{1, 2, 3}, {4, 5, 6}};
+
+    ZAX_JSON_SERIALIZABLE(some2_class, JSON_PROPERTY(x), JSON_PROPERTY(scores))
+};
+
+void some2_example4()
+{
+    some2_class some2_obj = R"({"x":17, "scores":[[11, 12, 13], [14, 15, 16]]})";
+    cout << some2_obj << endl;
 }
 
 int main()
@@ -331,5 +345,7 @@ int main()
     some_example();
     json_example12();
     some_example3();
+    some2_example4();
+
     return 0;
 }
