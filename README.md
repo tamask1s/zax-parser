@@ -11,11 +11,10 @@ struct some_class
 {
     int x = 9;
     std::string title = "some title";
-    ZAX_JSON_SERIALIZABLE_BASIC(JSON_PROPERTY(x), JSON_PROPERTY(title))
 };
 
 some_class some_obj;
-some_obj.zax_from_json("{\"x\":17, \"title\":\"new title\"}");
+zax_convert_from_json("{\"x\":17, \"title\":\"new title\"}", some_obj, JSON_PROPERTY(x), JSON_PROPERTY(title));
 
 ```
 
@@ -29,10 +28,12 @@ struct some_class
 {
     int x = 9;
     std::string title = "some title";
+
+    ZAX_JSON_SERIALIZABLE_BASIC(JSON_PROPERTY(x), JSON_PROPERTY(title))
 };
 
 some_class some_obj;
-zax_convert_from_json("{\"x\":17, \"title\":\"new title\"}", some_obj, JSON_PROPERTY(x), JSON_PROPERTY(title));
+some_obj.zax_from_json("{\"x\":17, \"title\":\"new title\"}");
 
 ```
 
@@ -46,6 +47,7 @@ struct some_class
 {
     int x = 9;
     std::string title = "some title";
+
     ZAX_JSON_SERIALIZABLE_BASIC(JSON_PROPERTY(x), JSON_PROPERTY(title))
 };
 
