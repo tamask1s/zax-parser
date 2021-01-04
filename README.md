@@ -3,6 +3,8 @@ Zax is a very basic JSON parser implemented in C++11 with probably the simplest 
 
 ### Example1:
 
+#### Code:
+
 ```cpp
 
 struct some_class
@@ -14,6 +16,17 @@ struct some_class
 
 some_class some_obj;
 some_obj.zax_from_json("{\"x\":17, \"title\":\"new title\"}");
+
+std::string jstr;
+some_obj.zax_to_json(jstr);
+std::cout << jstr << std::endl;
+
+```
+#### Result:
+
+```cpp
+
+{"x":17, "title":"new title"}
 
 ```
 
