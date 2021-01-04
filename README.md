@@ -17,9 +17,9 @@ struct some_class
 some_class some_obj;
 some_obj.zax_from_json("{\"x\":17, \"title\":\"new title\"}");
 
-std::string jstr;
-some_obj.zax_to_json(jstr);
-std::cout << jstr << std::endl;
+std::string some_json;
+some_obj.zax_to_json(some_json);
+std::cout << some_json << std::endl;
 
 ```
 #### Result:
@@ -48,9 +48,7 @@ struct some_class
 };
 
 some_class some_obj = R"({"x":17, "title":"new title", "scores":[[1, 1, 2], [3], [5, 8], [13, 21]]})";
-
 std::string some_json = some_obj;
-
 std::cout << some_json << std::endl;
 
 ```
