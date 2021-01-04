@@ -14,7 +14,7 @@ struct some_class
 };
 
 some_class some_obj;
-zax_convert_from_json("{\"x\":7, \"name\":\"new name\"}", some_obj, JSON_PROPERTY(x), JSON_PROPERTY(title));
+zax_convert_from_json("{\"x\":7, \"name\":\"jack\"}", some_obj, JSON_PROPERTY(x), JSON_PROPERTY(title));
 
 ```
 
