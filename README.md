@@ -10,11 +10,11 @@ Zax is a very basic JSON parser implemented in C++11 with probably the simplest 
 struct some_class
 {
     int x = 9;
-    std::string title = "some title";
+    std::string name = "some name";
 };
 
 some_class some_obj;
-zax_convert_from_json("{\"x\":7, \"title\":\"new title\"}", some_obj, JSON_PROPERTY(x), JSON_PROPERTY(title));
+zax_convert_from_json("{\"x\":7, \"name\":\"new name\"}", some_obj, JSON_PROPERTY(x), JSON_PROPERTY(title));
 
 ```
 
