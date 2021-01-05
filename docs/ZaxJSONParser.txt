@@ -22,7 +22,7 @@ Zax parser has a layered architecture. All the layers are accessible via an API.
 {nbsp} +
 
 
-. <<ZaxJsonFlatParser, ZaxJsonFlatParser>>
+. <<ZaxJsonTopTokenizer, ZaxJsonTopTokenizer>>
 . <<Converter_functions, Converter functions:>>
 * <<zax_convert_from_json, zax_convert_from_json()>>
 * <<zax_convert_to_json, zax_convert_to_json()>>
@@ -31,13 +31,13 @@ Zax parser has a layered architecture. All the layers are accessible via an API.
 * <<ZAX_JSON_SERIALIZABLE_WDC, ZAX_JSON_SERIALIZABLE_WDC>>
 * <<ZAX_JSON_SERIALIZABLE_BASIC, ZAX_JSON_SERIALIZABLE_BASIC>>
 
-[[ZaxJsonFlatParser]]
-== ZaxJsonFlatParser
+[[ZaxJsonTopTokenizer]]
+== ZaxJsonTopTokenizer
 
 {nbsp} +
 
 Tokenizes the top element of a JSON string. The tokenized values are stored either in the 'm_values' or the 'm_list_values' member of the class, depending on whether the top element is a dictionary or a list.
-Using ZaxJsonFlatParser class, a kind of a lazy parsing can be achieved.
+Using ZaxJsonTopTokenizer class, a kind of a lazy parsing can be achieved.
 
 {nbsp} +
 
@@ -45,7 +45,7 @@ Using ZaxJsonFlatParser class, a kind of a lazy parsing can be achieved.
 
 {nbsp} +
 
-Constructor Syntax: **ZaxJsonFlatParser([a_json], [a_in_situ], [a_success])**
+Constructor Syntax: **ZaxJsonTopTokenizer([a_json], [a_in_situ], [a_success])**
 
 .'Parameters'
 
@@ -63,7 +63,7 @@ NOTE: All the resulting tokens are 'char*' strings, and may point in the origina
 'Example 1:'
 
 ----------
-ZaxJsonFlatParser json_doc("{\"title\":\"some title\",\"x\":17}", false);
+ZaxJsonTopTokenizer json_doc("{\"title\":\"some title\",\"x\":17}", false);
 
 cout << json_doc.m_values["title"] << endl;
 cout << json_doc.m_values["x"] << endl;
@@ -80,7 +80,7 @@ some title
 'Example 2:'
 
 ----------
-ZaxJsonFlatParser json_doc("{\"title\":\"some title\",\"x\":17}", false);
+ZaxJsonTopTokenizer json_doc("{\"title\":\"some title\",\"x\":17}", false);
 
 const char* tmp = json_doc.m_values["no_such_key"];
 cout << (int) tmp << endl;
@@ -98,7 +98,7 @@ NOTE: The return value should be checked for a '0' value. In case of lists, over
 'Example 3:'
 
 ----------
-ZaxJsonFlatParser json_doc("[3, 7, 11]", false);
+ZaxJsonTopTokenizer json_doc("[3, 7, 11]", false);
 
 cout << json_doc.m_list_values[0] << endl;
 cout << json_doc.m_list_values[1] << endl;
@@ -117,7 +117,7 @@ cout << json_doc.m_list_values[2] << endl;
 'Example 4:'
 
 ----------
-ZaxJsonFlatParser json_doc("[\"3\", \"7\", \"11\"]", false);
+ZaxJsonTopTokenizer json_doc("[\"3\", \"7\", \"11\"]", false);
 
 cout << json_doc.m_list_values[0] << endl;
 cout << json_doc.m_list_values[1] << endl;

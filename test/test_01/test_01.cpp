@@ -39,6 +39,23 @@ void write_file(const char* fileName, const char* pData, int len)
     }
 }
 
+void read_file(const char* fileName, std::vector<char>& buffer)
+{
+    std::ifstream infile(fileName);
+    if (infile.is_open())
+    {
+        //get length of file
+        infile.seekg(0, infile.end);
+        size_t length = infile.tellg();
+        infile.seekg(0, infile.beg);
+
+        buffer.resize(length);
+        //read file
+        if (length)
+            infile.read(&buffer[0], length);
+    }
+}
+
 void json_example1()
 {
     struct1 some_obj;
@@ -131,8 +148,12 @@ struct CMxTableData
     std::deque<std::deque<int>> scores;
     deque<int> weights;
 
-    ZAX_JSON_SERIALIZABLE_BASIC(CMxTableData_JOSONProps)
+    ZAX_JSON_SERIALIZABLE_BASIC(JSON_PROPERTY(title), JSON_PROPERTY(options, "criteria"), JSON_PROPERTY(aspects), JSON_PROPERTY(scores), JSON_PROPERTY(x), JSON_PROPERTY(weights))
 };
+
+#define CClassInside_JOSONProps\
+    JSON_PROPERTY(x),\
+    JSON_PROPERTY(y)
 
 struct CClassInside
 {
@@ -207,7 +228,7 @@ void test_parser2()
 
 void json_example_01()
 {
-    ZaxJsonFlatParser json_doc(R"({"title":"some title","x":17})", false);
+    ZaxJsonTopTokenizer json_doc(R"({"title":"some title","x":17})", false);
 
     cout << json_doc.m_values["title"] << endl;
     cout << json_doc.m_values["x"] << endl;
@@ -215,15 +236,15 @@ void json_example_01()
     cout << (long long) tmp << endl;
 
 //    bool success = true;
-//    ZaxJsonFlatParser lDocument(aActionParam, aActionParamChangeAllowed, &success);
+//    ZaxJsonTopTokenizer lDocument(aActionParam, aActionParamChangeAllowed, &success);
 //    if (success)
 //        fpl_batonUse(atoll(lDocument.m_values["smartBaton"]));
 }
 
 void json_example_02()
 {
-    ZaxJsonFlatParser json_doc("[3, 7, 11]", false);
-    //ZaxJsonFlatParser json_doc("["3", "7", "11"]", false);
+    ZaxJsonTopTokenizer json_doc("[3, 7, 11]", false);
+    //ZaxJsonTopTokenizer json_doc("["3", "7", "11"]", false);
 
     cout << json_doc.m_list_values[0] << endl;
     cout << json_doc.m_list_values[1] << endl;
@@ -319,6 +340,8 @@ struct some2_class
 {
     int x = 9;
     int scores[2][3] = {{1, 2, 3}, {4, 5, 6}};
+    //int scores[2][3][2] = {{{1, 2}, {3, 4}, {5, 6}}, {{7, 8}, {9, 10}, {11, 12}}};
+    //std::vector<std::vector<std::vector<int>>> scores = {{{1, 2}, {3, 4}, {5, 6}}, {{7, 8}, {9, 10}, {11, 12}}};
 
     ZAX_JSON_SERIALIZABLE(some2_class, JSON_PROPERTY(x), JSON_PROPERTY(scores))
 };
@@ -327,6 +350,31 @@ void some2_example4()
 {
     some2_class some2_obj = R"({"x":17, "scores":[[11, 12, 13], [14, 15, 16]]})";
     cout << some2_obj << endl;
+}
+
+struct classA
+{
+    int x = 9;
+    int scores[2][3] = {{1, 2, 3}, {4, 5, 6}};
+    ZAX_JSON_SERIALIZABLE(classA, JSON_PROPERTY(x), JSON_PROPERTY(scores))
+};
+
+struct classB
+{
+    int x = 7;
+    int h = 9;
+    std::vector<std::vector<int>> scores = {{1, 1, 2}, {3, 5, 8}};
+    ZAX_JSON_SERIALIZABLE(classB, JSON_PROPERTY(x), JSON_PROPERTY(scores))
+};
+
+
+void some2_example5()
+{
+    classA objA;
+    classB objB = objA;
+    cout << objB << endl;
+
+    objB = (const string&)objA;
 }
 
 int main()
@@ -346,6 +394,7 @@ int main()
     json_example12();
     some_example3();
     some2_example4();
+    some2_example5();
 
     return 0;
 }

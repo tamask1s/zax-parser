@@ -21,288 +21,247 @@
 #include <vector>
 #include "ZaxJsonParser.h"
 
-const char* nextTokenOpen(const char* a_str_to_find, char* a_close_token_pair)
+static inline int zax_strcmp_(const char *a_s1,  const char *a_s2)
 {
-    while (*a_str_to_find)
-    {
-        switch (*a_str_to_find++)
-        {
-        case '"':
-            *a_close_token_pair = '"';
-            return --a_str_to_find;
-        case '\\':
-            ++a_str_to_find;
-            break;
-        case '{':
-            *a_close_token_pair = '}';
-            return --a_str_to_find;
-        case '[':
-            *a_close_token_pair = ']';
-            return --a_str_to_find;
-        }
-    }
-    return 0;
+    while (*a_s1 == *a_s2++)
+        if (*a_s1++ == 0)
+            return 0;
+    return (*(const unsigned char *)a_s1 - * (const unsigned char *)(a_s2 - 1));
 }
 
-const char* next_number_end(const char* a_str_to_find)
+ZaxStringWrap::ZaxStringWrap(const char* a_str)
+    : m_str(a_str)
+{}
+
+bool ZaxStringWrap::operator < (const ZaxStringWrap &a_rhs) const
 {
-    while (*a_str_to_find)
-    {
-        switch (*a_str_to_find++)
-        {
-        case ',':
-            return --a_str_to_find;
-        case '\\':
-            ++a_str_to_find;
-            break;
-        case '}':
-            return --a_str_to_find;
-        case ']':
-            return --a_str_to_find;
-        }
-    }
-    return 0;
+    return zax_strcmp_(m_str, a_rhs.m_str) < 0;
 }
 
-const char* next_number_start(const char* a_str_to_find)
-{
-    while (*a_str_to_find)
-    {
-        switch (*a_str_to_find++)
-        {
-        case ':':
-            return a_str_to_find;
-        case '\\':
-            ++a_str_to_find;
-            break;
-        case ',':
-            return a_str_to_find;
-        }
-    }
-    return 0;
-}
-
-const char* nextTokenClose(const char* a_str_to_find, char a_close_token, char a_open_token)
+static inline const char* zax_get_close_token(const char* a_str_to_find, char a_open_token, char a_close_token)
 {
     int equilibrium = 0;
-    while (*a_str_to_find)
+    while (*a_str_to_find++)
     {
         if (*a_str_to_find == a_close_token)
         {
             if (*(a_str_to_find - 1) != '\\')
             {
-                if (!equilibrium)
+                if (equilibrium == 0)
                     return a_str_to_find;
                 else
                     --equilibrium;
             }
         }
         else if (*a_str_to_find == a_open_token)
-            ++equilibrium;
-        ++a_str_to_find;
+            if (*(a_str_to_find - 1) != '\\')
+                ++equilibrium;
     }
     return 0;
 }
 
-char* nextQuotMark(const char* a_colon_value_start)
+static inline const char* zax_get_value_end(const char* a_str_to_find, bool a_whitespace_means_end = false)
 {
-    if (char* colon_value_stop = strchr((char*)a_colon_value_start + 1, '"'))
+    const char* l_end = 0;
+    while (*a_str_to_find)
     {
-        while (*(colon_value_stop - 1) == '\\')
-            colon_value_stop = strchr(colon_value_stop + 1, '"');
-        return colon_value_stop;
+        switch (*a_str_to_find++)
+        {
+        case '\\':
+            ++a_str_to_find;
+            break;
+        case '\t':
+        case '\n':
+        case '\r':
+        case ' ':
+            if (!a_whitespace_means_end)
+                break;
+        case ',':
+        case '}':
+        case ']':
+        case '"':
+            return --a_str_to_find;
+        case '{':
+            return (l_end = zax_get_close_token(a_str_to_find - 1, '{', '}')) ? (++l_end) : l_end;
+        case '[':
+            return (l_end = zax_get_close_token(a_str_to_find - 1, '[', ']')) ? (++l_end) : l_end;
+        }
     }
     return 0;
 }
 
-char* nextSqBraceOpen(const char* a_colon_value_start)
+static inline bool zax_is_value(const char* a_str_to_find)
 {
-    if (char* colon_value_stop = strchr((char*)a_colon_value_start, '['))
+    while (*a_str_to_find)
     {
-        if (colon_value_stop > a_colon_value_start)
-            while (*(colon_value_stop - 1) == '\\')
-                colon_value_stop = strchr(colon_value_stop + 1, '[');
-        return colon_value_stop;
+        switch (*a_str_to_find++)
+        {
+        case '\t':
+        case '\n':
+        case '\r':
+        case ' ':
+        case 0:
+            break;
+        default:
+            return true;
+        }
     }
-    return 0;
+    return false;
 }
 
-inline int strcmp_(const char *a_s1,  const char *a_s2)
+static inline const char* zax_get_value_start(const char* a_str_to_find)
 {
-    while (*a_s1 == *a_s2++)
-        if (*a_s1++ == 0)
+    bool colon_found = false;
+    while (*a_str_to_find)
+    {
+        switch (*a_str_to_find++)
+        {
+        case ':':
+            colon_found = true;
+        case '\t':
+        case '\n':
+        case '\r':
+        case ' ':
+            break;
+        case '\\':
+            ++a_str_to_find;
+            break;
+        case '}':
+        case ']':
             return 0;
-    return (*(const unsigned char *)a_s1 - *(const unsigned char *)(a_s2 - 1));
+        case '"':
+            if (colon_found)
+                return a_str_to_find;
+            else
+                return 0;
+        default:
+            if (colon_found)
+                return --a_str_to_find;
+            else
+                return 0;
+        }
+    }
+    return 0;
 }
 
-ZaxStringWrap::ZaxStringWrap(const char* a_str)
-    :m_str(a_str)
-{}
-
-bool ZaxStringWrap::operator < (const ZaxStringWrap &a_rhs) const
+enum EJsonState
 {
-    return strcmp_(m_str, a_rhs.m_str) < 0;
-}
+    EJson_Begin = 0,
+    EJson_Object,
+    EJson_Array
+};
 
-ZaxJsonFlatParser::ZaxJsonFlatParser(const char* a_json, bool a_in_situ, bool* a_success)
-    :m_own_buffer(0)
+ZaxJsonTopTokenizer::ZaxJsonTopTokenizer(const char* a_json, bool a_in_situ, bool* a_success)
 {
-    int success = true;
-    if (!a_json)
-        success = false;
-    else
+    bool result = true;
+    if (a_json)
     {
-        char* l_json = (char*)a_json;
         if (!a_in_situ)
         {
             m_own_buffer = new char[strlen(a_json) + 1];
             strcpy(m_own_buffer, a_json);
-            l_json = m_own_buffer;
+            a_json = m_own_buffer;
         }
-
-        char* colon_key_start = 0;
-        if (l_json[0])
-            colon_key_start = nextQuotMark(l_json);
-        bool is_list = false;
-
-        if (char* next_sq_brace_open = nextSqBraceOpen(l_json))
-            if (!colon_key_start || next_sq_brace_open < colon_key_start)
+        EJsonState state = EJson_Begin;
+        char* close_token = (char*)-1;
+        while (*a_json && (a_json < close_token) && result)
+        {
+            switch (*a_json)
             {
-                is_list = true;
-                if (const char* next_sq_brace_stop = nextTokenClose(next_sq_brace_open + 1, ']', '['))
+            case '\t':
+            case '\n':
+            case '\r':
+            case ' ':
+                break;
+            case '{':
+                if (state == EJson_Begin)
                 {
-                    m_list_values.clear();
-                    char close_token = ' ';
-                    const char* colon_value_start = nextTokenOpen(next_sq_brace_open + 1, &close_token);
-                    if (!colon_value_start || (colon_value_start >= next_sq_brace_stop)) // case of empty list or numbers
-                    {
-                        const char* start = next_sq_brace_open + 1;
-                        for (const char* i = next_sq_brace_open; i <= next_sq_brace_stop; ++ i)
-                        {
-                            if (*i == ',' || *i == ']' ) // case of numbers
-                            {
-                                *((char*)i) = 0;
-                                while (*start == ' ')
-                                    ++start;
-                                if (*start)
-                                    m_list_values.push_back(start);
-                                start = i + 1;
-                            }
-                        }
-                    }
-                    else while (colon_value_start && colon_value_start < next_sq_brace_stop)
-                    {
-                        if (const char* colon_value_stop = nextTokenClose(colon_value_start + 1, close_token, colon_value_start[0]))
-                        {
-                            if (close_token == '}' || close_token == ']')
-                            {
-                                --colon_value_start;
-                                ++colon_value_stop;
-                            }
-                            const char* origColonValueStop = colon_value_stop;
-                            *((char*)colon_value_stop) = 0;
-
-                            while (*(--colon_value_stop) == ' ')
-                                *((char*)colon_value_stop) = 0;
-                            m_list_values.push_back(colon_value_start + 1);
-                            colon_value_start = nextTokenOpen(origColonValueStop + 1, &close_token);
-                        }
-                        else
-                        {
-                            success = false;
-                            break;
-                        }
-                    }
+                    state = EJson_Object;
+                    if ((close_token = (char*)zax_get_close_token(a_json, '{', '}')) == 0)
+                        result = false;
                 }
                 else
+                    goto def_label;
+                break;
+            case '[':
+                if (state == EJson_Begin)
                 {
-                    success = false;
+                    state = EJson_Array;
+                    if ((close_token = (char*)zax_get_close_token(a_json, '[', ']')) == 0)
+                        result = false;
                 }
-            }
-
-        if (!is_list)
-            while (colon_key_start)
+                else
+                    goto def_label;
+                break;
+            case '"':
             {
-                if (char* colon_key_stop = nextQuotMark(colon_key_start))
+                if (char* closing_brace = (char*)zax_get_close_token(a_json, '"', '"'))
                 {
-                    *colon_key_stop = 0;
-                    char close_token;
-                    if (const char* colon_value_start = nextTokenOpen(colon_key_stop + 1, &close_token))
+                    *closing_brace = 0;
+                    if (state == EJson_Array)
                     {
-                        bool number = false;
-                        if (const char* next_number_delimiter = next_number_end(colon_key_stop + 1))
+                        if (zax_is_value(++a_json))
+                            m_list_values.push_back(a_json);
+                        a_json = closing_brace;
+                    }
+                    else if (state == EJson_Object)
+                    {
+                        if (char* value = (char*)zax_get_value_start(closing_brace + 1))
                         {
-                            if (next_number_delimiter <= colon_value_start)
+                            if (char* value_end = (char*)zax_get_value_end(value))
                             {
-                                if (const char* _next_number_start = next_number_start(colon_key_stop + 1))
-                                {
-                                    *((char*)next_number_delimiter) = 0;
-                                    if (*((int*)(_next_number_start + 0)) == 1819047278) /** null */
-                                        m_values.insert(std::make_pair<ZaxStringWrap, const char*>(ZaxStringWrap(colon_key_start + 1), 0));
-                                    else
-                                        m_values.insert(std::make_pair<ZaxStringWrap, const char*>(ZaxStringWrap(colon_key_start + 1), _next_number_start + 0));
-                                    number = true;
-                                    l_json = (char*)next_number_delimiter;
-                                }
-                            }
-                        }
-                        if (!number)
-                        {
-                            if (const char* colon_value_stop = nextTokenClose(colon_value_start + 1, close_token, colon_value_start[0]))
-                            {
-                                l_json = (char*)colon_value_stop + 1;
-                                if (close_token == '}' || close_token == ']')
-                                {
-                                    --colon_value_start;
-                                    ++colon_value_stop;
-                                }
-                                *((char*)colon_value_stop) = 0;
-
-                                while (*(--colon_key_stop) == ' ')
-                                    *colon_key_stop = 0;
-                                while (*(--colon_value_stop) == ' ')
-                                    *((char*)colon_value_stop) = 0;
-                                m_values.insert(std::make_pair<ZaxStringWrap, const char*>(ZaxStringWrap(colon_key_start + 1), colon_value_start + 1));
+                                *value_end = 0;
+                                if (*((int*)(value)) == 1819047278) /** null */
+                                    m_values.insert(std::make_pair<ZaxStringWrap, const char*>(ZaxStringWrap(++a_json), 0));
+                                else
+                                    m_values.insert(std::make_pair<ZaxStringWrap, const char*>(ZaxStringWrap(++a_json), value));
+                                a_json = value_end;
                             }
                             else
-                            {
-                                success = false;
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (const char* next_number_delimiter = next_number_end(colon_key_stop + 1))
-                        {
-                            if (const char* _next_number_start = next_number_start(colon_key_stop + 1))
-                            {
-                                *((char*)next_number_delimiter) = 0;
-                                if (*((int*)(_next_number_start + 0)) == 1819047278) /** null */
-                                    m_values.insert(std::make_pair<ZaxStringWrap, const char*>(ZaxStringWrap(colon_key_start + 1), 0));
-                                else
-                                    m_values.insert(std::make_pair<ZaxStringWrap, const char*>(ZaxStringWrap(colon_key_start + 1), _next_number_start + 0));
-                                l_json = (char*)next_number_delimiter;
-                            }
+                                result = false;
                         }
                         else
-                        {
-                            success = false;
-                            break;
-                        }
+                            result = false;
                     }
+                    else
+                        result = false;
                 }
-                colon_key_start = nextQuotMark(l_json);
+                else
+                    result = false;
             }
+            break;
+            case ',':
+                break;
+            default:
+def_label:
+                if (state == EJson_Array)
+                {
+                    if (char* value_end = (char*)zax_get_value_end(a_json, true))
+                    {
+                        *value_end = 0;
+                        if (zax_is_value(a_json))
+                            m_list_values.push_back(a_json);
+                        a_json = value_end;
+                    }
+                    else
+                        result = false;
+                }
+                else
+                    result = false;
+                break;
+            }
+            ++a_json;
+        }
     }
+    else
+        result = false;
     if (a_success)
-        *a_success = success;
+        *a_success = result;
 }
 
-ZaxJsonFlatParser::~ZaxJsonFlatParser()
+ZaxJsonTopTokenizer::~ZaxJsonTopTokenizer()
 {
-    if (m_own_buffer)
-        delete[] m_own_buffer;
+    delete[] m_own_buffer;
 }
 
 unsigned int ZaxJsonParser::initial_alloc_size_ = 10000;

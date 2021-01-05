@@ -776,7 +776,7 @@ Clang version 6 to 11
 <div class="olist arabic"><ol class="arabic">
 <li>
 <p>
-<a href="#ZaxJsonFlatParser">ZaxJsonFlatParser</a>
+<a href="#ZaxJsonTopTokenizer">ZaxJsonTopTokenizer</a>
 </p>
 </li>
 <li>
@@ -822,15 +822,15 @@ Clang version 6 to 11
 </div>
 </div>
 <div class="sect1">
-<h2 id="ZaxJsonFlatParser">ZaxJsonFlatParser</h2>
+<h2 id="ZaxJsonTopTokenizer">ZaxJsonTopTokenizer</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>&#160;<br /></p></div>
 <div class="paragraph"><p>Tokenizes the top element of a JSON string. The tokenized values are stored either in the <em>m_values</em> or the <em>m_list_values</em> member of the class, depending on whether the top element is a dictionary or a list.
-Using ZaxJsonFlatParser class, a kind of a lazy parsing can be achieved.</p></div>
+Using ZaxJsonTopTokenizer class, a kind of a lazy parsing can be achieved.</p></div>
 <div class="paragraph"><p>&#160;<br /></p></div>
 <div class="paragraph"><p><strong><em>It is recommended if there is no need to parse the whole JSON string.</em></strong></p></div>
 <div class="paragraph"><p>&#160;<br /></p></div>
-<div class="paragraph"><p>Constructor Syntax: <strong>ZaxJsonFlatParser([a_json], [a_in_situ], [a_success])</strong></p></div>
+<div class="paragraph"><p>Constructor Syntax: <strong>ZaxJsonTopTokenizer([a_json], [a_in_situ], [a_success])</strong></p></div>
 <div class="ulist"><div class="title"><em>Parameters</em></div><ul>
 <li>
 <p>
@@ -874,7 +874,7 @@ Using ZaxJsonFlatParser class, a kind of a lazy parsing can be achieved.</p></di
 <div class="paragraph"><p><em>Example 1:</em></p></div>
 <div class="listingblock">
 <div class="content">
-<pre><code>ZaxJsonFlatParser json_doc("{\"title\":\"some title\",\"x\":17}", false);
+<pre><code>ZaxJsonTopTokenizer json_doc("{\"title\":\"some title\",\"x\":17}", false);
 
 cout &lt;&lt; json_doc.m_values["title"] &lt;&lt; endl;
 cout &lt;&lt; json_doc.m_values["x"] &lt;&lt; endl;</code></pre>
@@ -888,7 +888,7 @@ cout &lt;&lt; json_doc.m_values["x"] &lt;&lt; endl;</code></pre>
 <div class="paragraph"><p><em>Example 2:</em></p></div>
 <div class="listingblock">
 <div class="content">
-<pre><code>ZaxJsonFlatParser json_doc("{\"title\":\"some title\",\"x\":17}", false);
+<pre><code>ZaxJsonTopTokenizer json_doc("{\"title\":\"some title\",\"x\":17}", false);
 
 const char* tmp = json_doc.m_values["no_such_key"];
 cout &lt;&lt; (int) tmp &lt;&lt; endl;</code></pre>
@@ -909,7 +909,7 @@ cout &lt;&lt; (int) tmp &lt;&lt; endl;</code></pre>
 <div class="paragraph"><p><em>Example 3:</em></p></div>
 <div class="listingblock">
 <div class="content">
-<pre><code>ZaxJsonFlatParser json_doc("[3, 7, 11]", false);
+<pre><code>ZaxJsonTopTokenizer json_doc("[3, 7, 11]", false);
 
 cout &lt;&lt; json_doc.m_list_values[0] &lt;&lt; endl;
 cout &lt;&lt; json_doc.m_list_values[1] &lt;&lt; endl;
@@ -925,7 +925,7 @@ cout &lt;&lt; json_doc.m_list_values[2] &lt;&lt; endl;</code></pre>
 <div class="paragraph"><p><em>Example 4:</em></p></div>
 <div class="listingblock">
 <div class="content">
-<pre><code>ZaxJsonFlatParser json_doc("[\"3\", \"7\", \"11\"]", false);
+<pre><code>ZaxJsonTopTokenizer json_doc("[\"3\", \"7\", \"11\"]", false);
 
 cout &lt;&lt; json_doc.m_list_values[0] &lt;&lt; endl;
 cout &lt;&lt; json_doc.m_list_values[1] &lt;&lt; endl;
@@ -1538,7 +1538,7 @@ Json string computed after assignment:
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-01-01 16:23:22 Central Europe Standard Time
+Last updated 2021-01-05 18:43:32 Central Europe Standard Time
 </div>
 </div>
 </body>
