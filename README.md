@@ -1,4 +1,4 @@
-# zax-parser
+# zax-json-parser
 Zax is a very basic JSON parser implemented in C++11 with probably the simplest possible interface, providing a kind of a struct to JSON and JSON to struct conversion.
 
 ### Example1:
