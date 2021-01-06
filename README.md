@@ -122,6 +122,30 @@ cout << some_obj << endl;
 
 ```
 
+
+### Example6:
+
+#### Code:
+
+```cpp
+
+struct some_class3
+{
+    map<string, string> assets = {{"Darth Vader", "Death Star"}, {"Lyra Belacqua", "Alethiometer"}};
+    ZAX_JSON_SERIALIZABLE(some_class3, JSON_PROPERTY(assets))
+};
+
+cout << some_class3() << endl;
+
+```
+#### Result:
+
+```cpp
+
+{"assets":{"Darth Vader":"Death Star", "Lyra Belacqua":"Alethiometer"}}
+
+```
+
 [Please check the documentation](https://tamask1s.github.io/zax-parser/index.html)
 
 version 1.0
