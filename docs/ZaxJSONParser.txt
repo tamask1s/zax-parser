@@ -539,13 +539,13 @@ void json_example_03()
 ----------
 
 [[Object_parsing_as_std_map]]
-== Object parsing as std::map
+== Object parsing as std::map or std::multimap
 
 {nbsp} +
 
-Homogenous objects can also be parsed as std::maps. The key must be an std::string, while the values in the JSON must be convertable to the map's value type.
+Homogenous objects can also be parsed as std::maps. The key is an std::string, while the values in the JSON must be convertable to the map's value type.
 
-A value of 'null' in the JSON will erase the pair from the map.
+A value of 'null' in the JSON will not add the pair to the map.
 
 {nbsp} +
 
@@ -573,7 +573,7 @@ void some_example3()
 
 ----------
 
-{"assets":{"Darth Vader":"Death Star", "Marquez":"Semantic dementia"}}
+{"assets":{"Marquez":"Semantic dementia"}}
 
 ----------
 

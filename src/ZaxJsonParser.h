@@ -99,8 +99,8 @@ class ZaxJsonParser
         return ZaxJsonParser::append(a_json, a_json_buffer_end, "", a_vals);
     }
 
-    template <typename mt>
-    static inline int print_val(char* a_json, const char* a_json_buffer_end, const std::map<std::string, mt>& a_vals)
+    template <template <typename, typename, typename... > class ct, class mt, class cot>
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const ct<std::string, mt, cot>& a_vals)
     {
         return ZaxJsonParser::append(a_json, a_json_buffer_end, "", a_vals);
     }
@@ -217,8 +217,8 @@ class ZaxJsonParser
         a_json ? ZaxJsonParser::parse(a_dst, a_json, a_error_output) : a_dst.clear();
     }
 
-    template <typename mt>
-    static inline void get_val(std::map<std::string, mt>& a_dst, const char* a_json, std::string* a_error_output)
+    template <template <typename, typename, typename... > class ct, class mt, class cot>
+    static inline void get_val(ct<std::string, mt, cot>& a_dst, const char* a_json, std::string* a_error_output)
     {
         a_json ? ZaxJsonParser::parse(a_dst, a_json, a_error_output) : a_dst.clear();
     }
@@ -319,15 +319,15 @@ public:
         return _result;
     }
 
-    template <typename mt>
-    static inline int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::map<std::string, mt>& a_values)
+    template <template <typename, typename, typename... > class ct, class mt, class cot>
+    static inline int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const ct<std::string, mt, cot>& a_values)
     {
         int _result = 0;
         json_begin(_result, a_json, a_json_buffer_end, a_key, "{");
         if (_result > 0)
         {
             a_json += _result;
-            for (typename std::map<std::string, mt>::const_iterator r = a_values.begin(); r != a_values.end(); ++r)
+            for (typename ct<std::string, mt, cot>::const_iterator r = a_values.begin(); r != a_values.end(); ++r)
             {
                 if (r != a_values.begin())
                     cat_comma_space(a_json, _result);
@@ -424,9 +424,10 @@ public:
             a_vect.clear();
     }
 
-    template <typename mt>
-    static inline void parse(std::map<std::string, mt>& a_vect, const char* a_json, std::string* a_error_output)
+    template <template <typename, typename, typename... > class ct, class mt, class cot>
+    static inline void parse(ct<std::string, mt, cot>& a_vect, const char* a_json, std::string* a_error_output)
     {
+        a_vect.clear();
         if (a_json)
         {
             bool success = false;
@@ -441,12 +442,10 @@ public:
                 {
                     mt tmp;
                     get_val(tmp, ite->second, a_error_output);
-                    a_vect[ite->first.m_str] = tmp;
+                    a_vect.insert(std::make_pair<std::string, mt>(ite->first.m_str, mt(tmp)));
                 }
             }
         }
-        else
-            a_vect.clear();
     }
 };
 

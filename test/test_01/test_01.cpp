@@ -367,7 +367,6 @@ struct classB
     ZAX_JSON_SERIALIZABLE(classB, JSON_PROPERTY(x), JSON_PROPERTY(scores))
 };
 
-
 void some2_example5()
 {
     classA objA;
@@ -375,6 +374,19 @@ void some2_example5()
     cout << objB << endl;
 
     objB = (const string&)objA;
+}
+
+struct classM
+{
+    int x = 7;
+    multimap<string, float> dmap = {{"AAA", 5.5}, {"BBB", 7.7}, {"BBB", 7.8}};
+    ZAX_JSON_SERIALIZABLE(classM, JSON_PROPERTY(x), JSON_PROPERTY(dmap))
+};
+
+void some2_example6()
+{
+    classM objA;
+    cout << objA << endl;
 }
 
 int main()
@@ -395,6 +407,7 @@ int main()
     some_example3();
     some2_example4();
     some2_example5();
+    some2_example6();
 
     return 0;
 }
