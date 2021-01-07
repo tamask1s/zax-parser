@@ -146,6 +146,78 @@ cout << some_class3() << endl;
 
 ```
 
+
+### Example7:
+
+#### Code:
+
+```cpp
+
+struct classA
+{
+    int x = 9;
+    int scores[2][3] = {{1, 2, 3}, {4, 5, 6}};
+    ZAX_JSON_SERIALIZABLE(classA, JSON_PROPERTY(x), JSON_PROPERTY(scores))
+};
+
+struct classB
+{
+    int x = 7;
+    std::vector<std::vector<int>> scores = {{1, 1, 2}, {3, 5, 8}};
+    ZAX_JSON_SERIALIZABLE(classB, JSON_PROPERTY(x), JSON_PROPERTY(scores))
+};
+
+classA objA;
+classB objB = objA;
+cout << objB << endl;
+
+```
+#### Result:
+
+```cpp
+
+{"x":9, "scores":[[1, 2, 3], [4, 5, 6]]}
+
+```
+
+### Example8:
+
+#### Code:
+
+```cpp
+struct classD
+{
+    int x = 1;
+    float y = 2.3;
+    string name = "some name";
+    ZAX_JSON_SERIALIZABLE(classD, JSON_PROPERTY(x), JSON_PROPERTY(y), JSON_PROPERTY(name))
+};
+
+struct classE
+{
+    classD some_info;
+    ZAX_JSON_SERIALIZABLE(classE, JSON_PROPERTY(some_info))
+};
+
+struct classF
+{
+    map<string, string> some_info = {{"x", "4"}, {"y", "5.6"}, {"name", "new name"}};
+    ZAX_JSON_SERIALIZABLE(classF, JSON_PROPERTY(some_info))
+};
+
+classF objF;
+classE objE = objF;
+cout << objE << endl;
+
+```
+#### Result:
+
+```cpp
+
+{"some_info":{"x":4, "y":5.600000, "name":"new name"}}
+
+```
+
 [Please check the documentation](https://tamask1s.github.io/zax-parser/index.html)
 
 version 1.0
