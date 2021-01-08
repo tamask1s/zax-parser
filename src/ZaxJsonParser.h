@@ -189,9 +189,12 @@ class ZaxJsonParser
             case 1702195828: /** true */
                 a_dst = true;
                 break;
-            case 1936482662: /** false */
-                a_dst = false;
-                break;
+            case 1936482662: /** fals(e) */
+                if (a_json[4] == 'e')
+                {
+                    a_dst = false;
+                    break;
+                }
             default:
                 if (a_error_output)
                     (*a_error_output) += std::string("ERROR: '") + a_json + "' is not a boolean\n";
@@ -257,7 +260,7 @@ public:
         *a_json = ',';
         *++a_json = ' ';
         *++a_json = 0;
-        a_result += 2;
+        (++a_result)++;
     }
 
     static inline void cat_char_noinc(char* a_json, int& a_result, char a_char)
@@ -319,32 +322,6 @@ public:
         return _result;
     }
 
-    template <template <typename, typename, typename... > class ct, class mt, class cot>
-    static inline int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const ct<std::string, mt, cot>& a_values)
-    {
-        int _result = 0;
-        json_begin(_result, a_json, a_json_buffer_end, a_key, "{");
-        if (_result > 0)
-        {
-            a_json += _result;
-            for (typename ct<std::string, mt, cot>::const_iterator r = a_values.begin(); r != a_values.end(); ++r)
-            {
-                if (r != a_values.begin())
-                    cat_comma_space(a_json, _result);
-                int written = print_key_and_val(a_json, a_json_buffer_end, r->first.c_str(), r->second);
-                if (written <= 0)
-                {
-                    _result = 0;
-                    break;
-                }
-                a_json += written;
-                _result += written;
-            }
-            json_end(_result, a_json, a_json_buffer_end, "}");
-        }
-        return _result;
-    }
-
     template <template <typename, typename... > class ct,  class vt>
     static inline int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const ct<vt>& a_values)
     {
@@ -367,6 +344,32 @@ public:
                 _result += written;
             }
             json_end(_result, a_json, a_json_buffer_end, "]");
+        }
+        return _result;
+    }
+
+    template <template <typename, typename, typename... > class ct, class mt, class cot>
+    static inline int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const ct<std::string, mt, cot>& a_values)
+    {
+        int _result = 0;
+        json_begin(_result, a_json, a_json_buffer_end, a_key, "{");
+        if (_result > 0)
+        {
+            a_json += _result;
+            for (typename ct<std::string, mt, cot>::const_iterator r = a_values.begin(); r != a_values.end(); ++r)
+            {
+                if (r != a_values.begin())
+                    cat_comma_space(a_json, _result);
+                int written = print_key_and_val(a_json, a_json_buffer_end, r->first.c_str(), r->second);
+                if (written <= 0)
+                {
+                    _result = 0;
+                    break;
+                }
+                a_json += written;
+                _result += written;
+            }
+            json_end(_result, a_json, a_json_buffer_end, "}");
         }
         return _result;
     }
@@ -425,9 +428,9 @@ public:
     }
 
     template <template <typename, typename, typename... > class ct, class mt, class cot>
-    static inline void parse(ct<std::string, mt, cot>& a_vect, const char* a_json, std::string* a_error_output)
+    static inline void parse(ct<std::string, mt, cot>& a_map, const char* a_json, std::string* a_error_output)
     {
-        a_vect.clear();
+        a_map.clear();
         if (a_json)
         {
             bool success = false;
@@ -437,12 +440,12 @@ public:
             for (std::map<ZaxStringWrap, const char*>::iterator ite = vector_data.m_values.begin(); ite != vector_data.m_values.end(); ++ite)
             {
                 if (!ite->second)
-                    a_vect.erase(ite->first.m_str);
+                    a_map.erase(ite->first.m_str);
                 else
                 {
                     mt tmp;
                     get_val(tmp, ite->second, a_error_output);
-                    a_vect.insert(std::make_pair<std::string, mt>(ite->first.m_str, mt(tmp)));
+                    a_map.insert(std::make_pair<std::string, mt>(ite->first.m_str, mt(tmp)));
                 }
             }
         }

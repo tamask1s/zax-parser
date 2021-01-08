@@ -36,4 +36,7 @@ some title
 {"assets":{"Marquez":"Semantic dementia"}}
 {"x":17, "scores":[[11, 12, 13], [14, 15, 16]]}
 {"x":9, "scores":[[1, 2, 3], [4, 5, 6]]}
-{"x":7, "dmap":{"AAA":5.500000, "BBB":7.700000, "BBB":7.800000}}
+{"x":7, "dmap":{"AAA":5.500000, "BBB":7.600000}}
+objE: {"some_info":{"x":4, "y":5.600000, "name":"new name"}}
+objF: {"some_info":{"name":"new name", "x":"4", "y":"5.6"}}
+{"assets":{"Darth Vader":"Death Star", "Lyra Belacqua":"Alethiometer"}}

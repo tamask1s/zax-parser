@@ -385,8 +385,37 @@ struct classM
 
 void some2_example6()
 {
-    classM objA;
+    classM objA = R"({"x":7, "dmap":{"AAA":5.500000, "BBB":7.600000, "BBB":7.900000}})";
     cout << objA << endl;
+}
+
+struct classD
+{
+    int x = 1;
+    float y = 2.3;
+    string name = "some name";
+    ZAX_JSON_SERIALIZABLE(classD, JSON_PROPERTY(x), JSON_PROPERTY(y), JSON_PROPERTY(name))
+};
+
+struct classE
+{
+    classD some_info;
+    ZAX_JSON_SERIALIZABLE(classE, JSON_PROPERTY(some_info))
+};
+
+struct classF
+{
+    map<string, string> some_info = {{"x", "4"}, {"y", "5.6"}, {"name", "new name"}};
+    ZAX_JSON_SERIALIZABLE(classF, JSON_PROPERTY(some_info))
+};
+
+void some2_example7()
+{
+    classF objF;
+    classE objE = objF;
+    cout << "objE: " << objE << endl;
+    cout << "objF: " << objF << endl;
+    cout << some_class3() << endl;
 }
 
 int main()
@@ -408,6 +437,7 @@ int main()
     some2_example4();
     some2_example5();
     some2_example6();
+    some2_example7();
 
     return 0;
 }
