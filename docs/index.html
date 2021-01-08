@@ -533,6 +533,68 @@ body.manpage div.sectionbody {
 @media print {
   body.manpage div#toc { display: none; }
 }
+.highlight .hll { background-color: #ffffcc }
+.highlight  { background: #f8f8f8; }
+.highlight .c { color: #408080; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #FF0000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #00A000 } /* Generic.Inserted */
+.highlight .go { color: #808080 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0040D0 } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #7D9029 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #A0A000 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
 
 
 </style>
@@ -742,12 +804,32 @@ asciidoc.install(2);
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph"><p><span class="image">
-<img src="images/ZaxJSONParserb.png" alt="Zax JSON Parser" />
-</span></p></div>
-<div class="paragraph"><p>Zax is a very basic JSON parser implemented in C++ 11 with probably the simplest possible interface, providing a kind of a struct to JSON and JSON to struct conversion. GCC, CLang or Intel compilers are needed in order to compile, Microsoft&#8217;s compiler is not supported due to some bugs in its variadic macro handling.
-The library seems to work, but it has no tests, and its error handling was not even tried out. I made it public because I was searching for something similar in C++ previously without luck, and I hope it will be useful for someone. The implementation is missing some features, as I have implemented only the features I needed.</p></div>
-<div class="paragraph"><p>Compiles with these compilers (and probably with newer versions):</p></div>
+<div class="paragraph"><p>Code:</p></div>
+<div class="listingblock">
+<div class="content"><div class="highlight"><pre><span></span><span class="cp">#define some_json_properties JSON_PROPERTY(x), JSON_PROPERTY(title), JSON_PROPERTY(scores)</span>
+
+<span class="k">struct</span> <span class="nc">some_class</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">title</span> <span class="o">=</span> <span class="s">&quot;some title&quot;</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">scores</span> <span class="o">=</span> <span class="p">{{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">}};</span>
+
+    <span class="n">ZAX_JSON_SERIALIZABLE</span><span class="p">(</span><span class="n">some_class</span><span class="p">,</span> <span class="n">some_json_properties</span><span class="p">)</span>
+<span class="p">};</span>
+
+<span class="n">some_class</span> <span class="n">some_obj</span> <span class="o">=</span> <span class="sa">R</span><span class="s">&quot;</span><span class="dl">(</span><span class="s">{&quot;x&quot;:17, &quot;title&quot;:&quot;new title&quot;, &quot;scores&quot;:[[1, 1, 2], [3], [5, 8], [13, 21]]}</span><span class="dl">)</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">some_json</span> <span class="o">=</span> <span class="n">some_obj</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">some_json</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</pre></div></div></div>
+<div class="paragraph"><p>Result:</p></div>
+<div class="listingblock">
+<div class="content"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s">&quot;x&quot;</span><span class="o">:</span><span class="mi">17</span><span class="p">,</span> <span class="s">&quot;title&quot;</span><span class="o">:</span><span class="s">&quot;new title&quot;</span><span class="p">,</span> <span class="s">&quot;scores&quot;</span><span class="o">:</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">13</span><span class="p">,</span> <span class="mi">21</span><span class="p">]]}</span>
+</pre></div></div></div>
+<div class="paragraph"><p>Zax json parser is a very basic JSON parser implemented in C++ 11 with probably the simplest possible interface, providing a kind of a struct to JSON and JSON to struct conversion.<br />
+GCC, CLang or Intel compilers are needed in order to compile. Microsoft&#8217;s compiler is not supported due to some bugs in its variadic macro handling. The library is using heavily the template argument deduction feature of modern compilers.<br />
+The library seems to work, but it has minimal tests, and its error handling was not tested. I made it public because I was searching for something similar in C++ previously without luck, and I hope it will be useful for someone. The implementation is missing some features, as I have implemented only the features I needed.<br />
+Note, that C structures are not fully compatible with the JSON concept, therefore some features are supported in a specific manner: for example a value of <em>null</em> in the JSON string cannot delete the member from the C structure.</p></div>
+<div class="paragraph"><p>Compiles with the following compilers (and probably with their newer versions):</p></div>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -873,31 +955,27 @@ Using ZaxJsonTopTokenizer class, a kind of a lazy parsing can be achieved.</p></
 </div>
 <div class="paragraph"><p><em>Example 1:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>ZaxJsonTopTokenizer json_doc("{\"title\":\"some title\",\"x\":17}", false);
+<div class="content"><div class="highlight"><pre><span></span><span class="n">ZaxJsonTopTokenizer</span> <span class="nf">json_doc</span><span class="p">(</span><span class="s">&quot;{</span><span class="se">\&quot;</span><span class="s">title</span><span class="se">\&quot;</span><span class="s">:</span><span class="se">\&quot;</span><span class="s">some title</span><span class="se">\&quot;</span><span class="s">,</span><span class="se">\&quot;</span><span class="s">x</span><span class="se">\&quot;</span><span class="s">:17}&quot;</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
 
-cout &lt;&lt; json_doc.m_values["title"] &lt;&lt; endl;
-cout &lt;&lt; json_doc.m_values["x"] &lt;&lt; endl;</code></pre>
-</div></div>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">json_doc</span><span class="p">.</span><span class="n">m_values</span><span class="p">[</span><span class="s">&quot;title&quot;</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">json_doc</span><span class="p">.</span><span class="n">m_values</span><span class="p">[</span><span class="s">&quot;x&quot;</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div></div></div>
 <div class="paragraph"><p><em>Result:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>some title
-17</code></pre>
-</div></div>
+<div class="content"><div class="highlight"><pre><span></span><span class="n">some</span> <span class="n">title</span>
+<span class="mi">17</span>
+</pre></div></div></div>
 <div class="paragraph"><p><em>Example 2:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>ZaxJsonTopTokenizer json_doc("{\"title\":\"some title\",\"x\":17}", false);
+<div class="content"><div class="highlight"><pre><span></span><span class="n">ZaxJsonTopTokenizer</span> <span class="nf">json_doc</span><span class="p">(</span><span class="s">&quot;{</span><span class="se">\&quot;</span><span class="s">title</span><span class="se">\&quot;</span><span class="s">:</span><span class="se">\&quot;</span><span class="s">some title</span><span class="se">\&quot;</span><span class="s">,</span><span class="se">\&quot;</span><span class="s">x</span><span class="se">\&quot;</span><span class="s">:17}&quot;</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
 
-const char* tmp = json_doc.m_values["no_such_key"];
-cout &lt;&lt; (int) tmp &lt;&lt; endl;</code></pre>
-</div></div>
+<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">json_doc</span><span class="p">.</span><span class="n">m_values</span><span class="p">[</span><span class="s">&quot;no_such_key&quot;</span><span class="p">];</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">tmp</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div></div></div>
 <div class="paragraph"><p><em>Result:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>0</code></pre>
-</div></div>
+<div class="content"><div class="highlight"><pre><span></span><span class="mi">0</span>
+</pre></div></div></div>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
@@ -908,36 +986,32 @@ cout &lt;&lt; (int) tmp &lt;&lt; endl;</code></pre>
 </div>
 <div class="paragraph"><p><em>Example 3:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>ZaxJsonTopTokenizer json_doc("[3, 7, 11]", false);
+<div class="content"><div class="highlight"><pre><span></span><span class="n">ZaxJsonTopTokenizer</span> <span class="nf">json_doc</span><span class="p">(</span><span class="s">&quot;[3, 7, 11]&quot;</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
 
-cout &lt;&lt; json_doc.m_list_values[0] &lt;&lt; endl;
-cout &lt;&lt; json_doc.m_list_values[1] &lt;&lt; endl;
-cout &lt;&lt; json_doc.m_list_values[2] &lt;&lt; endl;</code></pre>
-</div></div>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">json_doc</span><span class="p">.</span><span class="n">m_list_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">json_doc</span><span class="p">.</span><span class="n">m_list_values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">json_doc</span><span class="p">.</span><span class="n">m_list_values</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div></div></div>
 <div class="paragraph"><p><em>Result:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>3
-7
-11</code></pre>
-</div></div>
+<div class="content"><div class="highlight"><pre><span></span><span class="mi">3</span>
+<span class="mi">7</span>
+<span class="mi">11</span>
+</pre></div></div></div>
 <div class="paragraph"><p><em>Example 4:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>ZaxJsonTopTokenizer json_doc("[\"3\", \"7\", \"11\"]", false);
+<div class="content"><div class="highlight"><pre><span></span><span class="n">ZaxJsonTopTokenizer</span> <span class="nf">json_doc</span><span class="p">(</span><span class="s">&quot;[</span><span class="se">\&quot;</span><span class="s">3</span><span class="se">\&quot;</span><span class="s">, </span><span class="se">\&quot;</span><span class="s">7</span><span class="se">\&quot;</span><span class="s">, </span><span class="se">\&quot;</span><span class="s">11</span><span class="se">\&quot;</span><span class="s">]&quot;</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
 
-cout &lt;&lt; json_doc.m_list_values[0] &lt;&lt; endl;
-cout &lt;&lt; json_doc.m_list_values[1] &lt;&lt; endl;
-cout &lt;&lt; json_doc.m_list_values[2] &lt;&lt; endl;</code></pre>
-</div></div>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">json_doc</span><span class="p">.</span><span class="n">m_list_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">json_doc</span><span class="p">.</span><span class="n">m_list_values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">json_doc</span><span class="p">.</span><span class="n">m_list_values</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div></div></div>
 <div class="paragraph"><p><em>Result:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>3
-7
-11</code></pre>
-</div></div>
+<div class="content"><div class="highlight"><pre><span></span><span class="mi">3</span>
+<span class="mi">7</span>
+<span class="mi">11</span>
+</pre></div></div></div>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
@@ -1000,43 +1074,39 @@ boolean: <em>true</em> on success, <em>false</em> on fail.
 </div>
 <div class="paragraph"><p><em>Example 1:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>struct struct1
-{
-    int x = 7;
-    string name = "seven";
-};
+<div class="content"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="nc">struct1</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;seven&quot;</span><span class="p">;</span>
+<span class="p">};</span>
 
-#define struct1_json_properties JSON_PROPERTY(x), JSON_PROPERTY(name)
+<span class="cp">#define struct1_json_properties JSON_PROPERTY(x), JSON_PROPERTY(name)</span>
 
-struct1 some_obj;
+<span class="n">struct1</span> <span class="n">some_obj</span><span class="p">;</span>
 
-char json_string[1000];
-zax_convert_to_json(json_string, sizeof(json_string), some_obj, struct1_json_properties);
-cout &lt;&lt; json_string &lt;&lt; endl;</code></pre>
-</div></div>
+<span class="kt">char</span> <span class="n">json_string</span><span class="p">[</span><span class="mi">1000</span><span class="p">];</span>
+<span class="n">zax_convert_to_json</span><span class="p">(</span><span class="n">json_string</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">json_string</span><span class="p">),</span> <span class="n">some_obj</span><span class="p">,</span> <span class="n">struct1_json_properties</span><span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">json_string</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div></div></div>
 <div class="paragraph"><p><em>Result:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>{"x":7, "name":"seven"}</code></pre>
-</div></div>
+<div class="content"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s">&quot;x&quot;</span><span class="o">:</span><span class="mi">7</span><span class="p">,</span> <span class="s">&quot;name&quot;</span><span class="o">:</span><span class="s">&quot;seven&quot;</span><span class="p">}</span>
+</pre></div></div></div>
 <div class="paragraph"><p>&#160;<br /></p></div>
 <div class="paragraph"><p><strong>Aliases can be used by extending the json property descriptor in the following way:</strong></p></div>
 <div class="paragraph"><p>&#160;<br /></p></div>
 <div class="paragraph"><p><em>Example 2:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>...same code...
+<div class="content"><div class="highlight"><pre><span></span><span class="p">...</span><span class="n">same</span> <span class="n">code</span><span class="p">...</span>
 
-#define struct1_json_properties JSON_PROPERTY(x), JSON_PROPERTY(name, "with_letters")
+<span class="cp">#define struct1_json_properties JSON_PROPERTY(x), JSON_PROPERTY(name, &quot;with_letters&quot;)</span>
 
-...same code...</code></pre>
-</div></div>
+<span class="p">...</span><span class="n">same</span> <span class="n">code</span><span class="p">...</span>
+</pre></div></div></div>
 <div class="paragraph"><p><em>Result:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>{"x":7, "with_letters":"seven"}</code></pre>
-</div></div>
+<div class="content"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s">&quot;x&quot;</span><span class="o">:</span><span class="mi">7</span><span class="p">,</span> <span class="s">&quot;with_letters&quot;</span><span class="o">:</span><span class="s">&quot;seven&quot;</span><span class="p">}</span>
+</pre></div></div></div>
 </div>
 <div class="sect2">
 <h3 id="zax_convert_from_json">zax_convert_from_json</h3>
@@ -1070,27 +1140,25 @@ boolean: <em>true</em> on success, <em>false</em> on fail.
 </ul></div>
 <div class="paragraph"><p><em>Example 1:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>struct struct1
-{
-    int x = 7;
-    string name = "seven";
-};
+<div class="content"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="nc">struct1</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;seven&quot;</span><span class="p">;</span>
+<span class="p">};</span>
 
-#define struct1_json_properties JSON_PROPERTY(x), JSON_PROPERTY(name)
+<span class="cp">#define struct1_json_properties JSON_PROPERTY(x), JSON_PROPERTY(name)</span>
 
-char json_string[] = "{\"x\":11, \"name\":\"eleven\"}";
-zax_convert_from_json(json_string, some_obj, struct1_json_properties);
+<span class="kt">char</span> <span class="n">json_string</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&quot;{</span><span class="se">\&quot;</span><span class="s">x</span><span class="se">\&quot;</span><span class="s">:11, </span><span class="se">\&quot;</span><span class="s">name</span><span class="se">\&quot;</span><span class="s">:</span><span class="se">\&quot;</span><span class="s">eleven</span><span class="se">\&quot;</span><span class="s">}&quot;</span><span class="p">;</span>
+<span class="n">zax_convert_from_json</span><span class="p">(</span><span class="n">json_string</span><span class="p">,</span> <span class="n">some_obj</span><span class="p">,</span> <span class="n">struct1_json_properties</span><span class="p">);</span>
 
-char json_string2[10000];
-zax_convert_to_json(json_string2, sizeof(json_string2), some_obj, struct1_json_properties);
-cout &lt;&lt; json_string2 &lt;&lt; endl;</code></pre>
-</div></div>
+<span class="kt">char</span> <span class="n">json_string2</span><span class="p">[</span><span class="mi">10000</span><span class="p">];</span>
+<span class="n">zax_convert_to_json</span><span class="p">(</span><span class="n">json_string2</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">json_string2</span><span class="p">),</span> <span class="n">some_obj</span><span class="p">,</span> <span class="n">struct1_json_properties</span><span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">json_string2</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div></div></div>
 <div class="paragraph"><p><em>Result:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>{"x":11, "name":"eleven"}</code></pre>
-</div></div>
+<div class="content"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s">&quot;x&quot;</span><span class="o">:</span><span class="mi">11</span><span class="p">,</span> <span class="s">&quot;name&quot;</span><span class="o">:</span><span class="s">&quot;eleven&quot;</span><span class="p">}</span>
+</pre></div></div></div>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
@@ -1117,36 +1185,34 @@ cout &lt;&lt; json_string2 &lt;&lt; endl;</code></pre>
 <div class="paragraph"><p>&#160;<br /></p></div>
 <div class="paragraph"><p><em>Example 1:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>#define struct2_json_properties\
-    JSON_PROPERTY(int1),\
-    JSON_PROPERTY(int2),\
-    JSON_PROPERTY(string1),\
-    JSON_PROPERTY(string2)
+<div class="content"><div class="highlight"><pre><span></span><span class="cp">#define struct2_json_properties\</span>
+<span class="cp">    JSON_PROPERTY(int1),\</span>
+<span class="cp">    JSON_PROPERTY(int2),\</span>
+<span class="cp">    JSON_PROPERTY(string1),\</span>
+<span class="cp">    JSON_PROPERTY(string2)</span>
 
-struct struct2
-{
-    int int1;
-    int int2;
-    string string1;
-    string string2;
+<span class="k">struct</span> <span class="nc">struct2</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">int1</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">int2</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">string1</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">string2</span><span class="p">;</span>
 
-    ZAX_JSON_SERIALIZABLE(struct2, struct2_json_properties)
-};
+    <span class="n">ZAX_JSON_SERIALIZABLE</span><span class="p">(</span><span class="n">struct2</span><span class="p">,</span> <span class="n">struct2_json_properties</span><span class="p">)</span>
+<span class="p">};</span>
 
-string json_string = "{\"int1\":11, \"int2\":7, \"string1\":\"eleven\", \"string2\":\"seven\"}";
-struct2 some_obj = json_string;
-string json_string2 = some_obj;
+<span class="n">string</span> <span class="n">json_string</span> <span class="o">=</span> <span class="s">&quot;{</span><span class="se">\&quot;</span><span class="s">int1</span><span class="se">\&quot;</span><span class="s">:11, </span><span class="se">\&quot;</span><span class="s">int2</span><span class="se">\&quot;</span><span class="s">:7, </span><span class="se">\&quot;</span><span class="s">string1</span><span class="se">\&quot;</span><span class="s">:</span><span class="se">\&quot;</span><span class="s">eleven</span><span class="se">\&quot;</span><span class="s">, </span><span class="se">\&quot;</span><span class="s">string2</span><span class="se">\&quot;</span><span class="s">:</span><span class="se">\&quot;</span><span class="s">seven</span><span class="se">\&quot;</span><span class="s">}&quot;</span><span class="p">;</span>
+<span class="n">struct2</span> <span class="n">some_obj</span> <span class="o">=</span> <span class="n">json_string</span><span class="p">;</span>
+<span class="n">string</span> <span class="n">json_string2</span> <span class="o">=</span> <span class="n">some_obj</span><span class="p">;</span>
 
-cout &lt;&lt; json_string2 &lt;&lt; endl;
-cout &lt;&lt; some_obj &lt;&lt; endl;</code></pre>
-</div></div>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">json_string2</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">some_obj</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div></div></div>
 <div class="paragraph"><p><em>Result:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>{"int1":11, "int2":7, "string1":"eleven", "string2":"seven"}
-{"int1":11, "int2":7, "string1":"eleven", "string2":"seven"}</code></pre>
-</div></div>
+<div class="content"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s">&quot;int1&quot;</span><span class="o">:</span><span class="mi">11</span><span class="p">,</span> <span class="s">&quot;int2&quot;</span><span class="o">:</span><span class="mi">7</span><span class="p">,</span> <span class="s">&quot;string1&quot;</span><span class="o">:</span><span class="s">&quot;eleven&quot;</span><span class="p">,</span> <span class="s">&quot;string2&quot;</span><span class="o">:</span><span class="s">&quot;seven&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="s">&quot;int1&quot;</span><span class="o">:</span><span class="mi">11</span><span class="p">,</span> <span class="s">&quot;int2&quot;</span><span class="o">:</span><span class="mi">7</span><span class="p">,</span> <span class="s">&quot;string1&quot;</span><span class="o">:</span><span class="s">&quot;eleven&quot;</span><span class="p">,</span> <span class="s">&quot;string2&quot;</span><span class="o">:</span><span class="s">&quot;seven&quot;</span><span class="p">}</span>
+</pre></div></div></div>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
@@ -1165,73 +1231,70 @@ Therefore, ZAX_JSON_SERIALIZABLE will try to add a default constructor to your c
 <div class="paragraph"><p><em>Example 1:</em></p></div>
 <div class="paragraph"><p>&#160;<br /></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>#define struct2_json_properties\
-    JSON_PROPERTY(int1),\
-    JSON_PROPERTY(int2),\
-    JSON_PROPERTY(string1),\
-    JSON_PROPERTY(string2)
+<div class="content"><div class="highlight"><pre><span></span><span class="cp">#define struct2_json_properties\</span>
+<span class="cp">    JSON_PROPERTY(int1),\</span>
+<span class="cp">    JSON_PROPERTY(int2),\</span>
+<span class="cp">    JSON_PROPERTY(string1),\</span>
+<span class="cp">    JSON_PROPERTY(string2)</span>
 
-struct struct2
-{
-    int int1;
-    int int2;
-    string string1;
-    string string2;
+<span class="k">struct</span> <span class="nc">struct2</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">int1</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">int2</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">string1</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">string2</span><span class="p">;</span>
 
-    struct2()
-        :int1(10)
-    {}
+    <span class="n">struct2</span><span class="p">()</span>
+        <span class="o">:</span><span class="n">int1</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="p">{}</span>
 
-    ZAX_JSON_SERIALIZABLE_WDC(struct2, struct2_json_properties)
-};
+    <span class="n">ZAX_JSON_SERIALIZABLE_WDC</span><span class="p">(</span><span class="n">struct2</span><span class="p">,</span> <span class="n">struct2_json_properties</span><span class="p">)</span>
+<span class="p">};</span>
 
-string json_string = "{\"int1\":11, \"int2\":7, \"string1\":\"eleven\", \"string2\":\"seven\"}";
-struct2 some_obj = json_string;
-string json_string2 = some_obj;
+<span class="n">string</span> <span class="n">json_string</span> <span class="o">=</span> <span class="s">&quot;{</span><span class="se">\&quot;</span><span class="s">int1</span><span class="se">\&quot;</span><span class="s">:11, </span><span class="se">\&quot;</span><span class="s">int2</span><span class="se">\&quot;</span><span class="s">:7, </span><span class="se">\&quot;</span><span class="s">string1</span><span class="se">\&quot;</span><span class="s">:</span><span class="se">\&quot;</span><span class="s">eleven</span><span class="se">\&quot;</span><span class="s">, </span><span class="se">\&quot;</span><span class="s">string2</span><span class="se">\&quot;</span><span class="s">:</span><span class="se">\&quot;</span><span class="s">seven</span><span class="se">\&quot;</span><span class="s">}&quot;</span><span class="p">;</span>
+<span class="n">struct2</span> <span class="n">some_obj</span> <span class="o">=</span> <span class="n">json_string</span><span class="p">;</span>
+<span class="n">string</span> <span class="n">json_string2</span> <span class="o">=</span> <span class="n">some_obj</span><span class="p">;</span>
 
-cout &lt;&lt; json_string2 &lt;&lt; endl;
-cout &lt;&lt; some_obj &lt;&lt; endl;</code></pre>
-</div></div>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">json_string2</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">some_obj</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div></div></div>
 <div class="paragraph"><p><em>Result:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>{"int1":11, "int2":7, "string1":"eleven", "string2":"seven"}
-{"int1":11, "int2":7, "string1":"eleven", "string2":"seven"}</code></pre>
-</div></div>
+<div class="content"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s">&quot;int1&quot;</span><span class="o">:</span><span class="mi">11</span><span class="p">,</span> <span class="s">&quot;int2&quot;</span><span class="o">:</span><span class="mi">7</span><span class="p">,</span> <span class="s">&quot;string1&quot;</span><span class="o">:</span><span class="s">&quot;eleven&quot;</span><span class="p">,</span> <span class="s">&quot;string2&quot;</span><span class="o">:</span><span class="s">&quot;seven&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="s">&quot;int1&quot;</span><span class="o">:</span><span class="mi">11</span><span class="p">,</span> <span class="s">&quot;int2&quot;</span><span class="o">:</span><span class="mi">7</span><span class="p">,</span> <span class="s">&quot;string1&quot;</span><span class="o">:</span><span class="s">&quot;eleven&quot;</span><span class="p">,</span> <span class="s">&quot;string2&quot;</span><span class="o">:</span><span class="s">&quot;seven&quot;</span><span class="p">}</span>
+</pre></div></div></div>
 </div>
 <div class="sect2">
 <h3 id="ZAX_JSON_SERIALIZABLE_BASIC">ZAX_JSON_SERIALIZABLE_BASIC</h3>
 <div class="paragraph"><p>&#160;<br /></p></div>
-<div class="paragraph"><p>This macro adds only 2 converter functions, and adds no operators nor constructors.</p></div>
+<div class="paragraph"><p>This macro adds only basic converter functions, and adds no operators nor constructors.</p></div>
 <div class="paragraph"><p>&#160;<br /></p></div>
 <div class="paragraph"><p><em>Example 1:</em></p></div>
 <div class="paragraph"><p>&#160;<br /></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>#define struct2_json_properties\
-    JSON_PROPERTY(int1),\
-    JSON_PROPERTY(int2),\
-    JSON_PROPERTY(string1),\
-    JSON_PROPERTY(string2)
+<div class="content"><div class="highlight"><pre><span></span><span class="cp">#define struct2_json_properties\</span>
+<span class="cp">    JSON_PROPERTY(int1),\</span>
+<span class="cp">    JSON_PROPERTY(int2),\</span>
+<span class="cp">    JSON_PROPERTY(string1),\</span>
+<span class="cp">    JSON_PROPERTY(string2)</span>
 
-struct struct2
-{
-    int int1;
-    int int2;
-    string string1;
-    string string2;
+<span class="k">struct</span> <span class="nc">struct2</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">int1</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">int2</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">string1</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">string2</span><span class="p">;</span>
 
-    struct2()
-        :int1(10)
-    {}
+    <span class="n">struct2</span><span class="p">()</span>
+        <span class="o">:</span><span class="n">int1</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="p">{}</span>
 
-    ZAX_JSON_SERIALIZABLE_BASIC(struct2_json_properties)
-};
+    <span class="n">ZAX_JSON_SERIALIZABLE_BASIC</span><span class="p">(</span><span class="n">struct2_json_properties</span><span class="p">)</span>
+<span class="p">};</span>
 
-struct2 some_obj;
-some_obj.zax_from_json("{\"int1\":11, \"int2\":7, \"string1\":\"eleven\", \"string2\":\"seven\"}");</code></pre>
-</div></div>
+<span class="n">struct2</span> <span class="n">some_obj</span><span class="p">;</span>
+<span class="n">some_obj</span><span class="p">.</span><span class="n">zax_from_json</span><span class="p">(</span><span class="s">&quot;{</span><span class="se">\&quot;</span><span class="s">int1</span><span class="se">\&quot;</span><span class="s">:11, </span><span class="se">\&quot;</span><span class="s">int2</span><span class="se">\&quot;</span><span class="s">:7, </span><span class="se">\&quot;</span><span class="s">string1</span><span class="se">\&quot;</span><span class="s">:</span><span class="se">\&quot;</span><span class="s">eleven</span><span class="se">\&quot;</span><span class="s">, </span><span class="se">\&quot;</span><span class="s">string2</span><span class="se">\&quot;</span><span class="s">:</span><span class="se">\&quot;</span><span class="s">seven</span><span class="se">\&quot;</span><span class="s">}&quot;</span><span class="p">);</span>
+</pre></div></div></div>
 </div>
 </div>
 </div>
@@ -1243,30 +1306,48 @@ some_obj.zax_from_json("{\"int1\":11, \"int2\":7, \"string1\":\"eleven\", \"stri
 <div class="ulist"><ul>
 <li>
 <p>
-<em>vector</em>
+<em>native arrays</em>
 </p>
 </li>
 <li>
 <p>
-<em>deque</em>
+<em>std::vector</em>
 </p>
 </li>
 <li>
 <p>
-<em>list</em>
+<em>std::deque</em>
 </p>
 </li>
 <li>
 <p>
-<em>forward_list</em>
+<em>std::list</em>
+</p>
+</li>
+<li>
+<p>
+<em>std::forward_list</em>
 </p>
 </li>
 </ul></div>
-<div class="paragraph"><p>You may use your own containers. Requisits are:</p></div>
+<div class="paragraph"><p>You may use your own containers. Requisits are either:</p></div>
 <div class="ulist"><ul>
 <li>
 <p>
-<em>begin()</em> and <em>end()</em> std like iterators
+random access with <em>[]</em> operators (like native arrays),
+</p>
+</li>
+<li>
+<p>
+and fixed size (like native arrays)
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>or:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>begin()</em> and <em>end()</em> std like iterators,
 </p>
 </li>
 <li>
@@ -1276,64 +1357,60 @@ some_obj.zax_from_json("{\"int1\":11, \"int2\":7, \"string1\":\"eleven\", \"stri
 </li>
 <li>
 <p>
-<em>clear()</em> function
+and <em>clear()</em> function
 </p>
 </li>
 </ul></div>
 <div class="paragraph"><p>&#160;<br /></p></div>
 <div class="paragraph"><p><em>Example 1:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>#define struct3_json_props \
-    JSON_PROPERTY(x), \
-    JSON_PROPERTY(title, "name"), \
-    JSON_PROPERTY(options)
+<div class="content"><div class="highlight"><pre><span></span><span class="cp">#define struct3_json_props \</span>
+<span class="cp">    JSON_PROPERTY(x), \</span>
+<span class="cp">    JSON_PROPERTY(title, &quot;name&quot;), \</span>
+<span class="cp">    JSON_PROPERTY(options)</span>
 
-struct struct3
-{
-    int x;
-    string title;
-    vector&lt;string&gt; options;
+<span class="k">struct</span> <span class="nc">struct3</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">title</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">options</span><span class="p">;</span>
 
-    ZAX_JSON_SERIALIZABLE(struct3, struct3_json_props)
-};
+    <span class="n">ZAX_JSON_SERIALIZABLE</span><span class="p">(</span><span class="n">struct3</span><span class="p">,</span> <span class="n">struct3_json_props</span><span class="p">)</span>
+<span class="p">};</span>
 
-struct3 obj1 = "{ \"x\":99, \"title\":\"test bible title\", \"options\":[\"option 1\", \"option 2\", \"option 3\"]}";
-string json_string2 = obj1;
+<span class="n">struct3</span> <span class="n">obj1</span> <span class="o">=</span> <span class="s">&quot;{ </span><span class="se">\&quot;</span><span class="s">x</span><span class="se">\&quot;</span><span class="s">:99, </span><span class="se">\&quot;</span><span class="s">title</span><span class="se">\&quot;</span><span class="s">:</span><span class="se">\&quot;</span><span class="s">test bible title</span><span class="se">\&quot;</span><span class="s">, </span><span class="se">\&quot;</span><span class="s">options</span><span class="se">\&quot;</span><span class="s">:[</span><span class="se">\&quot;</span><span class="s">option 1</span><span class="se">\&quot;</span><span class="s">, </span><span class="se">\&quot;</span><span class="s">option 2</span><span class="se">\&quot;</span><span class="s">, </span><span class="se">\&quot;</span><span class="s">option 3</span><span class="se">\&quot;</span><span class="s">]}&quot;</span><span class="p">;</span>
+<span class="n">string</span> <span class="n">json_string2</span> <span class="o">=</span> <span class="n">obj1</span><span class="p">;</span>
 
-cout &lt;&lt; json_string2 &lt;&lt; endl;</code></pre>
-</div></div>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">json_string2</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div></div></div>
 <div class="paragraph"><p><em>Result:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>{"x":99, "name":"", "options":["option 1", "option 2", "option 3"]}</code></pre>
-</div></div>
+<div class="content"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s">&quot;x&quot;</span><span class="o">:</span><span class="mi">99</span><span class="p">,</span> <span class="s">&quot;name&quot;</span><span class="o">:</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;options&quot;</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;option 1&quot;</span><span class="p">,</span> <span class="s">&quot;option 2&quot;</span><span class="p">,</span> <span class="s">&quot;option 3&quot;</span><span class="p">]}</span>
+</pre></div></div></div>
 <div class="paragraph"><p>&#160;<br /></p></div>
 <div class="paragraph"><p><em><strong>It also works recursively:</strong></em></p></div>
 <div class="paragraph"><p>&#160;<br /></p></div>
 <div class="paragraph"><p><em>Example 2:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>#define struct3_json_props \
-    JSON_PROPERTY(x), \
-    JSON_PROPERTY(scores)
+<div class="content"><div class="highlight"><pre><span></span><span class="cp">#define struct3_json_props \</span>
+<span class="cp">    JSON_PROPERTY(x), \</span>
+<span class="cp">    JSON_PROPERTY(scores)</span>
 
-struct struct3
-{
-    int x = 9;
-    std::vector&lt;std::vector&lt;int&gt;&gt; scores = {{1, 2, 3}, {7, 8, 9}};
+<span class="k">struct</span> <span class="nc">struct3</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">scores</span> <span class="o">=</span> <span class="p">{{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">}};</span>
 
-    ZAX_JSON_SERIALIZABLE(struct3, struct3_json_props)
-};
+    <span class="n">ZAX_JSON_SERIALIZABLE</span><span class="p">(</span><span class="n">struct3</span><span class="p">,</span> <span class="n">struct3_json_props</span><span class="p">)</span>
+<span class="p">};</span>
 
-struct3 obj1;
-cout &lt;&lt; obj1 &lt;&lt; endl;</code></pre>
-</div></div>
+<span class="n">struct3</span> <span class="n">obj1</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">obj1</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div></div></div>
 <div class="paragraph"><p><em>Result:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>{"x":9, "scores":[[1, 2, 3], [7, 8, 9]]}</code></pre>
-</div></div>
+<div class="content"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s">&quot;x&quot;</span><span class="o">:</span><span class="mi">9</span><span class="p">,</span> <span class="s">&quot;scores&quot;</span><span class="o">:</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]]}</span>
+</pre></div></div></div>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
@@ -1344,32 +1421,30 @@ cout &lt;&lt; obj1 &lt;&lt; endl;</code></pre>
 </div>
 <div class="paragraph"><p><em>Example 2:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>#define struct3_json_props \
-    JSON_PROPERTY(x), \
-    JSON_PROPERTY(options)
+<div class="content"><div class="highlight"><pre><span></span><span class="cp">#define struct3_json_props \</span>
+<span class="cp">    JSON_PROPERTY(x), \</span>
+<span class="cp">    JSON_PROPERTY(options)</span>
 
-struct struct3
-{
-    int x = 9;
-    vector&lt;int&gt; options;
+<span class="k">struct</span> <span class="nc">struct3</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">options</span><span class="p">;</span>
 
-    ZAX_JSON_SERIALIZABLE(struct3, struct3_json_props)
-};
+    <span class="n">ZAX_JSON_SERIALIZABLE</span><span class="p">(</span><span class="n">struct3</span><span class="p">,</span> <span class="n">struct3_json_props</span><span class="p">)</span>
+<span class="p">};</span>
 
-void json_example_03()
-{
-    struct3 obj1 = "{\"x\":99, \"options\":[\"1\", \"2\", \"3\"]}";
-    string json_string2 = obj1;
+<span class="kt">void</span> <span class="nf">json_example_03</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">struct3</span> <span class="n">obj1</span> <span class="o">=</span> <span class="s">&quot;{</span><span class="se">\&quot;</span><span class="s">x</span><span class="se">\&quot;</span><span class="s">:99, </span><span class="se">\&quot;</span><span class="s">options</span><span class="se">\&quot;</span><span class="s">:[</span><span class="se">\&quot;</span><span class="s">1</span><span class="se">\&quot;</span><span class="s">, </span><span class="se">\&quot;</span><span class="s">2</span><span class="se">\&quot;</span><span class="s">, </span><span class="se">\&quot;</span><span class="s">3</span><span class="se">\&quot;</span><span class="s">]}&quot;</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">json_string2</span> <span class="o">=</span> <span class="n">obj1</span><span class="p">;</span>
 
-    cout &lt;&lt; json_string2 &lt;&lt; endl;
-}</code></pre>
-</div></div>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">json_string2</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div></div></div>
 <div class="paragraph"><p><em>Result:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>{"x":99, "options":[1, 2, 3]}</code></pre>
-</div></div>
+<div class="content"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s">&quot;x&quot;</span><span class="o">:</span><span class="mi">99</span><span class="p">,</span> <span class="s">&quot;options&quot;</span><span class="o">:</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]}</span>
+</pre></div></div></div>
 </div>
 </div>
 <div class="sect1">
@@ -1380,28 +1455,34 @@ void json_example_03()
 <div class="paragraph"><p>A value of <em>null</em> in the JSON will not add the pair to the map.</p></div>
 <div class="paragraph"><p>&#160;<br /></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>#define some_json_properties3 JSON_PROPERTY(assets)
+<div class="content"><div class="highlight"><pre><span></span><span class="cp">#define some_json_properties3 JSON_PROPERTY(assets)</span>
 
-struct some_class3
-{
-    map&lt;string, string&gt; assets = {{"Darth Vader", "Death Star"}, {"Lyra Belacqua", "Alethiometer"}};
+<span class="k">struct</span> <span class="nc">some_class3</span>
+<span class="p">{</span>
+    <span class="n">map</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span> <span class="n">string</span><span class="o">&gt;</span> <span class="n">assets</span> <span class="o">=</span> <span class="p">{{</span><span class="s">&quot;Darth Vader&quot;</span><span class="p">,</span> <span class="s">&quot;Death Star&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s">&quot;Lyra Belacqua&quot;</span><span class="p">,</span> <span class="s">&quot;Alethiometer&quot;</span><span class="p">}};</span>
 
-    ZAX_JSON_SERIALIZABLE(some_class3, some_json_properties3)
-};
+    <span class="n">ZAX_JSON_SERIALIZABLE</span><span class="p">(</span><span class="n">some_class3</span><span class="p">,</span> <span class="n">some_json_properties3</span><span class="p">)</span>
+<span class="p">};</span>
 
-void some_example3()
-{
-    some_class3 some_obj3 = "{\"assets\":{\"Marquez\": \"Semantic dementia\", \"Lyra Belacqua\":null}}";
+<span class="kt">void</span> <span class="nf">some_example3</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">some_class3</span> <span class="n">some_obj3</span> <span class="o">=</span> <span class="s">&quot;{</span><span class="se">\&quot;</span><span class="s">assets</span><span class="se">\&quot;</span><span class="s">:{</span><span class="se">\&quot;</span><span class="s">Marquez</span><span class="se">\&quot;</span><span class="s">: </span><span class="se">\&quot;</span><span class="s">Semantic dementia</span><span class="se">\&quot;</span><span class="s">, </span><span class="se">\&quot;</span><span class="s">Lyra Belacqua</span><span class="se">\&quot;</span><span class="s">:null}}&quot;</span><span class="p">;</span>
 
-    cout &lt;&lt; some_obj3 &lt;&lt; endl;
-}</code></pre>
-</div></div>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">some_obj3</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div></div></div>
 <div class="paragraph"><p><em>Result:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>{"assets":{"Marquez":"Semantic dementia"}}</code></pre>
-</div></div>
+<div class="content"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s">&quot;assets&quot;</span><span class="o">:</span><span class="p">{</span><span class="s">&quot;Marquez&quot;</span><span class="o">:</span><span class="s">&quot;Semantic dementia&quot;</span><span class="p">}}</span>
+</pre></div></div></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/note.png" alt="Note" />
+</td>
+<td class="content">Multimaps are supported like they were maps. JSON descriptors does not support multiple values bound to the same key, therefore multimaps shouldn&#8217;t have multiple values associated to a single key while converting. In case a multimap has multiple values, it will result in an invalid JSON, containing multiple values. The opposit direction: if an invalid JSON with multiple values is parsed, only the first value will be added to the multimap.</td>
+</tr></table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1412,41 +1493,39 @@ void some_example3()
 <div class="paragraph"><p>&#160;<br /></p></div>
 <div class="paragraph"><p><em>Example 1:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>#define CClassInside_JOSONProps\
-    JSON_PROPERTY(x),\
-    JSON_PROPERTY(y)
+<div class="content"><div class="highlight"><pre><span></span><span class="cp">#define CClassInside_JOSONProps\</span>
+<span class="cp">    JSON_PROPERTY(x),\</span>
+<span class="cp">    JSON_PROPERTY(y)</span>
 
-struct CClassInside
-{
-    int x = 11;
-    int y = 7;
+<span class="k">struct</span> <span class="nc">CClassInside</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
 
-    ZAX_JSON_SERIALIZABLE(CClassInside, CClassInside_JOSONProps)
-};
+    <span class="n">ZAX_JSON_SERIALIZABLE</span><span class="p">(</span><span class="n">CClassInside</span><span class="p">,</span> <span class="n">CClassInside_JOSONProps</span><span class="p">)</span>
+<span class="p">};</span>
 
-#define CClass_JOSONProps\
-    JSON_PROPERTY(title),\
-    JSON_PROPERTY(x),\
-    JSON_PROPERTY(inside)
+<span class="cp">#define CClass_JOSONProps\</span>
+<span class="cp">    JSON_PROPERTY(title),\</span>
+<span class="cp">    JSON_PROPERTY(x),\</span>
+<span class="cp">    JSON_PROPERTY(inside)</span>
 
-struct CClass
-{
-    CClassInside inside;
-    int x = 6;
-    string title = "some title";
+<span class="k">struct</span> <span class="nc">CClass</span>
+<span class="p">{</span>
+    <span class="n">CClassInside</span> <span class="n">inside</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">title</span> <span class="o">=</span> <span class="s">&quot;some title&quot;</span><span class="p">;</span>
 
-    ZAX_JSON_SERIALIZABLE(CClass, CClass_JOSONProps)
-};
+    <span class="n">ZAX_JSON_SERIALIZABLE</span><span class="p">(</span><span class="n">CClass</span><span class="p">,</span> <span class="n">CClass_JOSONProps</span><span class="p">)</span>
+<span class="p">};</span>
 
-CClass some_obj = "{\"title\": \"some other title\", \"x\": 17, \"inside\":{\"x\":9, \"y\":5}}";
-cout &lt;&lt; some_obj &lt;&lt; endl;</code></pre>
-</div></div>
+<span class="n">CClass</span> <span class="n">some_obj</span> <span class="o">=</span> <span class="s">&quot;{</span><span class="se">\&quot;</span><span class="s">title</span><span class="se">\&quot;</span><span class="s">: </span><span class="se">\&quot;</span><span class="s">some other title</span><span class="se">\&quot;</span><span class="s">, </span><span class="se">\&quot;</span><span class="s">x</span><span class="se">\&quot;</span><span class="s">: 17, </span><span class="se">\&quot;</span><span class="s">inside</span><span class="se">\&quot;</span><span class="s">:{</span><span class="se">\&quot;</span><span class="s">x</span><span class="se">\&quot;</span><span class="s">:9, </span><span class="se">\&quot;</span><span class="s">y</span><span class="se">\&quot;</span><span class="s">:5}}&quot;</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">some_obj</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div></div></div>
 <div class="paragraph"><p><em>Result:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>{"title":"some other title", "x":17, "inside":{"x":9, "y":5}}</code></pre>
-</div></div>
+<div class="content"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s">&quot;title&quot;</span><span class="o">:</span><span class="s">&quot;some other title&quot;</span><span class="p">,</span> <span class="s">&quot;x&quot;</span><span class="o">:</span><span class="mi">17</span><span class="p">,</span> <span class="s">&quot;inside&quot;</span><span class="o">:</span><span class="p">{</span><span class="s">&quot;x&quot;</span><span class="o">:</span><span class="mi">9</span><span class="p">,</span> <span class="s">&quot;y&quot;</span><span class="o">:</span><span class="mi">5</span><span class="p">}}</span>
+</pre></div></div></div>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
@@ -1457,65 +1536,63 @@ cout &lt;&lt; some_obj &lt;&lt; endl;</code></pre>
 </div>
 <div class="paragraph"><p><em>Example 2:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>#define CClassInside_JOSONProps\
-    JSON_PROPERTY(x),\
-    JSON_PROPERTY(y)
+<div class="content"><div class="highlight"><pre><span></span><span class="cp">#define CClassInside_JOSONProps\</span>
+<span class="cp">    JSON_PROPERTY(x),\</span>
+<span class="cp">    JSON_PROPERTY(y)</span>
 
-struct CClassInside
-{
-    int x = 11;
-    int y = 7;
+<span class="k">struct</span> <span class="nc">CClassInside</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
 
-    ZAX_JSON_SERIALIZABLE(CClassInside, CClassInside_JOSONProps)
-};
+    <span class="n">ZAX_JSON_SERIALIZABLE</span><span class="p">(</span><span class="n">CClassInside</span><span class="p">,</span> <span class="n">CClassInside_JOSONProps</span><span class="p">)</span>
+<span class="p">};</span>
 
-#define CClass_JOSONProps\
-    JSON_PROPERTY(title),\
-    JSON_PROPERTY(options),\
-    JSON_PROPERTY(aspects, "criteria"),\
-    JSON_PROPERTY(scores),\
-    JSON_PROPERTY(x),\
-    JSON_PROPERTY(inside),\
-    JSON_PROPERTY(weights)
+<span class="cp">#define CClass_JOSONProps\</span>
+<span class="cp">    JSON_PROPERTY(title),\</span>
+<span class="cp">    JSON_PROPERTY(options),\</span>
+<span class="cp">    JSON_PROPERTY(aspects, &quot;criteria&quot;),\</span>
+<span class="cp">    JSON_PROPERTY(scores),\</span>
+<span class="cp">    JSON_PROPERTY(x),\</span>
+<span class="cp">    JSON_PROPERTY(inside),\</span>
+<span class="cp">    JSON_PROPERTY(weights)</span>
 
-struct CClass
-{
-    CClassInside inside;
-    int x = 6;
-    string title = "some title";
-    vector&lt;string&gt; options = {"option1", "option2", "option3"};
-    vector&lt;string&gt; aspects = {"criteria1", "criteria2"};
-    std::vector&lt;std::vector&lt;int&gt;&gt; scores = {{1, 2, 3}, {7, 8, 9}};
-    vector&lt;int&gt; weights = {1, 2, 3};
+<span class="k">struct</span> <span class="nc">CClass</span>
+<span class="p">{</span>
+    <span class="n">CClassInside</span> <span class="n">inside</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">title</span> <span class="o">=</span> <span class="s">&quot;some title&quot;</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;option1&quot;</span><span class="p">,</span> <span class="s">&quot;option2&quot;</span><span class="p">,</span> <span class="s">&quot;option3&quot;</span><span class="p">};</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">aspects</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;criteria1&quot;</span><span class="p">,</span> <span class="s">&quot;criteria2&quot;</span><span class="p">};</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">scores</span> <span class="o">=</span> <span class="p">{{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">}};</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">weights</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
 
-    ZAX_JSON_SERIALIZABLE(CClass, CClass_JOSONProps)
-};
+    <span class="n">ZAX_JSON_SERIALIZABLE</span><span class="p">(</span><span class="n">CClass</span><span class="p">,</span> <span class="n">CClass_JOSONProps</span><span class="p">)</span>
+<span class="p">};</span>
 
-char json_string_copy[10000];
-strcpy(json_string_copy, "{\"x\":99, \"criteria\":[\"aspect x\"], \"title\":\"test title\", \"options\":[\"option 1\", \"option 2\", \"option 3\"], \"nonexisting_field\":\"\", \"scores\":[[1, 1, 2], [3, 5, 8], [13, 21], [34, 55]], \"weights\":[4, 3, 2, 1], \"inside\":{\"x\":\"11\", \"y\":\"9\"}}");
+<span class="kt">char</span> <span class="n">json_string_copy</span><span class="p">[</span><span class="mi">10000</span><span class="p">];</span>
+<span class="n">strcpy</span><span class="p">(</span><span class="n">json_string_copy</span><span class="p">,</span> <span class="s">&quot;{</span><span class="se">\&quot;</span><span class="s">x</span><span class="se">\&quot;</span><span class="s">:99, </span><span class="se">\&quot;</span><span class="s">criteria</span><span class="se">\&quot;</span><span class="s">:[</span><span class="se">\&quot;</span><span class="s">aspect x</span><span class="se">\&quot;</span><span class="s">], </span><span class="se">\&quot;</span><span class="s">title</span><span class="se">\&quot;</span><span class="s">:</span><span class="se">\&quot;</span><span class="s">test title</span><span class="se">\&quot;</span><span class="s">, </span><span class="se">\&quot;</span><span class="s">options</span><span class="se">\&quot;</span><span class="s">:[</span><span class="se">\&quot;</span><span class="s">option 1</span><span class="se">\&quot;</span><span class="s">, </span><span class="se">\&quot;</span><span class="s">option 2</span><span class="se">\&quot;</span><span class="s">, </span><span class="se">\&quot;</span><span class="s">option 3</span><span class="se">\&quot;</span><span class="s">], </span><span class="se">\&quot;</span><span class="s">nonexisting_field</span><span class="se">\&quot;</span><span class="s">:</span><span class="se">\&quot;\&quot;</span><span class="s">, </span><span class="se">\&quot;</span><span class="s">scores</span><span class="se">\&quot;</span><span class="s">:[[1, 1, 2], [3, 5, 8], [13, 21], [34, 55]], </span><span class="se">\&quot;</span><span class="s">weights</span><span class="se">\&quot;</span><span class="s">:[4, 3, 2, 1], </span><span class="se">\&quot;</span><span class="s">inside</span><span class="se">\&quot;</span><span class="s">:{</span><span class="se">\&quot;</span><span class="s">x</span><span class="se">\&quot;</span><span class="s">:</span><span class="se">\&quot;</span><span class="s">11</span><span class="se">\&quot;</span><span class="s">, </span><span class="se">\&quot;</span><span class="s">y</span><span class="se">\&quot;</span><span class="s">:</span><span class="se">\&quot;</span><span class="s">9</span><span class="se">\&quot;</span><span class="s">}}&quot;</span><span class="p">);</span>
 
-cout &lt;&lt; "Json string to be assigned to the object:" &lt;&lt; endl &lt;&lt; json_string_copy &lt;&lt; endl &lt;&lt; endl;
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Json string to be assigned to the object:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">json_string_copy</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
 
-CClass some_obj = "{}";
-cout &lt;&lt; "Field of the object before assignment: " &lt;&lt; endl &lt;&lt; some_obj &lt;&lt; endl &lt;&lt; endl;
+<span class="n">CClass</span> <span class="n">some_obj</span> <span class="o">=</span> <span class="s">&quot;{}&quot;</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Field of the object before assignment: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">some_obj</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
 
-some_obj = json_string_copy;
-string json_std_string = some_obj;
-cout &lt;&lt; "Json string computed after assignment: " &lt;&lt; endl &lt;&lt; json_std_string &lt;&lt; endl &lt;&lt; endl;</code></pre>
-</div></div>
+<span class="n">some_obj</span> <span class="o">=</span> <span class="n">json_string_copy</span><span class="p">;</span>
+<span class="n">string</span> <span class="n">json_std_string</span> <span class="o">=</span> <span class="n">some_obj</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Json string computed after assignment: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">json_std_string</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</pre></div></div></div>
 <div class="paragraph"><p><em>Result:</em></p></div>
 <div class="listingblock">
-<div class="content">
-<pre><code>Json string to be assigned to the object:
-{"x":99, "criteria":["aspect x"], "title":"test title", "options":["option 1", "option 2", "option 3"], "nonexisting_field":"", "scores":[[1, 1, 2], [3, 5, 8], [13, 21], [34, 55]], "weights":[4, 3, 2, 1], "inside":{"x":"11", "y":"9"}}
+<div class="content"><div class="highlight"><pre><span></span><span class="n">Json</span> <span class="n">string</span> <span class="n">to</span> <span class="n">be</span> <span class="n">assigned</span> <span class="n">to</span> <span class="n">the</span> <span class="nl">object</span><span class="p">:</span>
+<span class="p">{</span><span class="s">&quot;x&quot;</span><span class="o">:</span><span class="mi">99</span><span class="p">,</span> <span class="s">&quot;criteria&quot;</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;aspect x&quot;</span><span class="p">],</span> <span class="s">&quot;title&quot;</span><span class="o">:</span><span class="s">&quot;test title&quot;</span><span class="p">,</span> <span class="s">&quot;options&quot;</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;option 1&quot;</span><span class="p">,</span> <span class="s">&quot;option 2&quot;</span><span class="p">,</span> <span class="s">&quot;option 3&quot;</span><span class="p">],</span> <span class="s">&quot;nonexisting_field&quot;</span><span class="o">:</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;scores&quot;</span><span class="o">:</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">13</span><span class="p">,</span> <span class="mi">21</span><span class="p">],</span> <span class="p">[</span><span class="mi">34</span><span class="p">,</span> <span class="mi">55</span><span class="p">]],</span> <span class="s">&quot;weights&quot;</span><span class="o">:</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s">&quot;inside&quot;</span><span class="o">:</span><span class="p">{</span><span class="s">&quot;x&quot;</span><span class="o">:</span><span class="s">&quot;11&quot;</span><span class="p">,</span> <span class="s">&quot;y&quot;</span><span class="o">:</span><span class="s">&quot;9&quot;</span><span class="p">}}</span>
 
-Values before assignment:
-{"title":"some title", "options":["option1", "option2", "option3"], "criteria":["criteria1", "criteria2"], "scores":[[1, 2, 3], [7, 8, 9]], "x":6, "inside":{"x":11, "y":7}, "weights":[1, 2, 3]}
+<span class="n">Values</span> <span class="n">before</span> <span class="nl">assignment</span><span class="p">:</span>
+<span class="p">{</span><span class="s">&quot;title&quot;</span><span class="o">:</span><span class="s">&quot;some title&quot;</span><span class="p">,</span> <span class="s">&quot;options&quot;</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;option1&quot;</span><span class="p">,</span> <span class="s">&quot;option2&quot;</span><span class="p">,</span> <span class="s">&quot;option3&quot;</span><span class="p">],</span> <span class="s">&quot;criteria&quot;</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;criteria1&quot;</span><span class="p">,</span> <span class="s">&quot;criteria2&quot;</span><span class="p">],</span> <span class="s">&quot;scores&quot;</span><span class="o">:</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]],</span> <span class="s">&quot;x&quot;</span><span class="o">:</span><span class="mi">6</span><span class="p">,</span> <span class="s">&quot;inside&quot;</span><span class="o">:</span><span class="p">{</span><span class="s">&quot;x&quot;</span><span class="o">:</span><span class="mi">11</span><span class="p">,</span> <span class="s">&quot;y&quot;</span><span class="o">:</span><span class="mi">7</span><span class="p">},</span> <span class="s">&quot;weights&quot;</span><span class="o">:</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]}</span>
 
-Json string computed after assignment:
-{"title":"test title", "options":["option 1", "option 2", "option 3"], "criteria":["aspect x"], "scores":[[1, 1, 2], [3, 5, 8], [13, 21], [34, 55]], "x":99, "inside":{"x":11, "y":9}, "weights":[4, 3, 2, 1]}</code></pre>
-</div></div>
+<span class="n">Json</span> <span class="n">string</span> <span class="n">computed</span> <span class="n">after</span> <span class="nl">assignment</span><span class="p">:</span>
+<span class="p">{</span><span class="s">&quot;title&quot;</span><span class="o">:</span><span class="s">&quot;test title&quot;</span><span class="p">,</span> <span class="s">&quot;options&quot;</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;option 1&quot;</span><span class="p">,</span> <span class="s">&quot;option 2&quot;</span><span class="p">,</span> <span class="s">&quot;option 3&quot;</span><span class="p">],</span> <span class="s">&quot;criteria&quot;</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;aspect x&quot;</span><span class="p">],</span> <span class="s">&quot;scores&quot;</span><span class="o">:</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">13</span><span class="p">,</span> <span class="mi">21</span><span class="p">],</span> <span class="p">[</span><span class="mi">34</span><span class="p">,</span> <span class="mi">55</span><span class="p">]],</span> <span class="s">&quot;x&quot;</span><span class="o">:</span><span class="mi">99</span><span class="p">,</span> <span class="s">&quot;inside&quot;</span><span class="o">:</span><span class="p">{</span><span class="s">&quot;x&quot;</span><span class="o">:</span><span class="mi">11</span><span class="p">,</span> <span class="s">&quot;y&quot;</span><span class="o">:</span><span class="mi">9</span><span class="p">},</span> <span class="s">&quot;weights&quot;</span><span class="o">:</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]}</span>
+</pre></div></div></div>
 <div class="admonitionblock">
 <table><tr>
 <td class="icon">
@@ -1538,7 +1615,7 @@ Json string computed after assignment:
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-01-06 09:12:28 Central Europe Standard Time
+Last updated 2021-01-08 17:02:22 Central Europe Standard Time
 </div>
 </div>
 </body>

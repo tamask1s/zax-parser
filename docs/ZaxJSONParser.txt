@@ -1,13 +1,45 @@
 = ZAX JSON PARSER
 :toc:
 :icons: font
+:cpp: cpp
 
-image:images/ZaxJSONParserb.png[Zax JSON Parser]
+Code:
 
-Zax is a very basic JSON parser implemented in C++ 11 with probably the simplest possible interface, providing a kind of a struct to JSON and JSON to struct conversion. GCC, CLang or Intel compilers are needed in order to compile, Microsoft's compiler is not supported due to some bugs in its variadic macro handling.
-The library seems to work, but it has no tests, and its error handling was not even tried out. I made it public because I was searching for something similar in pass:[C++] previously without luck, and I hope it will be useful for someone. The implementation is missing some features, as I have implemented only the features I needed.
+[source,cpp]
+----------
 
-Compiles with these compilers (and probably with newer versions):
+#define some_json_properties JSON_PROPERTY(x), JSON_PROPERTY(title), JSON_PROPERTY(scores)
+
+struct some_class
+{
+    int x = 9;
+    std::string title = "some title";
+    std::vector<std::vector<int>> scores = {{1, 2, 3}, {4, 5, 6}};
+
+    ZAX_JSON_SERIALIZABLE(some_class, some_json_properties)
+};
+
+some_class some_obj = R"({"x":17, "title":"new title", "scores":[[1, 1, 2], [3], [5, 8], [13, 21]]})";
+std::string some_json = some_obj;
+std::cout << some_json << std::endl;
+
+----------
+
+Result:
+
+[source,cpp]
+----------
+
+{"x":17, "title":"new title", "scores":[[1, 1, 2], [3], [5, 8], [13, 21]]}
+
+----------
+
+Zax json parser is a very basic JSON parser implemented in C++ 11 with probably the simplest possible interface, providing a kind of a struct to JSON and JSON to struct conversion. +
+GCC, CLang or Intel compilers are needed in order to compile. Microsoft's compiler is not supported due to some bugs in its variadic macro handling. The library is using heavily the template argument deduction feature of modern compilers. +
+The library seems to work, but it has minimal tests, and its error handling was not tested. I made it public because I was searching for something similar in pass:[C++] previously without luck, and I hope it will be useful for someone. The implementation is missing some features, as I have implemented only the features I needed. +
+Note, that C structures are not fully compatible with the JSON concept, therefore some features are supported in a specific manner: for example a value of 'null' in the JSON string cannot delete the member from the C structure.
+
+Compiles with the following compilers (and probably with their newer versions):
 
 * Intel compiler (ICC) version 19 to 21
 * GCC version 6 to 10
@@ -62,6 +94,7 @@ NOTE: All the resulting tokens are 'char*' strings, and may point in the origina
 
 'Example 1:'
 
+[source,cpp]
 ----------
 ZaxJsonTopTokenizer json_doc("{\"title\":\"some title\",\"x\":17}", false);
 
@@ -71,6 +104,7 @@ cout << json_doc.m_values["x"] << endl;
 
 'Result:'
 
+[source,cpp]
 ----------
 some title
 17
@@ -79,6 +113,7 @@ some title
 
 'Example 2:'
 
+[source,cpp]
 ----------
 ZaxJsonTopTokenizer json_doc("{\"title\":\"some title\",\"x\":17}", false);
 
@@ -89,6 +124,7 @@ cout << (int) tmp << endl;
 
 'Result:'
 
+[source,cpp]
 ----------
 0
 ----------
@@ -97,6 +133,7 @@ NOTE: The return value should be checked for a '0' value. In case of lists, over
 
 'Example 3:'
 
+[source,cpp]
 ----------
 ZaxJsonTopTokenizer json_doc("[3, 7, 11]", false);
 
@@ -108,6 +145,7 @@ cout << json_doc.m_list_values[2] << endl;
 
 'Result:'
 
+[source,cpp]
 ----------
 3
 7
@@ -116,6 +154,7 @@ cout << json_doc.m_list_values[2] << endl;
 
 'Example 4:'
 
+[source,cpp]
 ----------
 ZaxJsonTopTokenizer json_doc("[\"3\", \"7\", \"11\"]", false);
 
@@ -127,6 +166,7 @@ cout << json_doc.m_list_values[2] << endl;
 
 'Result:'
 
+[source,cpp]
 ----------
 3
 7
@@ -171,6 +211,7 @@ NOTE: Class members which are not present in the a_json_properties argument macr
 
 'Example 1:'
 
+[source,cpp]
 ----------
 struct struct1
 {
@@ -189,6 +230,7 @@ cout << json_string << endl;
 
 'Result:'
 
+[source,cpp]
 ----------
 {"x":7, "name":"seven"}
 ----------
@@ -201,6 +243,7 @@ cout << json_string << endl;
 
 'Example 2:'
 
+[source,cpp]
 ----------
 ...same code...
 
@@ -211,6 +254,7 @@ cout << json_string << endl;
 
 'Result:'
 
+[source,cpp]
 ----------
 {"x":7, "with_letters":"seven"}
 ----------
@@ -238,6 +282,7 @@ Syntax: **zax_convert_from_json([a_json], [a_obj], [a_json_properties])**
 
 'Example 1:'
 
+[source,cpp]
 ----------
 struct struct1
 {
@@ -258,6 +303,7 @@ cout << json_string2 << endl;
 
 'Result:'
 
+[source,cpp]
 ----------
 {"x":11, "name":"eleven"}
 ----------
@@ -288,6 +334,7 @@ Besides the constructors having 'char*' and 'string' arguments, this macro also 
 
 'Example 1:'
 
+[source,cpp]
 ----------
 #define struct2_json_properties\
     JSON_PROPERTY(int1),\
@@ -316,6 +363,7 @@ cout << some_obj << endl;
 
 'Result:'
 
+[source,cpp]
 ----------
 {"int1":11, "int2":7, "string1":"eleven", "string2":"seven"}
 {"int1":11, "int2":7, "string1":"eleven", "string2":"seven"}
@@ -337,6 +385,7 @@ This macro adds only the constructors having 'char*' and 'string' arguments but 
 
 {nbsp} +
 
+[source,cpp]
 ----------
 #define struct2_json_properties\
     JSON_PROPERTY(int1),\
@@ -369,6 +418,7 @@ cout << some_obj << endl;
 
 'Result:'
 
+[source,cpp]
 ----------
 {"int1":11, "int2":7, "string1":"eleven", "string2":"seven"}
 {"int1":11, "int2":7, "string1":"eleven", "string2":"seven"}
@@ -379,7 +429,7 @@ cout << some_obj << endl;
 
 {nbsp} +
 
-This macro adds only 2 converter functions, and adds no operators nor constructors.
+This macro adds only basic converter functions, and adds no operators nor constructors.
 
 {nbsp} +
 
@@ -387,6 +437,7 @@ This macro adds only 2 converter functions, and adds no operators nor constructo
 
 {nbsp} +
 
+[source,cpp]
 ----------
 #define struct2_json_properties\
     JSON_PROPERTY(int1),\
@@ -420,21 +471,28 @@ some_obj.zax_from_json("{\"int1\":11, \"int2\":7, \"string1\":\"eleven\", \"stri
 
 The following std containers are supported:
 
-* 'vector'
-* 'deque'
-* 'list'
-* 'forward_list'
+* 'native arrays'
+* 'std::vector'
+* 'std::deque'
+* 'std::list'
+* 'std::forward_list'
 
-You may use your own containers. Requisits are:
+You may use your own containers. Requisits are either:
 
-* 'begin()' and 'end()' std like iterators
+* random access with '[]' operators (like native arrays),
+* and fixed size (like native arrays)
+
+or: 
+
+* 'begin()' and 'end()' std like iterators,
 * 'resize()' function
-* 'clear()' function
+* and 'clear()' function
 
 {nbsp} +
 
 'Example 1:'
 
+[source,cpp]
 ----------
 
 #define struct3_json_props \
@@ -460,6 +518,7 @@ cout << json_string2 << endl;
 
 'Result:'
 
+[source,cpp]
 ----------
 
 {"x":99, "name":"", "options":["option 1", "option 2", "option 3"]}
@@ -474,6 +533,7 @@ cout << json_string2 << endl;
 
 'Example 2:'
 
+[source,cpp]
 ----------
 
 #define struct3_json_props \
@@ -495,6 +555,7 @@ cout << obj1 << endl;
 
 'Result:'
 
+[source,cpp]
 ----------
 
 {"x":9, "scores":[[1, 2, 3], [7, 8, 9]]}
@@ -506,6 +567,7 @@ NOTE: The elements of the vectors in the JSON string might also be strings, even
 
 'Example 2:'
 
+[source,cpp]
 ----------
 
 #define struct3_json_props \
@@ -532,6 +594,7 @@ void json_example_03()
 
 'Result:'
 
+[source,cpp]
 ----------
 
 {"x":99, "options":[1, 2, 3]}
@@ -549,6 +612,7 @@ A value of 'null' in the JSON will not add the pair to the map.
 
 {nbsp} +
 
+[source,cpp]
 ----------
 
 #define some_json_properties3 JSON_PROPERTY(assets)
@@ -571,11 +635,14 @@ void some_example3()
 
 'Result:'
 
+[source,cpp]
 ----------
 
 {"assets":{"Marquez":"Semantic dementia"}}
 
 ----------
+
+NOTE: Multimaps are supported like they were maps. JSON descriptors does not support multiple values bound to the same key, therefore multimaps shouldn't have multiple values associated to a single key while converting. In case a multimap has multiple values, it will result in an invalid JSON, containing multiple values. The opposit direction: if an invalid JSON with multiple values is parsed, only the first value will be added to the multimap.
 
 [[Parsing_of_structures_with_fields_of_serializable_structures]]
 == Parsing of structures with fields of serializable structures
@@ -588,6 +655,7 @@ Parsing of structures inside structures is also possible, if the meta info of th
 
 'Example 1:'
 
+[source,cpp]
 ----------
 
 #define CClassInside_JOSONProps\
@@ -623,6 +691,7 @@ cout << some_obj << endl;
 
 'Result:'
 
+[source,cpp]
 ----------
 
 {"title":"some other title", "x":17, "inside":{"x":9, "y":5}}
@@ -633,6 +702,7 @@ NOTE: Of course, you may combine all the features. Note that if you are using an
 
 'Example 2:'
 
+[source,cpp]
 ----------
 
 #define CClassInside_JOSONProps\
@@ -685,6 +755,7 @@ cout << "Json string computed after assignment: " << endl << json_std_string << 
 
 'Result:'
 
+[source,cpp]
 ----------
 
 Json string to be assigned to the object:
