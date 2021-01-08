@@ -48,11 +48,7 @@ class ZaxJsonParser
     template <typename vtype>
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const vtype& a_val)
     {
-        unsigned int alloc_size = initial_alloc_size();
-        char* json = new char[alloc_size];
-        while (!a_val.zax_to_json(json, alloc_size - 1))
-            if (reallocate_json(json, alloc_size))
-                break;
+        char* json = print_to_json_alloc(a_val);
         int result = snprintf(a_json, a_json_buffer_end - a_json, "%s", json ? json : "");
         delete[] json;
         return result;
@@ -143,11 +139,7 @@ class ZaxJsonParser
     template <typename vtype>
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const vtype& a_val)
     {
-        unsigned int alloc_size = initial_alloc_size();
-        char* json = new char[alloc_size];
-        while (!a_val.zax_to_json(json, alloc_size - 1))
-            if (reallocate_json(json, alloc_size))
-                break;
+        char* json = print_to_json_alloc(a_val);
         int result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%s", a_key, json ? json : "");
         delete[] json;
         return result;
@@ -232,21 +224,34 @@ class ZaxJsonParser
         a_dst.zax_from_json(a_json);
     }
 
-    static inline void json_begin(int& a_result, char* a_json, const char* a_json_buffer_end, const char* a_key, const char* a_brace)
+    static inline int json_begin(char* a_json, const char* a_json_buffer_end, const char* a_key, const char* a_brace)
     {
+        int result = 0;
         if (a_json < a_json_buffer_end)
         {
             if (a_key && a_key[0])
-                a_result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%s", a_key, a_brace);
+                result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%s", a_key, a_brace);
             else
-                cat_char_noinc(a_json, a_result, a_brace[0]);
+                cat_char_noinc(a_json, result, a_brace[0]);
         }
+        return result;
     }
 
     static inline void json_end(int& a_result, char* a_json, const char* a_json_buffer_end, const char* a_brace)
     {
         if (snprintf(a_json + strlen(a_json), a_json_buffer_end - a_json, "%s", a_brace) == 1)
             ++a_result;
+    }
+
+    template <typename vtype>
+    static inline char* print_to_json_alloc(const vtype& a_val)
+    {
+        unsigned int alloc_size = initial_alloc_size();
+        char* json = new char[alloc_size];
+        while (!a_val.zax_to_json(json, alloc_size - 1))
+            if (reallocate_json(json, alloc_size))
+                break;
+        return json;
     }
 
 public:
@@ -260,7 +265,7 @@ public:
         *a_json = ',';
         *++a_json = ' ';
         *++a_json = 0;
-        (++a_result)++;
+        a_result += 2;
     }
 
     static inline void cat_char_noinc(char* a_json, int& a_result, char a_char)
@@ -299,8 +304,7 @@ public:
     template<typename T, size_t N>
     static inline int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const T (&a_values)[N])
     {
-        int _result = 0;
-        json_begin(_result, a_json, a_json_buffer_end, a_key, "[");
+        int _result = json_begin(a_json, a_json_buffer_end, a_key, "[");
         if (_result > 0)
         {
             a_json += _result;
@@ -325,8 +329,7 @@ public:
     template <template <typename, typename... > class ct,  class vt>
     static inline int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const ct<vt>& a_values)
     {
-        int _result = 0;
-        json_begin(_result, a_json, a_json_buffer_end, a_key, "[");
+        int _result = json_begin(a_json, a_json_buffer_end, a_key, "[");
         if (_result > 0)
         {
             a_json += _result;
@@ -351,8 +354,7 @@ public:
     template <template <typename, typename, typename... > class ct, class mt, class cot>
     static inline int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const ct<std::string, mt, cot>& a_values)
     {
-        int _result = 0;
-        json_begin(_result, a_json, a_json_buffer_end, a_key, "{");
+        int _result = json_begin(a_json, a_json_buffer_end, a_key, "{");
         if (_result > 0)
         {
             a_json += _result;
