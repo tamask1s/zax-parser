@@ -220,6 +220,6 @@ cout << objE << endl;
 
 [Please check the documentation](https://tamask1s.github.io/zax-parser/index.html)
 
-version 1.0
+version 1.1
 
 
