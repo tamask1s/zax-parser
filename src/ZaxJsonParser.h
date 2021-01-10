@@ -455,7 +455,7 @@ public:
 };
 
 template <typename mt>
-std::pair<std::string, mt*> json_property(std::string a_name, mt& a_obj)
+std::pair<const char*, mt*> json_property(const char* a_name, mt& a_obj)
 {
     return std::make_pair(a_name, &a_obj);
 }
@@ -477,7 +477,7 @@ zax_to_json_(char* a_json, const char* a_json_buffer_end, int& a_result, std::tu
             else
                 a_json[0] = 0;
         }
-    int l_result = ZaxJsonParser::append(a_json, a_json_buffer_end, std::get<I>(a_tuple).first.c_str(), *std::get<I>(a_tuple).second);
+    int l_result = ZaxJsonParser::append(a_json, a_json_buffer_end, std::get<I>(a_tuple).first, *std::get<I>(a_tuple).second);
     if (!l_result)
         return;
     a_json += l_result;
@@ -528,11 +528,11 @@ zax_from_json_(const char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenize
     }
     if (I < sizeof...(vt))
     {
-        std::map<ZaxStringWrap, const char*>::iterator it = parsed_json->m_values.find(std::get<I>(a_tuple).first.c_str());
+        std::map<ZaxStringWrap, const char*>::iterator it = parsed_json->m_values.find(std::get<I>(a_tuple).first);
         if (it != parsed_json->m_values.end())
-            ZaxJsonParser::parse(*std::get<I>(a_tuple).second, parsed_json->m_values[std::get<I>(a_tuple).first.c_str()], a_error_output);
+            ZaxJsonParser::parse(*std::get<I>(a_tuple).second, parsed_json->m_values[std::get<I>(a_tuple).first], a_error_output);
         else if (a_error_output)
-            (*a_error_output) += std::string("WARNING: JSON property is missing: '") + std::get<I>(a_tuple).first.c_str() + "'\n";
+            (*a_error_output) += std::string("WARNING: JSON property is missing: '") + std::get<I>(a_tuple).first + "'\n";
     }
     zax_from_json_ < I + 1, vt... > (a_json, a_tuple, parsed_json, a_error_output);
     if (I == sizeof...(vt) - 1)
@@ -557,11 +557,11 @@ zax_from_json_(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenizer* par
     }
     if (I < sizeof...(vt))
     {
-        std::map<ZaxStringWrap, const char*>::iterator it = parsed_json->m_values.find(std::get<I>(a_tuple).first.c_str());
+        std::map<ZaxStringWrap, const char*>::iterator it = parsed_json->m_values.find(std::get<I>(a_tuple).first);
         if (it != parsed_json->m_values.end())
-            ZaxJsonParser::parse(*std::get<I>(a_tuple).second, parsed_json->m_values[std::get<I>(a_tuple).first.c_str()], a_error_output);
+            ZaxJsonParser::parse(*std::get<I>(a_tuple).second, parsed_json->m_values[std::get<I>(a_tuple).first], a_error_output);
         else if (a_error_output)
-            (*a_error_output) += std::string("WARNING: JSON property is missing: '") + std::get<I>(a_tuple).first.c_str() + "'\n";
+            (*a_error_output) += std::string("WARNING: JSON property is missing: '") + std::get<I>(a_tuple).first + "'\n";
     }
     zax_from_json_ < I + 1, vt... > (a_json, a_tuple, parsed_json, a_error_output);
     if (I == sizeof...(vt) - 1)
