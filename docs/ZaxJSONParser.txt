@@ -37,7 +37,7 @@ Result:
 Zax json parser is a very basic JSON parser implemented in C++ 11 with probably the simplest possible interface, providing a kind of a struct to JSON and JSON to struct conversion. +
 GCC, CLang or Intel compilers are needed in order to compile. Microsoft's compiler is not supported due to some bugs in its variadic macro handling. The library is using heavily the template argument deduction feature of modern compilers. +
 The library seems to work, but it has minimal tests, and its error handling was not tested. I made it public because I was searching for something similar in pass:[C++] previously without luck, and I hope it will be useful for someone. The implementation is missing some features, as I have implemented only the features I needed. +
-Note, that C structures are not fully compatible with the JSON concept, therefore some features are supported in a specific manner: for example a value of 'null' in the JSON string cannot delete the member from the C structure.
+Note, that C structures are not fully compatible with the JSON concept, therefore some features are supported in a specific manner: for example a value of 'null' in the JSON string cannot delete the member from the C structure. Also, all the type information in a JSON string will be lost: the types of values will be determinded by the types of the fields of the classes.
 
 Compiles with the following compilers (and probably with their newer versions):
 
@@ -173,7 +173,7 @@ cout << json_doc.m_list_values[2] << endl;
 11
 ----------
 
-NOTE: Mixed lists like *[3, \"7\", \"11\"]* are not supported.
+NOTE: Mixed lists like *[3, \"7\", \"11\"]* are also supported, as the type information is lost already during tokenization (every token is a char*, without dashes).
 
 [[Converter_functions]]
 == Converter functions
@@ -769,6 +769,6 @@ Json string computed after assignment:
 
 ----------
 
-NOTE: As I was implementing the features I needed only, the implementations might be incomplete. I have implemented the possibility of error handling, but I have skipped to implement the error handling itself in most of the cases, therefore while parsing invalid JSON strings the library might just cause your application to crash.
+NOTE: As I was implementing the features I needed only, the implementations might be incomplete. I have implemented the possibility of error handling, but just a limited information is passed back to the user, and I skipped to test even that limited info.
 
-NOTE: For the outter layers, the 'null' value support is special. As no structures with pointers are supported, 'null' to struct member "conversion" is type specific: numbers get a value of '0', string lengths are set to zero, and vectors are cleared.
+NOTE: For the outter layers, the 'null' value support is special. As no structures with pointers are supported, 'null' to struct member "conversion" is type specific: numbers get a value of '0', string lengths are set to zero, vectors are cleared, and basic arrays' elemnts are set according to their type just mentioned.

@@ -828,7 +828,7 @@ asciidoc.install(2);
 <div class="paragraph"><p>Zax json parser is a very basic JSON parser implemented in C++ 11 with probably the simplest possible interface, providing a kind of a struct to JSON and JSON to struct conversion.<br />
 GCC, CLang or Intel compilers are needed in order to compile. Microsoft&#8217;s compiler is not supported due to some bugs in its variadic macro handling. The library is using heavily the template argument deduction feature of modern compilers.<br />
 The library seems to work, but it has minimal tests, and its error handling was not tested. I made it public because I was searching for something similar in C++ previously without luck, and I hope it will be useful for someone. The implementation is missing some features, as I have implemented only the features I needed.<br />
-Note, that C structures are not fully compatible with the JSON concept, therefore some features are supported in a specific manner: for example a value of <em>null</em> in the JSON string cannot delete the member from the C structure.</p></div>
+Note, that C structures are not fully compatible with the JSON concept, therefore some features are supported in a specific manner: for example a value of <em>null</em> in the JSON string cannot delete the member from the C structure. Also, all the type information in a JSON string will be lost: the types of values will be determinded by the types of the fields of the classes.</p></div>
 <div class="paragraph"><p>Compiles with the following compilers (and probably with their newer versions):</p></div>
 <div class="ulist"><ul>
 <li>
@@ -1017,7 +1017,7 @@ Using ZaxJsonTopTokenizer class, a kind of a lazy parsing can be achieved.</p></
 <td class="icon">
 <img src="./images/icons/note.png" alt="Note" />
 </td>
-<td class="content">Mixed lists like <strong>[3, \"7\", \"11\"]</strong> are not supported.</td>
+<td class="content">Mixed lists like <strong>[3, \"7\", \"11\"]</strong> are also supported, as the type information is lost already during tokenization (every token is a char*, without dashes).</td>
 </tr></table>
 </div>
 </div>
@@ -1598,7 +1598,7 @@ and <em>clear()</em> function
 <td class="icon">
 <img src="./images/icons/note.png" alt="Note" />
 </td>
-<td class="content">As I was implementing the features I needed only, the implementations might be incomplete. I have implemented the possibility of error handling, but I have skipped to implement the error handling itself in most of the cases, therefore while parsing invalid JSON strings the library might just cause your application to crash.</td>
+<td class="content">As I was implementing the features I needed only, the implementations might be incomplete. I have implemented the possibility of error handling, but just a limited information is passed back to the user, and I skipped to test even that limited info.</td>
 </tr></table>
 </div>
 <div class="admonitionblock">
@@ -1606,7 +1606,7 @@ and <em>clear()</em> function
 <td class="icon">
 <img src="./images/icons/note.png" alt="Note" />
 </td>
-<td class="content">For the outter layers, the <em>null</em> value support is special. As no structures with pointers are supported, <em>null</em> to struct member "conversion" is type specific: numbers get a value of <em>0</em>, string lengths are set to zero, and vectors are cleared.</td>
+<td class="content">For the outter layers, the <em>null</em> value support is special. As no structures with pointers are supported, <em>null</em> to struct member "conversion" is type specific: numbers get a value of <em>0</em>, string lengths are set to zero, vectors are cleared, and basic arrays' elemnts are set according to their type just mentioned.</td>
 </tr></table>
 </div>
 </div>
@@ -1615,7 +1615,7 @@ and <em>clear()</em> function
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-01-08 17:02:22 Central Europe Standard Time
+Last updated 2021-01-10 14:03:44 Central Europe Standard Time
 </div>
 </div>
 </body>
