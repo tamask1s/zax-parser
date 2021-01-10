@@ -92,6 +92,8 @@ NOTE: The library was not tested with invalid JSONS strings.
 
 NOTE: All the resulting tokens are 'char*' strings, and may point in the original buffer, or a newly allocated one, depending on the value of the 'a_in_situ' argument.
 
+NOTE: The input argument is a 'const char*', but if the 'a_in_situ' argument is set (or left) to true, the argument's content will be changed. Therefore, string literals can only be passed if 'a_in_situ' argument is set to false.
+
 'Example 1:'
 
 [source,cpp]
