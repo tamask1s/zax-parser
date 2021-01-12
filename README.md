@@ -159,7 +159,7 @@ struct classA
 struct classB
 {
     int x = 7;
-    std::vector<std::vector<int>> scores = {{1, 1, 2}, {3, 5, 8}};
+    std::vector<std::vector<int>> scores = {{1, 1}, {2}, {3, 5, 8}};
     ZAX_JSON_SERIALIZABLE(classB, JSON_PROPERTY(x), JSON_PROPERTY(scores))
 };
 
