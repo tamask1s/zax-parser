@@ -21,23 +21,6 @@
 #include <vector>
 #include "ZaxJsonParser.h"
 
-static inline int zax_strcmp_(const char *a_s1,  const char *a_s2)
-{
-    while (*a_s1 == *a_s2++)
-        if (*a_s1++ == 0)
-            return 0;
-    return (*(const unsigned char *)a_s1 - * (const unsigned char *)(a_s2 - 1));
-}
-
-ZaxStringWrap::ZaxStringWrap(const char* a_str)
-    : m_str(a_str)
-{}
-
-bool ZaxStringWrap::operator < (const ZaxStringWrap &a_rhs) const
-{
-    return zax_strcmp_(m_str, a_rhs.m_str) < 0;
-}
-
 static inline const char* zax_get_close_token(const char* a_str_to_find, char a_open_token, char a_close_token)
 {
     int equilibrium = 0;
@@ -212,9 +195,9 @@ ZaxJsonTopTokenizer::ZaxJsonTopTokenizer(const char* a_json, bool a_in_situ, boo
                             {
                                 *value_end = 0;
                                 if (*((int*)(value)) == 1819047278) /** null */
-                                    m_values.insert(std::make_pair<ZaxStringWrap, const char*>(ZaxStringWrap(++a_json), 0));
+                                    m_values.insert(std::make_pair<const char*, const char*>((const char*)(++a_json), 0));
                                 else
-                                    m_values.insert(std::make_pair<ZaxStringWrap, const char*>(ZaxStringWrap(++a_json), value));
+                                    m_values.insert(std::make_pair<const char*, const char*>((const char*)++a_json, value));
                                 a_json = value_end;
                             }
                             else
