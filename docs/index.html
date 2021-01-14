@@ -958,7 +958,7 @@ Using ZaxJsonTopTokenizer class, a kind of a lazy parsing can be achieved.</p></
 <td class="icon">
 <img src="./images/icons/note.png" alt="Note" />
 </td>
-<td class="content">The input argument is a <em>const char*</em>, but if the <em>a_in_situ</em> argument is set (or left) to true, the argument&#8217;s content will be changed. Therefore, string literals can only be passed if <em>a_in_situ</em> argument is set to false.</td>
+<td class="content">The input argument is a <em>const char*</em>, but if the <em>a_in_situ</em> argument is set (or left) to <em>true</em>, the argument&#8217;s content will be changed. Therefore, string literals can only be passed if <em>a_in_situ</em> argument is set to <em>false</em>.</td>
 </tr></table>
 </div>
 <div class="paragraph"><p><em>Example 1:</em></p></div>
@@ -1025,7 +1025,7 @@ Using ZaxJsonTopTokenizer class, a kind of a lazy parsing can be achieved.</p></
 <td class="icon">
 <img src="./images/icons/note.png" alt="Note" />
 </td>
-<td class="content">Mixed lists like <strong>[3, \"7\", \"11\"]</strong> are also supported, as the type information is lost already during tokenization (every token is a char*, without dashes).</td>
+<td class="content">Mixed lists like <strong>[3, \"7\", \"11\"]</strong> are also supported, as the type information is lost already during tokenization (every token is a char*, without dashes, be it a number, a boolean, <em>null</em> or a string).</td>
 </tr></table>
 </div>
 </div>
@@ -1623,7 +1623,7 @@ and <em>clear()</em> function
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-01-10 23:10:54 Central Europe Standard Time
+Last updated 2021-01-14 20:40:45 Central Europe Standard Time
 </div>
 </div>
 </body>

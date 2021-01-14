@@ -92,7 +92,7 @@ NOTE: The library was not tested with invalid JSONS strings.
 
 NOTE: All the resulting tokens are 'char*' strings, and may point in the original buffer, or a newly allocated one, depending on the value of the 'a_in_situ' argument.
 
-NOTE: The input argument is a 'const char*', but if the 'a_in_situ' argument is set (or left) to true, the argument's content will be changed. Therefore, string literals can only be passed if 'a_in_situ' argument is set to false.
+NOTE: The input argument is a 'const char*', but if the 'a_in_situ' argument is set (or left) to 'true', the argument's content will be changed. Therefore, string literals can only be passed if 'a_in_situ' argument is set to 'false'.
 
 'Example 1:'
 
@@ -175,7 +175,7 @@ cout << json_doc.m_list_values[2] << endl;
 11
 ----------
 
-NOTE: Mixed lists like *[3, \"7\", \"11\"]* are also supported, as the type information is lost already during tokenization (every token is a char*, without dashes).
+NOTE: Mixed lists like *[3, \"7\", \"11\"]* are also supported, as the type information is lost already during tokenization (every token is a char*, without dashes, be it a number, a boolean, 'null' or a string).
 
 [[Converter_functions]]
 == Converter functions
