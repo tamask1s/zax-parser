@@ -40,3 +40,4 @@ some title
 objE: {"some_info":{"x":4, "y":5.600000, "name":"new name"}}
 objF: {"some_info":{"name":"new name", "x":"4", "y":"5.6"}}
 {"assets":{"Darth Vader":"Death Star", "Lyra Belacqua":"Alethiometer"}}
+{"x":9, "scores":[[1, 2, 3], [4, 5, 6]]}

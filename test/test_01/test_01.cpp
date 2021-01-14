@@ -418,6 +418,27 @@ void some2_example7()
     cout << some_class3() << endl;
 }
 
+struct class1A
+{
+    int x = 9;
+    int scores[2][3] = {{1, 2, 3}, {4, 5, 6}};
+    ZAX_JSON_SERIALIZABLE(class1A, JSON_PROPERTY(x), JSON_PROPERTY(scores))
+};
+
+struct class1B
+{
+    int x = 7;
+    std::vector<std::vector<int>> scores = {{1, 1}, {2}, {3, 5, 8}};
+    ZAX_JSON_SERIALIZABLE(class1B, JSON_PROPERTY(x), JSON_PROPERTY(scores))
+};
+
+void some2_example8()
+{
+    class1A objA;
+    class1B objB = objA;
+    cout << objB << endl;
+}
+
 int main()
 {
     json_example1();
@@ -438,6 +459,7 @@ int main()
     some2_example5();
     some2_example6();
     some2_example7();
+    some2_example8();
 
     return 0;
 }
