@@ -26,7 +26,7 @@ class ZaxJsonTopTokenizer
             while (*a_lhs == *a_rhs++)
                 if (*a_lhs++ == 0)
                     return 0;
-            return (*(const unsigned char *)a_lhs - * (const unsigned char *)(a_rhs - 1)) < 0;
+            return (*(const unsigned char*)a_lhs - *(const unsigned char*)(a_rhs - 1)) < 0;
         }
     };
     char* m_own_buffer = 0;
