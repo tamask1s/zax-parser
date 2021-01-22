@@ -331,8 +331,7 @@ void some_example3()
 
     cout << some_obj3 << endl;
 
-    string jstr;
-    some_obj3.zax_to_json(jstr);
+    string jstr = some_obj3.zax_to_json();
     //cout << jstr << endl;
 }
 

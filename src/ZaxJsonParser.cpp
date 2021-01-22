@@ -195,9 +195,9 @@ ZaxJsonTopTokenizer::ZaxJsonTopTokenizer(const char* a_json, bool a_in_situ, boo
                             {
                                 *value_end = 0;
                                 if (*((int*)(value)) == 1819047278) /** null */
-                                    m_values.insert(std::make_pair<const char*, const char*>((const char*)(++a_json), 0));
+                                    m_values.insert(std::make_pair((++a_json), (char*)0));
                                 else
-                                    m_values.insert(std::make_pair<const char*, const char*>((const char*)++a_json, value));
+                                    m_values.insert(std::make_pair(++a_json, value));
                                 a_json = value_end;
                             }
                             else

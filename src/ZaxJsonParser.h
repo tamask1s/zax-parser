@@ -26,7 +26,7 @@ class ZaxJsonTopTokenizer
             while (*a_lhs == *a_rhs++)
                 if (*a_lhs++ == 0)
                     return 0;
-            return (*(const unsigned char*)a_lhs - *(const unsigned char*)(a_rhs - 1)) < 0;
+            return (*(const unsigned char *)a_lhs - * (const unsigned char *)(a_rhs - 1)) < 0;
         }
     };
     char* m_own_buffer = 0;
@@ -581,14 +581,15 @@ zax_from_json_(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenizer* par
     virtual int zax_to_json(char* a_json, int a_alloc_size) const {\
         return zax_convert_to_json(a_json, a_alloc_size, *this, ##__VA_ARGS__);\
     }\
-    virtual void zax_to_json(std::string& a_json) const {\
+    virtual std::string zax_to_json() const {\
         unsigned int alloc_size = ZaxJsonParser::initial_alloc_size();\
         char* json = new char[alloc_size];\
         while (!zax_convert_to_json(json, alloc_size - 1, *this, ##__VA_ARGS__))\
             if (!ZaxJsonParser::reallocate_json(json, alloc_size))\
                 break;\
-        a_json = json ? json : "";\
+        std::string a_json = json ? json : "";\
         delete[] json;\
+        return a_json;\
     }
 
 #define ZAX_JSON_SERIALIZABLE_WDC(class_name, ...)\
@@ -606,9 +607,7 @@ zax_from_json_(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenizer* par
         zax_convert_from_json(a_json.c_str(), *this, ##__VA_ARGS__);\
     }\
     template <typename T> operator T() const {\
-        std::string result;\
-        zax_to_json(result);\
-        return result;\
+        return zax_to_json();\
     }\
     friend std::ostream& operator<<(std::ostream& os, const class_name& a_obj) {\
         std::string s = a_obj;\
