@@ -1302,6 +1302,7 @@ Therefore, ZAX_JSON_SERIALIZABLE will try to add a default constructor to your c
 
 <span class="n">struct2</span> <span class="n">some_obj</span><span class="p">;</span>
 <span class="n">some_obj</span><span class="p">.</span><span class="n">zax_from_json</span><span class="p">(</span><span class="s">&quot;{</span><span class="se">\&quot;</span><span class="s">int1</span><span class="se">\&quot;</span><span class="s">:11, </span><span class="se">\&quot;</span><span class="s">int2</span><span class="se">\&quot;</span><span class="s">:7, </span><span class="se">\&quot;</span><span class="s">string1</span><span class="se">\&quot;</span><span class="s">:</span><span class="se">\&quot;</span><span class="s">eleven</span><span class="se">\&quot;</span><span class="s">, </span><span class="se">\&quot;</span><span class="s">string2</span><span class="se">\&quot;</span><span class="s">:</span><span class="se">\&quot;</span><span class="s">seven</span><span class="se">\&quot;</span><span class="s">}&quot;</span><span class="p">);</span>
+<span class="n">string</span> <span class="n">some_string</span> <span class="o">=</span> <span class="n">some_obj</span><span class="p">.</span><span class="n">zax_to_json</span><span class="p">();</span>
 </pre></div></div></div>
 </div>
 </div>
@@ -1623,7 +1624,7 @@ and <em>clear()</em> function
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-01-14 20:40:45 Central Europe Standard Time
+Last updated 2021-01-22 15:45:26 Central Europe Standard Time
 </div>
 </div>
 </body>

@@ -463,6 +463,7 @@ struct struct2
 
 struct2 some_obj;
 some_obj.zax_from_json("{\"int1\":11, \"int2\":7, \"string1\":\"eleven\", \"string2\":\"seven\"}");
+string some_string = some_obj.zax_to_json();
 
 ----------
 
