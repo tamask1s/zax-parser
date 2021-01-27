@@ -48,8 +48,7 @@ struct some_class
 };
 
 some_class some_obj;
-std::string some_json;
-some_obj.zax_to_json(some_json);
+std::string some_json = some_obj.zax_to_json();
 std::cout << some_json << std::endl;
 
 ```
