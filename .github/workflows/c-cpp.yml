@@ -22,5 +22,6 @@ jobs:
         cd build/test_01/bin
         ./testes > out_test_01
         cat out_test_01
+        cmp out_test_01 ../../../test/test_01/template_01
         cmp --silent out_test_01 ../../../test/test_01/template_01 && echo pass || exit 1
     
