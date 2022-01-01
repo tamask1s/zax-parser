@@ -15,6 +15,7 @@
 ***************************************************************************/
 
 #include <string.h>
+#include <string>
 #include <stdio.h>
 #include <stdlib.h>
 #include <map>
@@ -247,8 +248,9 @@ ZaxJsonTopTokenizer::~ZaxJsonTopTokenizer()
     delete[] m_own_buffer;
 }
 
-unsigned int ZaxJsonParser::initial_alloc_size_ = 10000;
+unsigned int ZaxJsonParser::initial_alloc_size_ = 10000000;
 unsigned int ZaxJsonParser::maximum_alloc_size_ = 100000000;
+unsigned int ZaxJsonParser::nr_indent_ = 4;
 
 unsigned int ZaxJsonParser::initial_alloc_size()
 {
@@ -260,6 +262,11 @@ unsigned int ZaxJsonParser::maximum_alloc_size()
     return maximum_alloc_size_;
 }
 
+unsigned int ZaxJsonParser::nr_indent()
+{
+    return nr_indent_;
+}
+
 void ZaxJsonParser::set_initial_alloc_size(unsigned int a_size)
 {
     initial_alloc_size_ = a_size;
@@ -268,4 +275,9 @@ void ZaxJsonParser::set_initial_alloc_size(unsigned int a_size)
 void ZaxJsonParser::set_maximum_alloc_size(unsigned int a_size)
 {
     maximum_alloc_size_ = a_size;
+}
+
+void ZaxJsonParser::set_nr_indent(unsigned int a_size)
+{
+    nr_indent_ = a_size;
 }

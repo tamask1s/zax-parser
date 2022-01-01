@@ -11,6 +11,7 @@
 #include <forward_list>
 #include <stack>
 #include <fstream>
+#include <string>
 
 /** lib includes */
 #include "ZaxJsonParser.h"

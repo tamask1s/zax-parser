@@ -19,8 +19,6 @@ build: $(EXECUTABLE_FILES)
 clean:
 	rm -r -f $(BIN)
 
-.PHONY: build clean
-
 $(EXECUTABLE_FILES): $(OBJECT_FILES)
 	@$(CC) $(LDFLAGS) -o $@ $^
 	@echo "Build successful!"
