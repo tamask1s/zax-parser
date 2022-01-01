@@ -283,7 +283,7 @@ public:
                 *a_json++ = ' ';
                 ++a_result;
             }
-            a_json[1] = 0;
+            a_json[0] = 0;
         }
     }
 
