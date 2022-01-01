@@ -1,7 +1,7 @@
 sizeof(json_string)1000
-{"x":7, "b":true, "with_letters":"seven", "weights":[1, 2, 3]}
-{"x":0, "b":false, "with_letters":"seven", "weights":[]}
-{"x":11, "b":true, "with_letters":"seven", "weights":[1, 2, 3]}
+{"x":7, "b":true, "with_letters":"seven 最高の夏をあ❤", "weights":[1, 2, 3]}
+{"x":0, "b":false, "with_letters":"seven 最高の夏をあ❤", "weights":[]}
+{"x":11, "b":true, "with_letters":"seven 最高の夏をあ❤", "weights":[1, 2, 3]}
 {"int1":11, "int2":7, "string1":"eleven", "string2":"seven"}
 {"int1":11, "int2":7, "string1":"eleven", "string2":"seven"}
 {"title":"some other title", "options":["option1", "option2", "option3"], "criteria":["criteria1", "criteria2"], "scores":[[1, 2, 3], [7, 8, 9]], "x":17, "inside":{"x":9, "y":11}, "weights":[1, 2, 3]}

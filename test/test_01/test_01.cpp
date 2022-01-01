@@ -20,8 +20,7 @@ struct struct1
 {
     int x = 7;
     bool b = true;
-    //string name = "seven ❤";
-    string name = "seven";
+    string name = "seven 最高の夏をあ❤";
     list<int> weights = {1, 2, 3};
 };
 
