@@ -1,10 +1,7 @@
 sizeof(json_string)1000
-{"x":7, "b":true, "name":"some str", "weights":[1, 2, 3]}
-{"x":0, "b":false, "name":"", "weights":[]}
-1702195828
-1936482662
-1819047278
-{"x":11, "b":true, "name":"eleven", "weights":[1, 2, 3]}
+{"x":7, "b":true, "with_letters":"seven ❤", "weights":[1, 2, 3]}
+{"x":0, "b":false, "with_letters":"seven ❤", "weights":[]}
+{"x":11, "b":true, "with_letters":"seven ❤", "weights":[1, 2, 3]}
 {"int1":11, "int2":7, "string1":"eleven", "string2":"seven"}
 {"int1":11, "int2":7, "string1":"eleven", "string2":"seven"}
 {"title":"some other title", "options":["option1", "option2", "option3"], "criteria":["criteria1", "criteria2"], "scores":[[1, 2, 3], [7, 8, 9]], "x":17, "inside":{"x":9, "y":11}, "weights":[1, 2, 3]}
@@ -41,3 +38,12 @@ objE: {"some_info":{"x":4, "y":5.600000, "name":"new name"}}
 objF: {"some_info":{"name":"new name", "x":"4", "y":"5.6"}}
 {"assets":{"Darth Vader":"Death Star", "Lyra Belacqua":"Alethiometer"}}
 {"x":9, "scores":[[1, 2, 3], [4, 5, 6]]}
+{"x":9, "title":"some title", "scores":[{"x":11, "y":7}, {"x":11, "y":7}]}
+{"x":17, "title":"new title", "scores":[{"x":1, "y":2}, {"x":3, "y":4}]}
+{
+    "assets":{
+        "Darth Vader":"Death Star",
+        "Lyra Belacqua":"Alethiometer",
+        "Marquez":"Semantic dementia"
+    }
+}

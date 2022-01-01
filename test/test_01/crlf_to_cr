@@ -1,0 +1,1 @@
+tr -d '\015' <template> template_01
