@@ -34,7 +34,7 @@ int main()
 {"x":7, "name":"new name"}
 
 ```
-# Examples:
+# examples:
 #### Example1:
 
 ```cpp
