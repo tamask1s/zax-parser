@@ -1,6 +1,40 @@
 # zax-json-parser
 Zax is a very basic JSON parser implemented in C++11 with probably the simplest possible interface, providing a kind of a struct to JSON and JSON to struct conversion.
 
+```cpp
+
+#include <iostream>
+#include <string.h>
+#include <string>
+#include <stdio.h>
+#include <stdlib.h>
+#include <map>
+#include <vector>
+#include "ZaxJsonParser.h"
+
+struct some_class
+{
+    int x = 9;
+    std::string name = "some name";
+    ZAX_JSON_SERIALIZABLE(some_class, JSON_PROPERTY(x), JSON_PROPERTY(name))
+};
+
+int main()
+{
+    some_class some_obj = R"({"x": 7, "name": "new name"})";
+    std::cout << some_obj;
+    return 0;
+}
+
+```
+#### Result:
+
+```cpp
+
+{"x":7, "name":"new name"}
+
+```
+
 ### Example1:
 
 ```cpp
