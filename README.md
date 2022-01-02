@@ -34,8 +34,8 @@ int main()
 {"x":7, "name":"new name"}
 
 ```
-
-### Example1:
+### Examples:
+#### Example1:
 
 ```cpp
 
@@ -46,11 +46,11 @@ struct some_class
 };
 
 some_class some_obj;
-zax_convert_from_json("{\"x\":7, \"name\":\"new name\"}", some_obj, JSON_PROPERTY(x), JSON_PROPERTY(name));
+zax_convert_from_json(R"({"x": 7, "name": "new name"})", some_obj, JSON_PROPERTY(x), JSON_PROPERTY(name));
 
 ```
 
-### Example2:
+#### Example2:
 
 ```cpp
 
@@ -67,9 +67,9 @@ some_obj.zax_from_json("{\"x\":7, \"title\":\"new title\"}");
 
 ```
 
-### Example3:
+#### Example3:
 
-#### Code:
+##### Code:
 
 ```cpp
 
@@ -86,7 +86,7 @@ std::string some_json = some_obj.zax_to_json();
 std::cout << some_json << std::endl;
 
 ```
-#### Result:
+##### Result:
 
 ```cpp
 
@@ -95,9 +95,9 @@ std::cout << some_json << std::endl;
 ```
 
 
-### Example4:
+#### Example4:
 
-#### Code:
+##### Code:
 
 ```cpp
 
@@ -117,7 +117,7 @@ std::string some_json = some_obj;
 std::cout << some_json << std::endl;
 
 ```
-#### Result:
+##### Result:
 
 ```cpp
 
@@ -125,9 +125,9 @@ std::cout << some_json << std::endl;
 
 ```
 
-### Example5:
+#### Example5:
 
-#### Code:
+##### Code:
 
 ```cpp
 
@@ -143,7 +143,7 @@ some_class some_obj = R"({"x":17, "scores":[[11, 12, 13], [14, 15, 16]]})";
 cout << some_obj << endl;
 
 ```
-#### Result:
+##### Result:
 
 ```cpp
 
@@ -152,9 +152,9 @@ cout << some_obj << endl;
 ```
 
 
-### Example6:
+#### Example6:
 
-#### Code:
+##### Code:
 
 ```cpp
 
@@ -167,7 +167,7 @@ struct some_class3
 cout << some_class3() << endl;
 
 ```
-#### Result:
+##### Result:
 
 ```cpp
 
@@ -176,9 +176,9 @@ cout << some_class3() << endl;
 ```
 
 
-### Example7:
+#### Example7:
 
-#### Code:
+##### Code:
 
 ```cpp
 
@@ -201,7 +201,7 @@ classB objB = objA;
 cout << objB << endl;
 
 ```
-#### Result:
+##### Result:
 
 ```cpp
 
@@ -209,9 +209,9 @@ cout << objB << endl;
 
 ```
 
-### Example8:
+#### Example8:
 
-#### Code:
+##### Code:
 
 ```cpp
 struct classD
@@ -239,7 +239,7 @@ classE objE = objF;
 cout << objE << endl;
 
 ```
-#### Result:
+##### Result:
 
 ```cpp
 
