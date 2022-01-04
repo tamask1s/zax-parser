@@ -270,7 +270,7 @@ public:
     static unsigned int nr_indent();
     static void set_initial_alloc_size(unsigned int a_size);
     static void set_maximum_alloc_size(unsigned int a_size);
-    static void set_nr_indent(unsigned int a_size);
+    static void set_indent(unsigned int a_size);
 
     static inline void indent(char*& a_json, int& a_result, int a_deep)
     {

@@ -277,7 +277,7 @@ void ZaxJsonParser::set_maximum_alloc_size(unsigned int a_size)
     maximum_alloc_size_ = a_size;
 }
 
-void ZaxJsonParser::set_nr_indent(unsigned int a_size)
+void ZaxJsonParser::set_indent(unsigned int a_size)
 {
     nr_indent_ = a_size;
 }

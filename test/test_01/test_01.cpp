@@ -391,7 +391,7 @@ void json_example_21()
 
 void json_example_22()
 {
-    ZaxJsonParser::set_nr_indent(4);
+    ZaxJsonParser::set_indent(4);
     some_class3 some_obj;
     some_obj.assets.insert({"Marquez", "Semantic dementia"});
     cout << some_obj << endl;
