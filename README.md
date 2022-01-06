@@ -35,7 +35,7 @@ int main()
 
 ```
 # examples:
-#### Example1:
+#### Example1 - using serializer function:
 
 ```cpp
 
@@ -50,7 +50,7 @@ zax_convert_from_json(R"({"x": 7, "name": "new name"})", some_obj, JSON_PROPERTY
 
 ```
 
-#### Example2:
+#### Example2 - using deserializer function:
 
 ```cpp
 
@@ -247,7 +247,7 @@ cout << objE << endl;
 
 ```
 
-#### Example9:
+#### Example9 - serializing containers of pointers pointing to serializable objects:
 
 ##### Code:
 
@@ -285,7 +285,7 @@ std::cout << some_json << std::endl;
 
 
 
-#### Example8:
+#### Example10 - pretty print indentation:
 
 ##### Code:
 
