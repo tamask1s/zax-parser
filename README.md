@@ -247,6 +247,73 @@ cout << objE << endl;
 
 ```
 
+#### Example9:
+
+##### Code:
+
+```cpp
+
+struct CClassInside
+{
+    int x = 11;
+    int y = 7;
+    ZAX_JSON_SERIALIZABLE_BASIC(JSON_PROPERTY(x), JSON_PROPERTY(y))
+};
+
+struct some_hierarchic_class
+{
+    int x = 9;
+    std::string title = "some title";
+    std::vector<CClassInside*> scores;
+    ZAX_JSON_SERIALIZABLE(some_hierarchic_class, JSON_PROPERTY(x), JSON_PROPERTY(title), JSON_PROPERTY(scores))
+};
+
+some_hierarchic_class some_obj;
+some_obj.scores.push_back(new CClassInside);
+some_obj.scores.push_back(new CClassInside);
+std::string some_json = some_obj;
+std::cout << some_json << std::endl;
+
+```
+##### Result:
+
+```cpp
+
+{"x":9, "title":"some title", "scores":[{"x":11, "y":7}, {"x":11, "y":7}]}
+
+```
+
+
+
+#### Example8:
+
+##### Code:
+
+```cpp
+struct some_class
+{
+    int x = 9;
+    std::string name = "some name";
+    ZAX_JSON_SERIALIZABLE(some_class, JSON_PROPERTY(x), JSON_PROPERTY(name))
+};
+
+ZaxJsonParser::set_indent(4);
+some_class some_obj;
+std::cout << some_obj;
+
+```
+##### Result:
+
+```cpp
+
+{
+    "x":9,
+    "name":"some name"
+}
+
+```
+
+
 [Please check the documentation](https://tamask1s.github.io/zax-parser/index.html)
 
 version 1.3
