@@ -17,6 +17,10 @@
 #ifndef _ZAXJSONPARSER_H_
 #define _ZAXJSONPARSER_H_
 
+#ifndef PRId64
+    #define PRId64 "I64d"
+#endif
+
 class ZaxJsonTopTokenizer
 {
     struct cstring_comparator
@@ -83,6 +87,16 @@ class ZaxJsonParser
         return snprintf(a_json, a_json_buffer_end - a_json, "%f", a_val);
     }
 
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const double a_val, int a_deep)
+    {
+        return snprintf(a_json, a_json_buffer_end - a_json, "%0.8f", a_val);
+    }
+
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const long long a_val, int a_deep)
+    {
+        return snprintf(a_json, a_json_buffer_end - a_json, "%" PRId64, a_val);
+    }
+
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const char* a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\"", a_val);
@@ -138,6 +152,16 @@ class ZaxJsonParser
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const float a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%f", a_key, a_val);
+    }
+
+    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const double a_val, int a_deep)
+    {
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%0.8f", a_key, a_val);
+    }
+
+    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const long long a_val, int a_deep)
+    {
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%" PRId64, a_key, a_val);
     }
 
     template <typename vtype>
@@ -208,6 +232,16 @@ class ZaxJsonParser
     static inline void get_val(float& a_dst, const char* a_json, std::string* a_error_output)
     {
         a_dst = a_json ? atof(a_json) : 0.0;
+    }
+
+    static inline void get_val(double& a_dst, const char* a_json, std::string* a_error_output)
+    {
+        a_dst = a_json ? atof(a_json) : 0.0;
+    }
+
+    static inline void get_val(long long& a_dst, const char* a_json, std::string* a_error_output)
+    {
+        a_dst = a_json ? atoll(a_json) : 0.0;
     }
 
     template <template <typename, typename... > class ct,  class vt>
