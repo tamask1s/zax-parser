@@ -1,5 +1,10 @@
 # zax-json-parser
 Zax is a very basic JSON parser implemented in C++11 with probably the simplest possible interface, providing a kind of a struct to JSON and JSON to struct conversion.
+It was tested with the following compilers:
+ - Intel compiler (ICC) version 19 to 21
+ - GCC version 6 to 10
+ - Clang version 6 to 11
+ - Arduino IDE 2.0.1's toolchain
 
 ```cpp
 
