@@ -173,6 +173,51 @@ class ZaxJsonParser
         return result;
     }
 
+    static inline int print_key_or_val(char* a_json, const char* a_json_buffer_end, const char* a_key_or_val, int a_deep)
+    {
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\"", a_key_or_val);
+    }
+
+    static inline int print_key_or_val(char* a_json, const char* a_json_buffer_end, const std::string& a_key_or_val, int a_deep)
+    {
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\"", a_key_or_val.c_str());
+    }
+
+    static inline int print_key_or_val(char* a_json, const char* a_json_buffer_end, const int a_key_or_val, int a_deep)
+    {
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%d\"", a_key_or_val);
+    }
+
+    static inline int print_key_or_val(char* a_json, const char* a_json_buffer_end, const unsigned int a_key_or_val, int a_deep)
+    {
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%d\"", a_key_or_val);
+    }
+
+    static inline int print_key_or_val(char* a_json, const char* a_json_buffer_end, const bool a_key_or_val, int a_deep)
+    {
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\"", a_key_or_val ? "true" : "false");
+    }
+
+    static inline int print_key_or_val(char* a_json, const char* a_json_buffer_end, const char a_key_or_val, int a_deep)
+    {
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%c\"", a_key_or_val);
+    }
+
+    static inline int print_key_or_val(char* a_json, const char* a_json_buffer_end, const float a_key_or_val, int a_deep)
+    {
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%f\"", a_key_or_val);
+    }
+
+    static inline int print_key_or_val(char* a_json, const char* a_json_buffer_end, const double a_key_or_val, int a_deep)
+    {
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%0.8f\"", a_key_or_val);
+    }
+
+    static inline int print_key_or_val(char* a_json, const char* a_json_buffer_end, const long long a_key_or_val, int a_deep)
+    {
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%" PRId64 "\"", a_key_or_val);
+    }
+
     static inline void get_val(std::string& a_dst, const char* a_json, std::string* a_error_output)
     {
         a_dst = a_json ? a_json : "";
@@ -474,6 +519,35 @@ public:
         return _result;
     }
 
+    template <template <typename, typename, typename... > class ct, class kt, class mt, class cot>
+    static inline int append(char* a_json, const char* a_json_buffer_end, const char* a_key, const ct<kt, mt, cot>& a_values, int a_deep)
+    {
+        int _result = json_begin(a_json, a_json_buffer_end, a_key, "{");
+        if (_result > 0)
+        {
+            a_json += _result;
+            indent(a_json, _result, ++a_deep);
+            for (typename ct<kt, mt, cot>::const_iterator r = a_values.begin(); r != a_values.end(); ++r)
+            {
+                if (r != a_values.begin())
+                    cat_comma_space(a_json, _result, a_deep);
+                int written = print_key_or_val(a_json, a_json_buffer_end, r->first, a_deep);
+                written += snprintf(a_json + written, a_json_buffer_end - a_json, ":");
+                written += print_key_or_val(a_json + written, a_json_buffer_end, r->second, a_deep);
+                if (written <= 0)
+                {
+                    _result = 0;
+                    break;
+                }
+                a_json += written;
+                _result += written;
+            }
+            indent(a_json, _result, --a_deep);
+            json_end(_result, a_json, a_json_buffer_end, "}");
+        }
+        return _result;
+    }
+
     template <typename type>
     static inline void parse(type& a_dst, const char* a_json, std::string* a_error_output)
     {
@@ -547,6 +621,27 @@ public:
                     get_val(tmp, ite->second, a_error_output);
                     a_map.insert(std::make_pair<std::string, mt>(ite->first, mt(tmp)));
                 }
+            }
+        }
+    }
+
+    template <template <typename, typename, typename... > class ct, class kt, class mt, class cot>
+    static inline void parse(ct<kt, mt, cot>& a_map, const char* a_json, std::string* a_error_output)
+    {
+        a_map.clear();
+        if (a_json)
+        {
+            bool success = false;
+            ZaxJsonTopTokenizer vector_data(a_json, false, &success);
+            if (!success && a_error_output)
+                (*a_error_output) += std::string("ERROR: error parsing a map in JSON: '") + a_json + "'\n";
+            for (std::map<const char*, const char*>::iterator ite = vector_data.m_values.begin(); ite != vector_data.m_values.end(); ++ite)
+            {
+                mt tmp;
+                get_val(tmp, ite->second, a_error_output);
+                kt tmpk;
+                get_val(tmpk, ite->first, a_error_output);
+                a_map.insert(std::make_pair<kt, mt>(kt(tmpk), mt(tmp)));
             }
         }
     }
