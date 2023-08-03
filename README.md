@@ -321,6 +321,6 @@ std::cout << some_obj;
 
 [Please check the documentation](https://tamask1s.github.io/zax-parser/index.html)
 
-version 1.3
+version 1.4
 
 
