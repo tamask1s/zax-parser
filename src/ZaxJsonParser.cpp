@@ -14,10 +14,9 @@
 * limitations under the License.                                           *
 ***************************************************************************/
 
-#include <string.h>
+#include <cstring>
 #include <string>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
 #include <map>
 #include <vector>
 #include "ZaxJsonParser.h"
