@@ -47,7 +47,7 @@ class ZaxJsonParser
     template<typename T, size_t N>
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const T (&a_dst)[N], int a_deep)
     {
-        return append(a_json, a_json_buffer_end, 0, a_dst, a_deep);
+        return append(a_json, a_json_buffer_end, "", a_dst, a_deep);
     }
 
     template <typename vtype>
@@ -138,7 +138,7 @@ class ZaxJsonParser
 
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const unsigned int a_val, int a_deep)
     {
-        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%d", a_key, a_val);
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%u", a_key, a_val);
     }
 
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const bool a_val, int a_deep)
