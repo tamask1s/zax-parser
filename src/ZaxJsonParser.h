@@ -17,11 +17,6 @@
 #ifndef _ZAXJSONPARSER_H_
 #define _ZAXJSONPARSER_H_
 
-#ifndef PRId64
-#   define __STDC_FORMAT_MACROS
-#   include <inttypes.h>
-#endif
-
 class ZaxJsonTopTokenizer
 {
     struct cstring_comparator
@@ -101,7 +96,7 @@ class ZaxJsonParser
 
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const long long int a_val, int a_deep)
     {
-        return snprintf(a_json, a_json_buffer_end - a_json, "%" PRId64, a_val);
+        return snprintf(a_json, a_json_buffer_end - a_json, "%lld", a_val);
     }
 
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const char* a_val, int a_deep)
@@ -173,7 +168,7 @@ class ZaxJsonParser
 
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const long long int a_val, int a_deep)
     {
-        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%" PRId64, a_key, a_val);
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%lld", a_key, a_val);
     }
 
     template <typename vtype>
