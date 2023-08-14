@@ -261,7 +261,7 @@ unsigned int ZaxJsonParser::maximum_alloc_size()
     return maximum_alloc_size_;
 }
 
-unsigned int ZaxJsonParser::nr_indent()
+unsigned int ZaxJsonParser::get_nr_indent()
 {
     return nr_indent_;
 }

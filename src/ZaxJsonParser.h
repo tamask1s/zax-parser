@@ -313,18 +313,18 @@ class ZaxJsonParser
 public:
     static unsigned int initial_alloc_size();
     static unsigned int maximum_alloc_size();
-    static unsigned int nr_indent();
+    static unsigned int get_nr_indent();
     static void set_initial_alloc_size(unsigned int a_size);
     static void set_maximum_alloc_size(unsigned int a_size);
     static void set_indent(unsigned int a_size);
 
     static inline void indent(char*& a_json, int& a_result, int a_deep)
     {
-        if (int nrindent = ZaxJsonParser::nr_indent())
+        if (unsigned int nr_indent = ZaxJsonParser::get_nr_indent())
         {
             *a_json++ = '\n';
             ++a_result;
-            for (int i = 0; i < nrindent * a_deep; ++i)
+            for (unsigned int i = 0; i < nr_indent * a_deep; ++i)
             {
                 *a_json++ = ' ';
                 ++a_result;
