@@ -123,12 +123,12 @@ class ZaxJsonParser
 
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const char* a_val, int a_deep)
     {
-        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":\"%s\"", a_key, a_val);
+        return snprintf(a_json, a_json_buffer_end - a_json, R"("%s":"%s")", a_key, a_val);
     }
 
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::string& a_val, int a_deep)
     {
-        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":\"%s\"", a_key, a_val.c_str());
+        return snprintf(a_json, a_json_buffer_end - a_json, R"("%s":"%s")", a_key, a_val.c_str());
     }
 
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const int a_val, int a_deep)
