@@ -532,8 +532,8 @@ public:
                 (*a_error_output) += std::string("ERROR: error parsing a vector in JSON: '") + a_json + "'\n";
             a_vect.resize(vector_data.m_list_values.size());
             auto r = a_vect.begin();
-            for (unsigned int i = 0; i < vector_data.m_list_values.size(); ++i)
-                get_val(*r++, vector_data.m_list_values[i], a_error_output);
+            for (auto & m_list_value : vector_data.m_list_values)
+                get_val(*r++, m_list_value, a_error_output);
         }
         else
             a_vect.clear();
@@ -549,15 +549,15 @@ public:
             ZaxJsonTopTokenizer vector_data(a_json, false, &success);
             if (!success && a_error_output)
                 (*a_error_output) += std::string("ERROR: error parsing a map in JSON: '") + a_json + "'\n";
-            for (std::map<const char*, const char*>::iterator ite = vector_data.m_values.begin(); ite != vector_data.m_values.end(); ++ite)
+            for (auto & m_value : vector_data.m_values)
             {
-                if (!ite->second)
-                    a_map.erase(ite->first);
+                if (!m_value.second)
+                    a_map.erase(m_value.first);
                 else
                 {
                     mt tmp;
-                    get_val(tmp, ite->second, a_error_output);
-                    a_map.insert(std::make_pair<std::string, mt>(ite->first, mt(tmp)));
+                    get_val(tmp, m_value.second, a_error_output);
+                    a_map.insert(std::make_pair<std::string, mt>(m_value.first, mt(tmp)));
                 }
             }
         }
@@ -658,7 +658,7 @@ zax_from_json_(const char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenize
     }
     if (parsed_json && I < sizeof...(vt))
     {
-        std::map<const char*, const char*>::iterator it = parsed_json->m_values.find(std::get<I>(a_tuple).first);
+        auto it = parsed_json->m_values.find(std::get<I>(a_tuple).first);
         if (it != parsed_json->m_values.end())
             ZaxJsonParser::parse(*std::get<I>(a_tuple).second, parsed_json->m_values[std::get<I>(a_tuple).first], a_error_output);
         else if (a_error_output)
@@ -687,7 +687,7 @@ zax_from_json_(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenizer* par
     }
     if (I < sizeof...(vt))
     {
-        std::map<const char*, const char*>::iterator it = parsed_json->m_values.find(std::get<I>(a_tuple).first);
+        auto it = parsed_json->m_values.find(std::get<I>(a_tuple).first);
         if (it != parsed_json->m_values.end())
             ZaxJsonParser::parse(*std::get<I>(a_tuple).second, parsed_json->m_values[std::get<I>(a_tuple).first], a_error_output);
         else if (a_error_output)
