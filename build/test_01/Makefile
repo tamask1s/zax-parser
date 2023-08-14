@@ -14,7 +14,7 @@ SOURCE_FILES=$(shell find ../../ -maxdepth 3 -name "*.cpp")
 EXECUTABLE_FILES = $(EXECUTABLE_NAME:%=$(BIN)/%)
 OBJECT_FILES     = $(SOURCE_FILES:%.cpp=$(OBJ)/%.o)
 
-build: $(EXECUTABLE_FILES)
+all: $(EXECUTABLE_FILES)
 
 clean:
 	rm -r -f $(BIN)
