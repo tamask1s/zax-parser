@@ -14,10 +14,9 @@
 * limitations under the License.                                           *
 ***************************************************************************/
 
-#include <string.h>
+#include <cstring>
 #include <string>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
 #include <map>
 #include <vector>
 #include "ZaxJsonParser.h"
@@ -41,12 +40,12 @@ static inline const char* zax_get_close_token(const char* a_str_to_find, char a_
             if (*(a_str_to_find - 1) != '\\')
                 ++equilibrium;
     }
-    return 0;
+    return nullptr;
 }
 
 static inline const char* zax_get_value_end(const char* a_str_to_find, bool a_whitespace_means_end = false)
 {
-    const char* l_end = 0;
+    const char* l_end;
     while (*a_str_to_find)
     {
         switch (*a_str_to_find++)
@@ -71,7 +70,7 @@ static inline const char* zax_get_value_end(const char* a_str_to_find, bool a_wh
             return (l_end = zax_get_close_token(a_str_to_find - 1, '[', ']')) ? (++l_end) : l_end;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 static inline bool zax_is_value(const char* a_str_to_find)
@@ -112,20 +111,20 @@ static inline const char* zax_get_value_start(const char* a_str_to_find)
             break;
         case '}':
         case ']':
-            return 0;
+            return nullptr;
         case '"':
             if (colon_found)
                 return a_str_to_find;
             else
-                return 0;
+                return nullptr;
         default:
             if (colon_found)
                 return --a_str_to_find;
             else
-                return 0;
+                return nullptr;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 enum EJsonState
@@ -148,7 +147,7 @@ ZaxJsonTopTokenizer::ZaxJsonTopTokenizer(const char* a_json, bool a_in_situ, boo
         }
         EJsonState state = EJson_Begin;
         char* close_token = (char*)-1;
-        while (*a_json && (a_json < close_token) && result)
+        while (a_json && (a_json < close_token) && result)
         {
             switch (*a_json)
             {
@@ -161,7 +160,7 @@ ZaxJsonTopTokenizer::ZaxJsonTopTokenizer(const char* a_json, bool a_in_situ, boo
                 if (state == EJson_Begin)
                 {
                     state = EJson_Object;
-                    if ((close_token = (char*)zax_get_close_token(a_json, '{', '}')) == 0)
+                    if ((close_token = (char*)zax_get_close_token(a_json, '{', '}')) == nullptr)
                         result = false;
                 }
                 else
@@ -171,7 +170,7 @@ ZaxJsonTopTokenizer::ZaxJsonTopTokenizer(const char* a_json, bool a_in_situ, boo
                 if (state == EJson_Begin)
                 {
                     state = EJson_Array;
-                    if ((close_token = (char*)zax_get_close_token(a_json, '[', ']')) == 0)
+                    if ((close_token = (char*)zax_get_close_token(a_json, '[', ']')) == nullptr)
                         result = false;
                 }
                 else
@@ -196,7 +195,7 @@ ZaxJsonTopTokenizer::ZaxJsonTopTokenizer(const char* a_json, bool a_in_situ, boo
                             {
                                 *value_end = 0;
                                 if (*((int*)(value)) == 1819047278) /** null */
-                                    m_values.insert(std::make_pair((++a_json), (char*)0));
+                                    m_values.insert(std::make_pair((++a_json), (char*)nullptr));
                                 else
                                     m_values.insert(std::make_pair(++a_json, value));
                                 a_json = value_end;
@@ -262,7 +261,7 @@ unsigned int ZaxJsonParser::maximum_alloc_size()
     return maximum_alloc_size_;
 }
 
-unsigned int ZaxJsonParser::nr_indent()
+unsigned int ZaxJsonParser::get_nr_indent()
 {
     return nr_indent_;
 }
