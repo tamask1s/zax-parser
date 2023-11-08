@@ -47,6 +47,7 @@ class ZaxJsonParser
     static unsigned int initial_alloc_size_;
     static unsigned int maximum_alloc_size_;
     static unsigned int nr_indent_;
+    static bool warnings_enabled_;
 
     template<typename T, size_t N>
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const T (&a_dst)[N], int a_deep)
@@ -184,34 +185,52 @@ class ZaxJsonParser
         return result;
     }
 
-    static inline void get_val(std::string& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(std::string& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
         a_dst = a_json ? a_json : "";
     }
 
     template<size_t N>
-    static inline void get_val(char (&a_dst)[N], const char* a_json, std::string* a_error_output)
+    static inline void get_val(char (&a_dst)[N], const char* a_json, std::vector<std::string>* a_error_output)
     {
         a_json ? strncpy(a_dst, a_json, N) : strncpy(a_dst, "", N);
     }
 
     template<typename T, size_t N>
-    static inline void get_val(T (&a_dst)[N], const char* a_json, std::string* a_error_output)
+    static inline void get_val(T (&a_dst)[N], const char* a_json, std::vector<std::string>* a_error_output)
     {
         parse(a_dst, a_json, a_error_output);
     }
 
-    static inline void get_val(int& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(int& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
         a_dst = a_json ? atoi(a_json) : 0;
     }
 
-    static inline void get_val(unsigned int& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(unsigned int& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
-        a_dst = a_json ? atoi(a_json) : 0;
+        if (a_error_output)
+        {
+            char* endptr;
+            long long int tmp = strtol(a_json, &endptr, 10);
+            if (*endptr != '\0' || endptr == a_json)
+            {
+                a_error_output->push_back(std::string("ERROR: error parsing an unsigned int in JSON: '") + a_json + "'\n");
+            }
+            else if (a_dst > UINT_MAX)
+            {
+                a_error_output->push_back(std::string("ERROR: error parsing an unsigned int in JSON: '") + a_json + "'\n");
+            }
+            else
+                a_dst = tmp;
+        }
+        else
+        {
+            a_dst = a_json ? atoi(a_json) : 0;
+        }
     }
 
-    static inline void get_val(bool& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(bool& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
         if (a_json)
         {
@@ -228,58 +247,58 @@ class ZaxJsonParser
                 }
             default:
                 if (a_error_output)
-                    (*a_error_output) += std::string("ERROR: '") + a_json + "' is not a boolean\n";
+                    a_error_output->push_back(std::string("ERROR: '") + a_json + "' is not a boolean\n");
             }
         }
         else
             a_dst = false;
     }
 
-    static inline void get_val(char& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(char& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
         a_dst = a_json ? atoi(a_json) : 0;
     }
 
-    static inline void get_val(float& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(float& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
         a_dst = a_json ? atof(a_json) : 0.0;
     }
 
-    static inline void get_val(double& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(double& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
         a_dst = a_json ? atof(a_json) : 0.0;
     }
 
-    static inline void get_val(uint16_t& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(uint16_t& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
         a_dst = a_json ? atoi(a_json) : 0;
     }
 
-    static inline void get_val(long long int& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(long long int& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
         a_dst = a_json ? atoll(a_json) : 0;
     }
 
     template <template <typename, typename... > class ct,  class vt>
-    static inline void get_val(ct<vt>& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(ct<vt>& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
         a_json ? ZaxJsonParser::parse(a_dst, a_json, a_error_output) : a_dst.clear();
     }
 
     template <template <typename, typename, typename... > class ct, class mt, class cot>
-    static inline void get_val(ct<std::string, mt, cot>& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(ct<std::string, mt, cot>& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
         a_json ? ZaxJsonParser::parse(a_dst, a_json, a_error_output) : a_dst.clear();
     }
 
     template <typename vtype>
-    static inline void get_val(vtype& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(vtype& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
         a_dst.zax_from_json(a_json);
     }
 
     template <typename vtype>
-    static inline void get_val(vtype*& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void get_val(vtype*& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
         a_dst->zax_from_json(a_json);
     }
@@ -321,6 +340,8 @@ public:
     static void set_initial_alloc_size(unsigned int a_size);
     static void set_maximum_alloc_size(unsigned int a_size);
     static void set_indent(unsigned int a_size);
+    static bool warnings_enabled();
+    static void set_warnings_enabled(bool val);
 
     static inline void indent(char*& a_json, int& a_result, int a_deep)
     {
@@ -491,31 +512,31 @@ public:
     }
 
     template <typename type>
-    static inline void parse(type& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void parse(type& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
         get_val(a_dst, a_json, a_error_output);
     }
 
-    static inline void parse(std::string& a_dst, const char* a_json, std::string* a_error_output)
+    static inline void parse(std::string& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
         get_val(a_dst, a_json, a_error_output);
     }
 
     template<size_t N>
-    static inline void parse(char (&a_vect)[N], const char* a_json, std::string* a_error_output)
+    static inline void parse(char (&a_vect)[N], const char* a_json, std::vector<std::string>* a_error_output)
     {
         get_val(a_vect, a_json, a_error_output);
     }
 
     template<typename T, size_t N>
-    static inline void parse(T (&a_vect)[N], const char* a_json, std::string* a_error_output)
+    static inline void parse(T (&a_vect)[N], const char* a_json, std::vector<std::string>* a_error_output)
     {
         if (a_json)
         {
             bool success = false;
             ZaxJsonTopTokenizer vector_data(a_json, false, &success);
             if (!success && a_error_output)
-                (*a_error_output) += std::string("ERROR: error parsing a vector in JSON: '") + a_json + "'\n";
+                a_error_output->push_back(std::string("ERROR: error parsing a vector in JSON: '") + a_json + "'\n");
             unsigned int l_size = N > vector_data.m_list_values.size() ? vector_data.m_list_values.size() : N;
             for (unsigned int i = 0; i < l_size; ++i)
                 get_val(a_vect[i], vector_data.m_list_values[i], a_error_output);
@@ -526,14 +547,14 @@ public:
     }
 
     template <template <typename, typename... > class ct,  class vt>
-    static inline void parse(ct<vt>& a_vect, const char* a_json, std::string* a_error_output)
+    static inline void parse(ct<vt>& a_vect, const char* a_json, std::vector<std::string>* a_error_output)
     {
         if (a_json)
         {
             bool success = false;
             ZaxJsonTopTokenizer vector_data(a_json, false, &success);
             if (!success && a_error_output)
-                (*a_error_output) += std::string("ERROR: error parsing a vector in JSON: '") + a_json + "'\n";
+                a_error_output->push_back(std::string("ERROR: error parsing a vector in JSON: '") + a_json + "'\n");
             a_vect.resize(vector_data.m_list_values.size());
             auto r = a_vect.begin();
             for (auto & m_list_value : vector_data.m_list_values)
@@ -544,7 +565,7 @@ public:
     }
 
     template <template <typename, typename, typename... > class ct, class mt, class cot>
-    static inline void parse(ct<std::string, mt, cot>& a_map, const char* a_json, std::string* a_error_output)
+    static inline void parse(ct<std::string, mt, cot>& a_map, const char* a_json, std::vector<std::string>* a_error_output)
     {
         a_map.clear();
         if (a_json)
@@ -552,7 +573,7 @@ public:
             bool success = false;
             ZaxJsonTopTokenizer vector_data(a_json, false, &success);
             if (!success && a_error_output)
-                (*a_error_output) += std::string("ERROR: error parsing a map in JSON: '") + a_json + "'\n";
+                a_error_output->push_back(std::string("ERROR: error parsing a map in JSON: '") + a_json + "'\n");
             for (auto & m_value : vector_data.m_values)
             {
                 if (!m_value.second)
@@ -641,12 +662,12 @@ zax_to_json_(char* a_json, const char* a_json_buffer_end, int& a_result, std::tu
 
 template<std::size_t I = 0, typename... vt>
 inline typename std::enable_if<I == sizeof...(vt), void>::type
-zax_from_json_(const char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenizer* parsed_json, std::string* a_error_output = nullptr)
+zax_from_json_(const char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenizer* parsed_json, std::vector<std::string>* a_error_output = nullptr)
 {}
 
 template<std::size_t I = 0, typename... vt>
 inline typename std::enable_if < I < sizeof...(vt), void>::type
-zax_from_json_(const char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenizer* parsed_json, std::string* a_error_output = nullptr)
+zax_from_json_(const char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenizer* parsed_json, std::vector<std::string>* a_error_output = nullptr)
 {
     if (!parsed_json)
     {
@@ -657,7 +678,7 @@ zax_from_json_(const char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenize
             bool success = false;
             parsed_json = new ZaxJsonTopTokenizer(a_json, false, &success);
             if (!success && a_error_output)
-                (*a_error_output) += std::string("ERROR: error parsing JSON: '") + a_json + "'\n";
+                a_error_output->push_back(std::string("ERROR: error parsing JSON: '") + a_json + "'\n");
         }
     }
     if (parsed_json && I < sizeof...(vt))
@@ -665,8 +686,8 @@ zax_from_json_(const char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenize
         auto it = parsed_json->m_values.find(std::get<I>(a_tuple).first);
         if (it != parsed_json->m_values.end())
             ZaxJsonParser::parse(*std::get<I>(a_tuple).second, parsed_json->m_values[std::get<I>(a_tuple).first], a_error_output);
-        else if (a_error_output)
-            (*a_error_output) += std::string("WARNING: JSON property is missing: '") + std::get<I>(a_tuple).first + "'\n";
+        else if (a_error_output && ZaxJsonParser::warnings_enabled())
+            a_error_output->push_back(std::string("WARNING: JSON property is missing: '") + std::get<I>(a_tuple).first + "'\n");
     }
     zax_from_json_ < I + 1, vt... > (a_json, a_tuple, parsed_json, a_error_output);
     if (I == sizeof...(vt) - 1)
@@ -675,27 +696,27 @@ zax_from_json_(const char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenize
 
 template<std::size_t I = 0, typename... vt>
 inline typename std::enable_if<I == sizeof...(vt), void>::type
-zax_from_json_(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenizer* parsed_json, std::string* a_error_output = nullptr)
+zax_from_json_(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenizer* parsed_json, std::vector<std::string>* a_error_output = nullptr)
 {}
 
 template<std::size_t I = 0, typename... vt>
 inline typename std::enable_if < I < sizeof...(vt), void>::type
-zax_from_json_(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenizer* parsed_json, std::string* a_error_output = nullptr)
+zax_from_json_(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenizer* parsed_json, std::vector<std::string>* a_error_output = nullptr)
 {
     if (!parsed_json)
     {
         bool success = false;
         parsed_json = new ZaxJsonTopTokenizer(a_json, true, &success);
         if (!success && a_error_output)
-            (*a_error_output) += std::string("ERROR: error parsing JSON: '") + a_json + "'\n";
+            a_error_output->push_back(std::string("ERROR: error parsing JSON: '") + a_json + "'\n");
     }
     if (I < sizeof...(vt))
     {
         auto it = parsed_json->m_values.find(std::get<I>(a_tuple).first);
         if (it != parsed_json->m_values.end())
             ZaxJsonParser::parse(*std::get<I>(a_tuple).second, parsed_json->m_values[std::get<I>(a_tuple).first], a_error_output);
-        else if (a_error_output)
-            (*a_error_output) += std::string("WARNING: JSON property is missing: '") + std::get<I>(a_tuple).first + "'\n";
+        else if (a_error_output && ZaxJsonParser::warnings_enabled())
+            a_error_output->push_back(std::string("WARNING: JSON property is missing: '") + std::get<I>(a_tuple).first + "'\n");
     }
     zax_from_json_ < I + 1, vt... > (a_json, a_tuple, parsed_json, a_error_output);
     if (I == sizeof...(vt) - 1)
@@ -706,7 +727,7 @@ zax_from_json_(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenizer* par
 #define zax_convert_from_json_err(arg_json, arg_obj, err_stream, ...) decltype(arg_obj)& object_to_convert = arg_obj; zax_from_json_(arg_json, std::make_tuple(__VA_ARGS__), 0, err_stream);
 
 #define ZAX_JSON_SERIALIZABLE_BASIC(...)\
-    virtual void zax_from_json(const char* a_json, std::string* a_err_stream = 0) {\
+    virtual void zax_from_json(const char* a_json, std::vector<std::string>* a_err_stream = 0) {\
         zax_convert_from_json_err(a_json, *this, a_err_stream, ##__VA_ARGS__);\
     }\
     virtual int zax_to_json(char* a_json, int a_alloc_size, int a_deep = 0) const {\
