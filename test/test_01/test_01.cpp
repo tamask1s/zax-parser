@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <limits.h>
+#include <climits>
 #include <vector>
 #include <set>
 #include <queue>
