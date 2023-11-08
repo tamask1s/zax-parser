@@ -14,7 +14,7 @@
 * limitations under the License.                                           *
 ***************************************************************************/
 
-#include <limits.h>
+#include <climits>
 #include <cstring>
 #include <string>
 #include <cstdio>
