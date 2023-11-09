@@ -99,7 +99,7 @@ class ZaxJsonParser
         return snprintf(a_json, a_json_buffer_end - a_json, "%d", a_val);
     }
 
-    static inline int print_val(char* a_json, const char* a_json_buffer_end, const int64_t a_val, int a_deep)
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const long long int a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "%" PRId64, a_val);
     }
@@ -171,7 +171,7 @@ class ZaxJsonParser
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%d", a_key, a_val);
     }
 
-    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const int64_t a_val, int a_deep)
+    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const long long int a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%" PRId64, a_key, a_val);
     }
@@ -278,7 +278,7 @@ class ZaxJsonParser
         a_dst = a_json ? atoi(a_json) : 0;
     }
 
-    static inline void get_val(int64_t& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
+    static inline void get_val(long long int& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
         a_dst = a_json ? atoll(a_json) : 0;
     }
