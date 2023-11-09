@@ -251,7 +251,7 @@ ZaxJsonTopTokenizer::~ZaxJsonTopTokenizer()
 unsigned int ZaxJsonParser::initial_alloc_size_ = 10000000;
 unsigned int ZaxJsonParser::maximum_alloc_size_ = 100000000;
 unsigned int ZaxJsonParser::nr_indent_ = 0;
-bool ZaxJsonParser::warnings_enabled_ = false;
+bool ZaxJsonParser::warnings_enabled_ = true;
 
 unsigned int ZaxJsonParser::initial_alloc_size()
 {
