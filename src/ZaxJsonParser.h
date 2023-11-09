@@ -44,9 +44,9 @@ public:
 
 class ZaxJsonParser
 {
-    static unsigned int initial_alloc_size_;
-    static unsigned int maximum_alloc_size_;
-    static unsigned int nr_indent_;
+    static uint32_t initial_alloc_size_;
+    static uint32_t maximum_alloc_size_;
+    static uint32_t nr_indent_;
     static bool warnings_enabled_;
 
     template<typename T, size_t N>
@@ -64,12 +64,12 @@ class ZaxJsonParser
         return result;
     }
 
-    static inline int print_val(char* a_json, const char* a_json_buffer_end, const int a_val, int a_deep)
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const int32_t a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "%d", a_val);
     }
 
-    static inline int print_val(char* a_json, const char* a_json_buffer_end, const unsigned int a_val, int a_deep)
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const uint32_t a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "%u", a_val);
     }
@@ -79,7 +79,7 @@ class ZaxJsonParser
         return snprintf(a_json, a_json_buffer_end - a_json, "%s", a_val ? "true" : "false");
     }
 
-    static inline int print_val(char* a_json, const char* a_json_buffer_end, const char a_val, int a_deep)
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const int8_t a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "%c", a_val);
     }
@@ -99,7 +99,7 @@ class ZaxJsonParser
         return snprintf(a_json, a_json_buffer_end - a_json, "%d", a_val);
     }
 
-    static inline int print_val(char* a_json, const char* a_json_buffer_end, const long long int a_val, int a_deep)
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const int64_t a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "%" PRId64, a_val);
     }
@@ -136,12 +136,12 @@ class ZaxJsonParser
         return snprintf(a_json, a_json_buffer_end - a_json, R"("%s":"%s")", a_key, a_val.c_str());
     }
 
-    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const int a_val, int a_deep)
+    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const int32_t a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%d", a_key, a_val);
     }
 
-    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const unsigned int a_val, int a_deep)
+    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const uint32_t a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%u", a_key, a_val);
     }
@@ -151,7 +151,7 @@ class ZaxJsonParser
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%s", a_key, a_val ? "true" : "false");
     }
 
-    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const char a_val, int a_deep)
+    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const int8_t a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%c", a_key, a_val);
     }
@@ -171,7 +171,7 @@ class ZaxJsonParser
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%d", a_key, a_val);
     }
 
-    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const long long int a_val, int a_deep)
+    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const int64_t a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%" PRId64, a_key, a_val);
     }
@@ -207,19 +207,23 @@ class ZaxJsonParser
         a_dst = a_json ? atoi(a_json) : 0;
     }
 
-    static inline void get_val(unsigned int& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
+    static inline void get_val(uint32_t& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
         if (a_error_output)
         {
             char* endptr;
-            long long int tmp = strtol(a_json, &endptr, 10);
+            int64_t tmp = strtol(a_json, &endptr, 10);
             if (*endptr != '\0' || endptr == a_json)
             {
-                a_error_output->push_back(std::string("ERROR: error parsing an unsigned int in JSON: '") + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing an uint32_t in JSON: '") + a_json + "'\n");
             }
-            else if (a_dst > UINT_MAX)
+            else if (tmp > UINT_MAX)
             {
-                a_error_output->push_back(std::string("ERROR: error parsing an unsigned int in JSON: '") + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: an uint32_t is bigger then its range: '") + a_json + "'\n");
+            }
+            else if (tmp < 0)
+            {
+                a_error_output->push_back(std::string("ERROR: an uint32_t is smaller than 0: '") + a_json + "'\n");
             }
             else
                 a_dst = tmp;
@@ -254,7 +258,7 @@ class ZaxJsonParser
             a_dst = false;
     }
 
-    static inline void get_val(char& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
+    static inline void get_val(int8_t& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
         a_dst = a_json ? atoi(a_json) : 0;
     }
@@ -274,7 +278,7 @@ class ZaxJsonParser
         a_dst = a_json ? atoi(a_json) : 0;
     }
 
-    static inline void get_val(long long int& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
+    static inline void get_val(int64_t& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
         a_dst = a_json ? atoll(a_json) : 0;
     }
@@ -325,7 +329,7 @@ class ZaxJsonParser
     template <typename vtype>
     static inline char* print_to_json_alloc(const vtype& a_val, int a_deep)
     {
-        unsigned int alloc_size = initial_alloc_size();
+        uint32_t alloc_size = initial_alloc_size();
         char* json = new char[alloc_size];
         while (!a_val.zax_to_json(json, alloc_size - 1, a_deep))
             if (reallocate_json(json, alloc_size))
@@ -334,22 +338,22 @@ class ZaxJsonParser
     }
 
 public:
-    static unsigned int initial_alloc_size();
-    static unsigned int maximum_alloc_size();
-    static unsigned int get_nr_indent();
-    static void set_initial_alloc_size(unsigned int a_size);
-    static void set_maximum_alloc_size(unsigned int a_size);
-    static void set_indent(unsigned int a_size);
+    static uint32_t initial_alloc_size();
+    static uint32_t maximum_alloc_size();
+    static uint32_t get_nr_indent();
+    static void set_initial_alloc_size(uint32_t a_size);
+    static void set_maximum_alloc_size(uint32_t a_size);
+    static void set_indent(uint32_t a_size);
     static bool warnings_enabled();
     static void set_warnings_enabled(bool val);
 
     static inline void indent(char*& a_json, int& a_result, int a_deep)
     {
-        if (unsigned int nr_indent = ZaxJsonParser::get_nr_indent())
+        if (uint32_t nr_indent = ZaxJsonParser::get_nr_indent())
         {
             *a_json++ = '\n';
             ++a_result;
-            for (unsigned int i = 0; i < nr_indent * a_deep; ++i)
+            for (uint32_t i = 0; i < nr_indent * a_deep; ++i)
             {
                 *a_json++ = ' ';
                 ++a_result;
@@ -364,7 +368,7 @@ public:
         if (nr_indent_)
         {
             *++a_json = '\n';
-            for (unsigned int i = 0; i < nr_indent_ * a_deep; ++i)
+            for (uint32_t i = 0; i < nr_indent_ * a_deep; ++i)
             {
                 *++a_json = ' ';
                 ++a_result;
@@ -383,7 +387,7 @@ public:
         ++a_result;
     }
 
-    static inline bool reallocate_json(char*& a_json, unsigned int& a_alloc_size)
+    static inline bool reallocate_json(char*& a_json, uint32_t& a_alloc_size)
     {
         delete[] a_json;
         a_alloc_size *= 2;
@@ -416,7 +420,7 @@ public:
         if (_result > 0)
         {
             a_json += _result;
-            for (unsigned int i = 0; i < N; ++i)
+            for (uint32_t i = 0; i < N; ++i)
             {
                 if (i)
                     cat_comma_space(a_json, _result, a_deep);
@@ -537,12 +541,12 @@ public:
             ZaxJsonTopTokenizer vector_data(a_json, false, &success);
             if (!success && a_error_output)
                 a_error_output->push_back(std::string("ERROR: error parsing a vector in JSON: '") + a_json + "'\n");
-            unsigned int l_size = N > vector_data.m_list_values.size() ? vector_data.m_list_values.size() : N;
-            for (unsigned int i = 0; i < l_size; ++i)
+            uint32_t l_size = N > vector_data.m_list_values.size() ? vector_data.m_list_values.size() : N;
+            for (uint32_t i = 0; i < l_size; ++i)
                 get_val(a_vect[i], vector_data.m_list_values[i], a_error_output);
         }
         else
-            for (unsigned int i = 0; i < N; ++i)
+            for (uint32_t i = 0; i < N; ++i)
                 get_val(a_vect[i], 0, a_error_output);
     }
 
@@ -734,7 +738,7 @@ zax_from_json_(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenizer* par
         return zax_convert_to_json_deep(a_json, a_alloc_size, *this, a_deep, ##__VA_ARGS__);\
     }\
     virtual std::string zax_to_json(int a_deep = 0) const {\
-        unsigned int alloc_size = ZaxJsonParser::initial_alloc_size();\
+        uint32_t alloc_size = ZaxJsonParser::initial_alloc_size();\
         char* json = new char[alloc_size];\
         while (!zax_convert_to_json_deep(json, alloc_size - 1, *this, a_deep, ##__VA_ARGS__))\
             if (!ZaxJsonParser::reallocate_json(json, alloc_size))\
