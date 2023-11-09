@@ -248,37 +248,37 @@ ZaxJsonTopTokenizer::~ZaxJsonTopTokenizer()
     delete[] m_own_buffer;
 }
 
-unsigned int ZaxJsonParser::initial_alloc_size_ = 10000000;
-unsigned int ZaxJsonParser::maximum_alloc_size_ = 100000000;
-unsigned int ZaxJsonParser::nr_indent_ = 0;
+uint32_t ZaxJsonParser::initial_alloc_size_ = 10000000;
+uint32_t ZaxJsonParser::maximum_alloc_size_ = 100000000;
+uint32_t ZaxJsonParser::nr_indent_ = 0;
 bool ZaxJsonParser::warnings_enabled_ = true;
 
-unsigned int ZaxJsonParser::initial_alloc_size()
+uint32_t ZaxJsonParser::initial_alloc_size()
 {
     return initial_alloc_size_;
 }
 
-unsigned int ZaxJsonParser::maximum_alloc_size()
+uint32_t ZaxJsonParser::maximum_alloc_size()
 {
     return maximum_alloc_size_;
 }
 
-unsigned int ZaxJsonParser::get_nr_indent()
+uint32_t ZaxJsonParser::get_nr_indent()
 {
     return nr_indent_;
 }
 
-void ZaxJsonParser::set_initial_alloc_size(unsigned int a_size)
+void ZaxJsonParser::set_initial_alloc_size(uint32_t a_size)
 {
     initial_alloc_size_ = a_size;
 }
 
-void ZaxJsonParser::set_maximum_alloc_size(unsigned int a_size)
+void ZaxJsonParser::set_maximum_alloc_size(uint32_t a_size)
 {
     maximum_alloc_size_ = a_size;
 }
 
-void ZaxJsonParser::set_indent(unsigned int a_size)
+void ZaxJsonParser::set_indent(uint32_t a_size)
 {
     nr_indent_ = a_size;
 }
