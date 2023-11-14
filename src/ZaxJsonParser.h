@@ -267,7 +267,21 @@ class ZaxJsonParser
 
     static inline void get_val(uint16_t& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
-        a_dst = a_json ? atoi(a_json) : 0;
+        char* endptr;
+        int64_t tmp = strtoll(a_json, &endptr, 10);
+        if (a_error_output)
+        {
+            if (*endptr != '\0' || endptr == a_json)
+                a_error_output->push_back(std::string("ERROR: error parsing an uint16_t in JSON: '") + a_json + "'\n");
+            else if (tmp > INT16_MAX)
+                a_error_output->push_back(std::string("ERROR: an uint16_t is bigger than its range: '") + a_json + "'\n");
+            else if (tmp < 0)
+                a_error_output->push_back(std::string("ERROR: an uint16_t is smaller than 0: '") + a_json + "'\n");
+            else
+                a_dst = tmp;
+        }
+        else
+            a_dst = tmp;
     }
 
     static inline void get_val(long long int& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
