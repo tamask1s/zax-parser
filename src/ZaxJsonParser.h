@@ -74,16 +74,6 @@ class ZaxJsonParser
         return snprintf(a_json, a_json_buffer_end - a_json, "%u", a_val);
     }
 
-    static inline int print_val(char* a_json, const char* a_json_buffer_end, const int64_t a_val, int a_deep)
-    {
-        return snprintf(a_json, a_json_buffer_end - a_json, "%d", a_val);
-    }
-
-    static inline int print_val(char* a_json, const char* a_json_buffer_end, const uint64_t a_val, int a_deep)
-    {
-        return snprintf(a_json, a_json_buffer_end - a_json, "%u", a_val);
-    }
-
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const bool a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "%s", a_val ? "true" : "false");
@@ -152,16 +142,6 @@ class ZaxJsonParser
     }
 
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const uint32_t a_val, int a_deep)
-    {
-        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%u", a_key, a_val);
-    }
-
-    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const int64_t a_val, int a_deep)
-    {
-        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%d", a_key, a_val);
-    }
-
-    static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const uint64_t a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%u", a_key, a_val);
     }
@@ -239,25 +219,6 @@ class ZaxJsonParser
                 a_error_output->push_back(std::string("ERROR: an uint32_t is bigger than its range: '") + a_json + "'\n");
             else if (tmp < 0)
                 a_error_output->push_back(std::string("ERROR: an uint32_t is smaller than 0: '") + a_json + "'\n");
-            else
-                a_dst = tmp;
-        }
-        else
-            a_dst = tmp;
-    }
-
-    static inline void get_val(uint64_t& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
-    {
-        char* endptr;
-        int64_t tmp = strtoll(a_json, &endptr, 10);
-        if (a_error_output)
-        {
-            if (*endptr != '\0' || endptr == a_json)
-                a_error_output->push_back(std::string("ERROR: error parsing an uint64_t in JSON: '") + a_json + "'\n");
-            else if (tmp > UINT64_MAX)
-                a_error_output->push_back(std::string("ERROR: an uint64_t is bigger than its range: '") + a_json + "'\n");
-            else if (tmp < 0)
-                a_error_output->push_back(std::string("ERROR: an uint64_t is smaller than 0: '") + a_json + "'\n");
             else
                 a_dst = tmp;
         }
