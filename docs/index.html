@@ -827,7 +827,7 @@ asciidoc.install(2);
 </pre></div></div></div>
 <div class="paragraph"><p>Zax json parser is a very basic JSON parser implemented in C++ 11 with probably the simplest possible interface, providing a kind of a struct to JSON and JSON to struct conversion.<br />
 GCC, CLang or Intel compilers are needed in order to compile. Microsoft&#8217;s compiler is not supported due to some bugs in its variadic macro handling. The library is using heavily the template argument deduction feature of modern compilers.<br />
-The library seems to work, but it has minimal tests, and its error handling was not tested. I made it public because I was searching for something similar in C++ previously without luck, and I hope it will be useful for someone. The implementation is missing some features, as I have implemented only the features I needed.<br />
+The library seems to work, but it has minimal tests. I made it public because I was searching for something similar in C++ previously without luck, and I hope it will be useful for someone. The implementation is missing some features, as I have implemented only the features I needed.<br />
 Note, that C structures are not fully compatible with the JSON concept, therefore some features are supported in a specific manner: for example a value of <em>null</em> in the JSON string cannot delete the member from the C structure. Also, all the type information in a JSON string will be lost: the types of values will be determinded by the types of the fields of the classes.</p></div>
 <div class="paragraph"><p>Compiles with the following compilers (and probably with their newer versions):</p></div>
 <div class="ulist"><ul>

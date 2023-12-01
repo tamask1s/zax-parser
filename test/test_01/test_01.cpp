@@ -29,21 +29,29 @@ struct struct1
 
 void json_example_01()
 {
+    cout << "Example 1:" << endl;
     struct1 some_obj;
     char json_string[1000];
     cout << "sizeof(json_string)" << sizeof(json_string) << endl;
     zax_convert_to_json(json_string, sizeof(json_string), some_obj, struct1_json_properties);
     cout << json_string << endl;
+    cout << "End of example 1" << endl;
 }
 
 void json_example_02()
 {
+    cout << "Example 2:" << endl;
     struct1 some_obj;
     char json_string[] = R"({"x":null, "name":null, "b":null, "weights":null})";
+    cout << "hello1" << endl;
+    cout << "json string: " << json_string << endl;
     zax_convert_from_json(json_string, some_obj, struct1_json_properties);
     char json_string2[10000];
+    cout << "hello2" << endl;
     zax_convert_to_json(json_string2, sizeof(json_string2), some_obj, struct1_json_properties);
+    cout << "hello3" << endl;
     cout << json_string2 << endl;
+    cout << "End of example 2" << endl;
 }
 
 void json_example_03()
@@ -398,6 +406,107 @@ void json_example_22()
     cout << some_obj << endl;
 }
 
+struct struct_with_int_end
+{
+    uint64_t my_uint64;
+    uint16_t my_uint16;
+
+    ZAX_JSON_SERIALIZABLE(struct_with_int_end, JSON_PROPERTY(my_uint64), JSON_PROPERTY(my_uint16))
+};
+
+void parse_and_print(struct_with_int_end &some_obj, const char *str, vector<string> &errors)
+{
+    some_obj.zax_from_json(str, &errors);
+    cout << some_obj.my_uint64 << " " << some_obj.my_uint16 << endl;
+}
+
+void json_example_23()
+{
+    cout << "Testing whitespaces after an integer:" << endl;
+    struct_with_int_end some_obj;
+    vector<string> errors;
+    parse_and_print(some_obj, R"({"my_uint64":123, "my_uint16":"65533"   })", errors);
+    parse_and_print(some_obj, R"({"my_uint64":12a 3, "my_uint16":65534   })", errors);
+    parse_and_print(some_obj, R"({"my_uint64":e123 , "my_uint16": 65536   })", errors);
+    parse_and_print(some_obj, R"({"my_uint64":0123 , "my_uint16":65535   })", errors);
+    parse_and_print(some_obj, R"({"my_uint64":0123 , "my_uint16":65536   })", errors);
+    parse_and_print(some_obj, R"({"my_uint64":123, "my_uint16":-2   })", errors);
+    parse_and_print(some_obj, R"({"my_uint64":123, "my_uint16":3a56  })", errors);
+    parse_and_print(some_obj, R"({"my_uint64":123, "my_uint16": 156})", errors);
+    parse_and_print(some_obj, R"({"my_uint64":123, "my_uint16":10018  })", errors);
+    parse_and_print(some_obj, R"({"my_uint64":123, "my_uint16":f0018  })", errors);
+
+    for (string e : errors)
+        cout << e;
+}
+
+struct struct_with_int_types
+{
+    int8_t my_int8;
+    int16_t my_int16;
+    uint16_t my_uint16;
+    int32_t my_int32;
+    uint32_t my_uint32;
+    int64_t my_int64;
+    uint64_t my_uint64;
+
+    ZAX_JSON_SERIALIZABLE(struct_with_int_types, JSON_PROPERTY(my_int8), JSON_PROPERTY(my_int16), JSON_PROPERTY(my_uint16),
+                          JSON_PROPERTY(my_int32), JSON_PROPERTY(my_uint32), JSON_PROPERTY(my_int64), JSON_PROPERTY(my_uint64))
+};
+
+void json_error_handling_1()
+{
+    cout << "Testing errors when values are lower than the accepted range:" << endl;
+    vector<string> errors;
+    struct_with_int_types some_obj;
+    some_obj.zax_from_json(R"({"my_int8":-130, "my_int16":-32770, "my_uint16":-304, "my_int32":-2147483650, "my_uint32":-2, "my_int64":-9223372036854775810, "my_uint64":-5})", &errors);
+    for (string e : errors)
+        cout << e;
+}
+
+void json_error_handling_2()
+{
+    cout << "Testing errors when values are higher than the accepted range:" << endl;
+    vector<string> errors;
+    struct_with_int_types some_obj;
+    some_obj.zax_from_json(R"({"my_int8":"130", "my_int16":32770, "my_uint16":65539, "my_int32":2147483650, "my_uint32":4294967299, "my_int64":9223372036854775810, "my_uint64":18446744073709551620})", &errors);
+    for (string e : errors)
+        cout << e;
+}
+
+void json_error_handling_3()
+{
+    cout << "Testing errors when values are invalid for whole numbers:" << endl;
+    vector<string> errors;
+    struct_with_int_types some_obj;
+    some_obj.zax_from_json(R"({"my_int8":13a0, "my_int16":32-770, "my_uint16":6e5539, "my_int32":214g74836.50, "my_uint32":42.94967299, "my_int64":92233720368a4, "my_uint64":4?294a96.7299})", &errors);
+    cout << "this is my int_8: " << some_obj.my_int8 << endl;
+    cout << some_obj.my_int8 << " " << some_obj.my_int16 << " " << some_obj.my_uint16 << " " << some_obj.my_int32 << " " << some_obj.my_uint32
+        << " " << some_obj.my_int64 << " " << some_obj.my_uint64 << endl;
+    for (string e : errors)
+        cout << e;
+}
+
+struct struct_with_other_types
+{
+    float my_float;
+    double my_double;
+    bool my_bool;
+
+    ZAX_JSON_SERIALIZABLE(struct_with_other_types, JSON_PROPERTY(my_float), JSON_PROPERTY(my_double), JSON_PROPERTY(my_bool))
+};
+
+void json_error_handling_4()
+{
+    cout << "Testing errors when values are invalid:" << endl;
+    vector<string> errors;
+    struct_with_other_types some_obj;
+    some_obj.zax_from_json(R"({"my_float":13.24k, "my_double":32-770, "my_bool":notaboolean})", &errors);
+    cout << some_obj.my_float << " " << some_obj.my_double << " " << some_obj.my_bool << endl;
+    for (string e : errors)
+        cout << e;
+}
+
 int main()
 {
     json_example_01();
@@ -422,5 +531,10 @@ int main()
     json_example_20();
     json_example_21();
     json_example_22();
+    json_example_23();
+    json_error_handling_1();
+    json_error_handling_2();
+    json_error_handling_3();
+    json_error_handling_4();
     return 0;
 }
