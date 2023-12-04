@@ -2,7 +2,7 @@
 CC=g++
 CFLAGS=-c -Wall -O2 -I ../../src
 LDFLAGS=
-EXECUTABLE_NAME=tests
+EXECUTABLE_NAME=testes
 
 # Folders
 SRC=src
