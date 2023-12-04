@@ -29,30 +29,21 @@ struct struct1
 
 void json_example_01()
 {
-    cout << "Example 1:" << endl;
     struct1 some_obj;
     char json_string[1000];
     cout << "sizeof(json_string)" << sizeof(json_string) << endl;
     zax_convert_to_json(json_string, sizeof(json_string), some_obj, struct1_json_properties);
     cout << json_string << endl;
-    cout << "End of example 1" << endl;
 }
 
 void json_example_02()
 {
-    cout << "Example 2:" << endl;
     struct1 some_obj;
     char json_string[] = R"({"x":null, "name":null, "b":null, "weights":null})";
-    cout << "hello1" << endl;
-    cout << "json string: " << json_string << endl;
     zax_convert_from_json(json_string, some_obj, struct1_json_properties);
     char json_string2[10000];
-    cout << "hello2" << endl;
     zax_convert_to_json(json_string2, sizeof(json_string2), some_obj, struct1_json_properties);
-    cout << "hello3" << endl;
     cout << json_string2 << endl;
-    cout << "End of example 2" << endl;
-}
 
 void json_example_03()
 {
