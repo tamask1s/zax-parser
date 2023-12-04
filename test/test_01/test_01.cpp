@@ -494,7 +494,7 @@ void json_error_handling_4()
     vector<string> errors;
     struct_with_other_types some_obj;
     some_obj.zax_from_json(R"({"my_float":13.24k, "my_double":32-770, "my_bool":notaboolean})", &errors);
-    cout << some_obj.my_float << " " << some_obj.my_double << " " << some_obj.my_bool << endl;
+    cout << some_obj.my_float << " " << some_obj.my_double << endl;
     for (string e : errors)
         cout << e;
 }
