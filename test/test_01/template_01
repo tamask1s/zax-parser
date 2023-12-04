@@ -14,10 +14,10 @@ some_obj.inside.x2 : {"title":"test bible title", "options":["option 1", "option
 Json string to be assigned to object:
 {"x":99, "criteria":["aspect x"], "title":"test title", "options":["option 1", "option 2", "option 3"], "nonexisting_field":"", "scores":[[1, 1, 2], [3, 5, 8], [13, 21], [34, 55]], "weights":[4, 3, 2, 1], "inside":{"x":"11", "y":"9"}}
 
-Values before assignment:
+Values before assignment: 
 {"title":"some title", "options":["option1", "option2", "option3"], "criteria":["criteria1", "criteria2"], "scores":[[1, 2, 3], [7, 8, 9]], "x":6, "inside":{"x":11, "y":7}, "weights":[1, 2, 3]}
 
-Json string computed after assignment:
+Json string computed after assignment: 
 {"title":"test title", "options":["option 1", "option 2", "option 3"], "criteria":["aspect x"], "scores":[[1, 1, 2], [3, 5, 8], [13, 21], [34, 55]], "x":99, "inside":{"x":11, "y":9}, "weights":[4, 3, 2, 1]}
 
 some title
@@ -78,8 +78,7 @@ ERROR: error parsing uint32_t in JSON: 'Result too large: 4294967299'
 ERROR: error parsing int64_t in JSON: 'Result too large: 9223372036854775810'
 ERROR: error parsing uint64_t in JSON: 'Result too large: 18446744073709551620'
 Testing errors when values are invalid for whole numbers:
-this is my int_8:
- 32 6 214 42 92233720368 4
+32 6 214 42 92233720368 4
 Testing errors when values are invalid:
 13.24 32
 ERROR: 'notaboolean' is not a boolean

@@ -472,8 +472,7 @@ void json_error_handling_3()
     vector<string> errors;
     struct_with_int_types some_obj;
     some_obj.zax_from_json(R"({"my_int8":13a0, "my_int16":32-770, "my_uint16":6e5539, "my_int32":214g74836.50, "my_uint32":42.94967299, "my_int64":92233720368a4, "my_uint64":4?294a96.7299})", &errors);
-    cout << "this is my int_8: " << some_obj.my_int8 << endl;
-    cout << some_obj.my_int8 << " " << some_obj.my_int16 << " " << some_obj.my_uint16 << " " << some_obj.my_int32 << " " << some_obj.my_uint32
+    cout << some_obj.my_int16 << " " << some_obj.my_uint16 << " " << some_obj.my_int32 << " " << some_obj.my_uint32
         << " " << some_obj.my_int64 << " " << some_obj.my_uint64 << endl;
     for (string e : errors)
         cout << e;
