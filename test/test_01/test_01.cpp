@@ -44,6 +44,7 @@ void json_example_02()
     char json_string2[10000];
     zax_convert_to_json(json_string2, sizeof(json_string2), some_obj, struct1_json_properties);
     cout << json_string2 << endl;
+}
 
 void json_example_03()
 {
