@@ -65,18 +65,15 @@ Testing errors when values are lower than the accepted range:
 ERROR: error parsing int8_t in JSON, out of range: '-130'
 ERROR: error parsing int16_t in JSON, out of range: '-32770'
 ERROR: error parsing uint16_t in JSON, out of range: '-304'
-ERROR: error parsing int32_t in JSON: 'Result too large: -2147483650'
-ERROR: error parsing uint32_t in JSON: 'No error: -2'
-ERROR: error parsing int64_t in JSON: 'Result too large: -9223372036854775810'
-ERROR: error parsing uint64_t in JSON: 'No error: -5'
+ERROR: error parsing uint32_t in JSON: 'Success: -2'
+ERROR: error parsing int64_t in JSON: 'Numerical result out of range: -9223372036854775810'
+ERROR: error parsing uint64_t in JSON: 'Success: -5'
 Testing errors when values are higher than the accepted range:
 ERROR: error parsing int8_t in JSON, out of range: '130'
 ERROR: error parsing int16_t in JSON, out of range: '32770'
 ERROR: error parsing uint16_t in JSON, out of range: '65539'
-ERROR: error parsing int32_t in JSON: 'Result too large: 2147483650'
-ERROR: error parsing uint32_t in JSON: 'Result too large: 4294967299'
-ERROR: error parsing int64_t in JSON: 'Result too large: 9223372036854775810'
-ERROR: error parsing uint64_t in JSON: 'Result too large: 18446744073709551620'
+ERROR: error parsing int64_t in JSON: 'Numerical result out of range: 9223372036854775810'
+ERROR: error parsing uint64_t in JSON: 'Numerical result out of range: 18446744073709551620'
 Testing errors when values are invalid for whole numbers:
 32 6 214 42 92233720368 4
 Testing errors when values are invalid:

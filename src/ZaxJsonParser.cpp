@@ -22,6 +22,10 @@
 #include <vector>
 #include "ZaxJsonParser.h"
 
+#include <sstream>
+#include <limits>
+#include <cstring>
+
 static inline const char* zax_get_close_token(const char* a_str_to_find, char a_open_token, char a_close_token)
 {
     int equilibrium = 0;

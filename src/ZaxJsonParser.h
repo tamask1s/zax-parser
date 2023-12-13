@@ -21,10 +21,6 @@
 #define PRId64 "lld"
 #endif
 
-#include <sstream>
-#include <limits>
-#include <cstring>
-
 class ZaxJsonTopTokenizer
 {
     struct cstring_comparator
@@ -105,7 +101,7 @@ class ZaxJsonParser
 
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const int64_t a_val, int a_deep)
     {
-        return snprintf(a_json, a_json_buffer_end - a_json, "%lld", a_val);
+        return snprintf(a_json, a_json_buffer_end - a_json, "%" PRId64, a_val);
     }
 
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const char* a_val, int a_deep)
@@ -123,14 +119,14 @@ class ZaxJsonParser
         return snprintf(a_json, a_json_buffer_end - a_json, "%d", a_val);
     }
 
-    static inline int print_val(char* a_json, const char* a_json_buffer_end, const uint64_t a_val, int a_deep)
+    static inline int print_val(char* a_json, const char* a_json_buffer_end, const  uint64_t a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "%llu", a_val);
     }
 
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const long double a_val, int a_deep)
     {
-        return snprintf(a_json, a_json_buffer_end - a_json, "%Lf", a_val);
+        return snprintf(a_json, a_json_buffer_end - a_json, "%Le", a_val);
     }
 
     template <template <typename, typename... > class ct,  class vt>
@@ -192,7 +188,7 @@ class ZaxJsonParser
 
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const int64_t a_val, int a_deep)
     {
-        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%lld", a_key, a_val);
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%" PRId64, a_key, a_val);
     }
 
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const int16_t a_val, int a_deep)
@@ -207,7 +203,7 @@ class ZaxJsonParser
 
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const long double a_val, int a_deep)
     {
-        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%Lf", a_key, a_val);
+        return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%Le", a_key, a_val);
     }
 
     template <typename vtype>
@@ -240,14 +236,16 @@ class ZaxJsonParser
     {
         char *endptr;
         errno = 0;
-        const int32_t tmp = strtol(a_json, &endptr, 10);
+        int32_t tmp = 0;
+        if (a_json)
+            tmp = strtol(a_json, &endptr, 10);
 
         if (a_error_output)
         {
             if (errno == 0)
                 a_dst = tmp;
             else
-                a_error_output->push_back(std::string("ERROR: error parsing int32_t in JSON: '") + std::strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing int32_t in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
         }
         else
             a_dst = tmp;
@@ -255,16 +253,18 @@ class ZaxJsonParser
 
     static inline void get_val(uint32_t& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
-        char *endptr;
+        char* endptr;
         errno = 0;
-        uint32_t tmp = std::strtoul(a_json, &endptr, 10);
+        uint32_t tmp = 0;
+        if (a_json)
+            tmp = strtoul(a_json, &endptr, 10);
 
         if (a_error_output)
         {
             if (errno == 0 && a_json[0] != '-')
                 a_dst = tmp;
             else
-                a_error_output->push_back(std::string("ERROR: error parsing uint32_t in JSON: '") + std::strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing uint32_t in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
         }
         else
             a_dst = tmp;
@@ -298,7 +298,9 @@ class ZaxJsonParser
     {
         char *endptr;
         errno = 0;
-        const int32_t tmp = strtol(a_json, &endptr, 10);
+        int32_t tmp = 0;
+        if (a_json)
+            tmp = strtol(a_json, &endptr, 10);
 
         if (a_error_output)
         {
@@ -309,7 +311,7 @@ class ZaxJsonParser
                     a_error_output->push_back(std::string("ERROR: error parsing int8_t in JSON, out of range: '") + a_json + "'\n");
             }
             else
-                a_error_output->push_back(std::string("ERROR: error parsing int8_t in JSON: '") + std::strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing int8_t in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
         }
         else
             a_dst = tmp;
@@ -319,14 +321,16 @@ class ZaxJsonParser
     {
         char *endptr;
         errno = 0;
-        const float tmp = strtof(a_json, &endptr);
+        float tmp = 0.0;
+        if (a_json)
+            tmp = strtof(a_json, &endptr);
 
         if (a_error_output)
         {
             if (errno == 0)
                 a_dst = tmp;
             else
-                a_error_output->push_back(std::string("ERROR: error parsing float in JSON: '") + std::strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing float in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
         }
         else
             a_dst = tmp;
@@ -336,14 +340,16 @@ class ZaxJsonParser
     {
         char *endptr;
         errno = 0;
-        const double tmp = strtod(a_json, &endptr);
+        double tmp = 0.0;
+        if (a_json)
+            tmp = strtod(a_json, &endptr);
 
         if (a_error_output)
         {
             if (errno == 0)
                 a_dst = tmp;
             else
-                a_error_output->push_back(std::string("ERROR: error parsing double in JSON: '") + std::strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing double in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
         }
         else
             a_dst = tmp;
@@ -351,9 +357,11 @@ class ZaxJsonParser
 
     static inline void get_val(uint16_t& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
-        char *endptr;
+        char* endptr;
         errno = 0;
-        const int32_t tmp = strtol(a_json, &endptr, 10);
+        int32_t tmp = 0;
+        if (a_json)
+            tmp = strtol(a_json, &endptr, 10);
 
         if (a_error_output)
         {
@@ -365,7 +373,7 @@ class ZaxJsonParser
             }
                 
             else if (errno)
-                a_error_output->push_back(std::string("ERROR: error parsing uint16_t in JSON: '") + std::strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing uint16_t in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
         }
         else
             a_dst = tmp;
@@ -375,14 +383,16 @@ class ZaxJsonParser
     {
         char *endptr;
         errno = 0;
-        const int64_t tmp = strtoll(a_json, &endptr, 10);
+        int64_t tmp = 0;
+        if (a_json)
+            tmp = strtoll(a_json, &endptr, 10);
 
         if (a_error_output)
         {
             if (errno == 0)
                 a_dst = tmp;
             else
-                a_error_output->push_back(std::string("ERROR: error parsing int64_t in JSON: '") + std::strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing int64_t in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
         }
         else
             a_dst = tmp;
@@ -392,14 +402,16 @@ class ZaxJsonParser
     {
         char *endptr;
         errno = 0;
-        const int32_t tmp = strtol(a_json, &endptr, 10);
+        int32_t tmp = 0;
+        if (a_json)
+            tmp = strtol(a_json, &endptr, 10);
 
         if (a_error_output)
         {
             if (errno == 0 && tmp <= INT16_MAX && tmp >= INT16_MIN)
                 a_dst = tmp;
             else if (errno)
-                a_error_output->push_back(std::string("ERROR: error parsing int16_t in JSON: '") + std::strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing int16_t in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
             else
                 a_error_output->push_back(std::string("ERROR: error parsing int16_t in JSON, out of range: '") + a_json + "'\n");
         }
@@ -411,14 +423,16 @@ class ZaxJsonParser
     {
         char *endptr;
         errno = 0;
-        const uint64_t tmp = strtoull(a_json, &endptr, 10);
+        uint64_t tmp = 0;
+        if (a_json)
+            tmp = strtoull(a_json, &endptr, 10);
 
         if (a_error_output)
         {
             if (errno == 0 && a_json[0] != '-')
                 a_dst = tmp;
             else
-                a_error_output->push_back(std::string("ERROR: error parsing uint64_t in JSON: '") + std::strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing uint64_t in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
         }
         else
             a_dst = tmp;
@@ -428,14 +442,16 @@ class ZaxJsonParser
     {
         char *endptr;
         errno = 0;
-        const long double tmp = strtold(a_json, &endptr);
+        long double tmp = 0.0;
+        if (a_json)
+            tmp = strtold(a_json, &endptr);
 
         if (a_error_output)
         {
             if (errno == 0)
                 a_dst = tmp;
             else
-                a_error_output->push_back(std::string("ERROR: error parsing long double in JSON: '") + std::strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing long double in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
         }
         else
             a_dst = tmp;
