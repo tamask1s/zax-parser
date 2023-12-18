@@ -20,11 +20,10 @@
 #include <cstdio>
 #include <map>
 #include <vector>
-#include "ZaxJsonParser.h"
-
 #include <sstream>
 #include <limits>
 #include <cstring>
+#include "ZaxJsonParser.h"
 
 static inline const char* zax_get_close_token(const char* a_str_to_find, char a_open_token, char a_close_token)
 {
