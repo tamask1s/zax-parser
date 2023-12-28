@@ -99,22 +99,22 @@ class ZaxJsonParser
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "%d", a_val);
     }
-
+#if __x86_64__
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const long long int a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "%" "lld", a_val);
     }
-
+#endif
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const long int a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "%" "ld", a_val);
     }
-
+#if __x86_64__
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const long long unsigned int a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "%" "llu", a_val);
     }
-
+#endif
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const long unsigned int a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "%" "lu", a_val);
@@ -134,12 +134,12 @@ class ZaxJsonParser
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "%d", a_val);
     }
-
+#if __x86_64__
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const long double a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "%Le", a_val);
     }
-
+#endif
     template <template <typename, typename... > class ct,  class vt>
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const ct<vt>& a_vals, int a_deep)
     {
@@ -196,22 +196,22 @@ class ZaxJsonParser
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%d", a_key, a_val);
     }
-
+#if __x86_64__
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const long long int a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%" "lld", a_key, a_val);
     }
-
+#endif
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const long int a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%" "ld", a_key, a_val);
     }
-
+#if __x86_64__
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const long long unsigned int a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%" "llu", a_key, a_val);
     }
-
+#endif
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const long unsigned int a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%" "lu", a_key, a_val);
@@ -221,12 +221,12 @@ class ZaxJsonParser
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%d", a_key, a_val);
     }
-
+#if __x86_64__
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const long double a_val, int a_deep)
     {
         return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%Le", a_key, a_val);
     }
-
+#endif
     template <typename vtype>
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const vtype& a_val, int a_deep)
     {
