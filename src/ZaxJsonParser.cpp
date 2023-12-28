@@ -15,14 +15,13 @@
 ***************************************************************************/
 
 #include <climits>
+#include <stdlib.h>
 #include <cstring>
 #include <string>
 #include <cstdio>
 #include <map>
 #include <vector>
-#include <sstream>
 #include <limits>
-#include <cstring>
 #include "ZaxJsonParser.h"
 
 static inline const char* zax_get_close_token(const char* a_str_to_find, char a_open_token, char a_close_token)
@@ -49,7 +48,7 @@ static inline const char* zax_get_close_token(const char* a_str_to_find, char a_
 
 static inline const char* zax_get_value_end(const char* a_str_to_find, bool a_whitespace_means_end = false)
 {
-    const char* l_end;
+    const char* l_end = 0;
     while (*a_str_to_find)
     {
         switch (*a_str_to_find++)
@@ -151,7 +150,7 @@ ZaxJsonTopTokenizer::ZaxJsonTopTokenizer(const char* a_json, bool a_in_situ, boo
         }
         EJsonState state = EJson_Begin;
         char* close_token = (char*)-1;
-        while (a_json && (a_json < close_token) && result)
+        while (*a_json && (a_json < close_token) && result)
         {
             switch (*a_json)
             {
