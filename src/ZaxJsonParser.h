@@ -263,7 +263,7 @@ class ZaxJsonParser
 
         if (a_error_output)
         {
-            if (errno == 0)
+            if (errno == 0 && endptr != a_json)
                 a_dst = tmp;
             else
                 a_error_output->push_back(std::string("ERROR: error parsing int32_t in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
@@ -282,7 +282,7 @@ class ZaxJsonParser
 
         if (a_error_output)
         {
-            if (errno == 0 && a_json[0] != '-')
+            if (errno == 0 && a_json[0] != '-' && endptr != a_json)
                 a_dst = tmp;
             else
                 a_error_output->push_back(std::string("ERROR: error parsing uint32_t in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
@@ -325,7 +325,7 @@ class ZaxJsonParser
 
         if (a_error_output)
         {
-            if (errno == 0) {
+            if (errno == 0  && endptr != a_json) {
                 if (tmp <= INT8_MAX && tmp >= INT8_MIN)
                     a_dst = tmp;
                 else
@@ -348,7 +348,7 @@ class ZaxJsonParser
 
         if (a_error_output)
         {
-            if (errno == 0)
+            if (errno == 0 && endptr != a_json)
                 a_dst = tmp;
             else
                 a_error_output->push_back(std::string("ERROR: error parsing float in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
@@ -367,7 +367,7 @@ class ZaxJsonParser
 
         if (a_error_output)
         {
-            if (errno == 0)
+            if (errno == 0 && endptr != a_json)
                 a_dst = tmp;
             else
                 a_error_output->push_back(std::string("ERROR: error parsing double in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
@@ -386,7 +386,7 @@ class ZaxJsonParser
 
         if (a_error_output)
         {
-            if (errno == 0) {
+            if (errno == 0 && endptr != a_json) {
                 if (tmp <= UINT16_MAX && tmp >= 0)
                     a_dst = tmp;
                 else
@@ -410,7 +410,7 @@ class ZaxJsonParser
 
         if (a_error_output)
         {
-            if (errno == 0)
+            if (errno == 0 && endptr != a_json)
                 a_dst = tmp;
             else
                 a_error_output->push_back(std::string("ERROR: error parsing long long int in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
@@ -429,7 +429,7 @@ class ZaxJsonParser
 
         if (a_error_output)
         {
-            if (errno == 0)
+            if (errno == 0 && endptr != a_json)
                 a_dst = tmp;
             else
                 a_error_output->push_back(std::string("ERROR: error parsing long int in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
@@ -448,7 +448,7 @@ class ZaxJsonParser
 
         if (a_error_output)
         {
-            if (errno == 0 && a_json[0] != '-')
+            if (errno == 0 && a_json[0] != '-' && endptr != a_json)
                 a_dst = tmp;
             else
                 a_error_output->push_back(std::string("ERROR: error parsing long long unsigned int in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
@@ -467,7 +467,7 @@ class ZaxJsonParser
 
         if (a_error_output)
         {
-            if (errno == 0 && a_json[0] != '-')
+            if (errno == 0 && a_json[0] != '-' && endptr != a_json)
                 a_dst = tmp;
             else
                 a_error_output->push_back(std::string("ERROR: error parsing long unsigned int in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
@@ -486,7 +486,7 @@ class ZaxJsonParser
 
         if (a_error_output)
         {
-            if (errno == 0 && tmp <= INT16_MAX && tmp >= INT16_MIN)
+            if (errno == 0 && tmp <= INT16_MAX && tmp >= INT16_MIN && endptr != a_json)
                 a_dst = tmp;
             else if (errno)
                 a_error_output->push_back(std::string("ERROR: error parsing int16_t in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
@@ -507,7 +507,7 @@ class ZaxJsonParser
 
         if (a_error_output)
         {
-            if (errno == 0)
+            if (errno == 0 && endptr != a_json)
                 a_dst = tmp;
             else
                 a_error_output->push_back(std::string("ERROR: error parsing long double in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
