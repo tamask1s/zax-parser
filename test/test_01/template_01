@@ -62,6 +62,7 @@ ERROR: error parsing long unsigned int in JSON: 'Success: e123 '
 ERROR: error parsing uint16_t in JSON, out of range: '65536   '
 ERROR: error parsing uint16_t in JSON, out of range: '65536   '
 ERROR: error parsing uint16_t in JSON, out of range: '-2   '
+ERROR: error parsing uint16_t in JSON: 'Success: f0018  '
 Testing errors when values are lower than the accepted range:
 ERROR: error parsing int8_t in JSON, out of range: '-130'
 ERROR: error parsing int16_t in JSON, out of range: '-32770'

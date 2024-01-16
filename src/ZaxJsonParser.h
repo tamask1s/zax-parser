@@ -392,8 +392,7 @@ class ZaxJsonParser
                 else
                     a_error_output->push_back(std::string("ERROR: error parsing uint16_t in JSON, out of range: '") + a_json + "'\n");
             }
-
-            else if (errno)
+            else
                 a_error_output->push_back(std::string("ERROR: error parsing uint16_t in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
         }
         else
@@ -486,12 +485,15 @@ class ZaxJsonParser
 
         if (a_error_output)
         {
-            if (errno == 0 && tmp <= INT16_MAX && tmp >= INT16_MIN && endptr != a_json)
-                a_dst = tmp;
-            else if (errno)
-                a_error_output->push_back(std::string("ERROR: error parsing int16_t in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
-            else
-                a_error_output->push_back(std::string("ERROR: error parsing int16_t in JSON, out of range: '") + a_json + "'\n");
+            if (errno == 0 && endptr != a_json)
+            {
+                if (tmp <= INT16_MAX && tmp >= INT16_MIN)
+                    a_dst = tmp;
+                else
+                    a_error_output->push_back(std::string("ERROR: error parsing int16_t in JSON, out of range: '") + a_json + "'\n");
+            }
+            else 
+                 a_error_output->push_back(std::string("ERROR: error parsing int16_t in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
         }
         else
             a_dst = tmp;
