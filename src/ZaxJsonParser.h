@@ -533,13 +533,13 @@ class ZaxJsonParser
     template <typename vtype>
     static inline void get_val(vtype& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
-        a_dst.zax_from_json(a_json);
+        a_dst.zax_from_json(a_json, a_error_output);
     }
 
     template <typename vtype>
     static inline void get_val(vtype*& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
-        a_dst->zax_from_json(a_json);
+        a_dst->zax_from_json(a_json, a_error_output);
     }
 
     static inline int json_begin(char* a_json, const char* a_json_buffer_end, const char* a_key, const char* a_brace)
