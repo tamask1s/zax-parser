@@ -22,6 +22,8 @@
 #define PRIu64 "lu"
 #endif
 
+#define JSON_OBJ_TRAIL_BYTE -97
+
 class ZaxJsonTopTokenizer
 {
     struct cstring_comparator
@@ -127,7 +129,7 @@ class ZaxJsonParser
 
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const char* a_val, int a_deep)
     {
-        if (a_val[0] != -97)
+        if (a_val[0] != JSON_OBJ_TRAIL_BYTE)
             return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\"", a_val);
         else
             return snprintf(a_json, a_json_buffer_end - a_json, "%s", ++a_val);
@@ -135,7 +137,7 @@ class ZaxJsonParser
 
     static inline int print_val(char* a_json, const char* a_json_buffer_end, const std::string& a_val, int a_deep)
     {
-        if (a_val.c_str()[0] != -97)
+        if (a_val.c_str()[0] != JSON_OBJ_TRAIL_BYTE)
             return snprintf(a_json, a_json_buffer_end - a_json, "\"%s\"", a_val.c_str());
         else
             return snprintf(a_json, a_json_buffer_end - a_json, "%s", a_val.c_str() + 1);
@@ -165,7 +167,7 @@ class ZaxJsonParser
 
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const char* a_val, int a_deep)
     {
-        if (a_val[0] != -97)
+        if (a_val[0] != JSON_OBJ_TRAIL_BYTE)
             return snprintf(a_json, a_json_buffer_end - a_json, R"("%s":"%s")", a_key, a_val);
         else
             return snprintf(a_json, a_json_buffer_end - a_json, R"("%s":%s)", a_key, ++a_val);
@@ -173,7 +175,7 @@ class ZaxJsonParser
 
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const std::string& a_val, int a_deep)
     {
-        if (a_val.c_str()[0] != -97)
+        if (a_val.c_str()[0] != JSON_OBJ_TRAIL_BYTE)
             return snprintf(a_json, a_json_buffer_end - a_json, R"("%s":"%s")", a_key, a_val.c_str());
         else
             return snprintf(a_json, a_json_buffer_end - a_json, R"("%s":%s)", a_key, a_val.c_str() + 1);
@@ -1020,7 +1022,7 @@ zax_from_json_(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenizer* par
     virtual std::string zax_to_json(int a_deep = 0, bool as_obj = false) const {\
         uint32_t alloc_size = ZaxJsonParser::initial_alloc_size();\
         char* json = new char[alloc_size];\
-        if (as_obj) {*json = -97; ++json;}\
+        if (as_obj) {*json = JSON_OBJ_TRAIL_BYTE; ++json;}\
         while (!zax_convert_to_json_deep(json, alloc_size - 1, *this, a_deep, ##__VA_ARGS__))\
             if (!ZaxJsonParser::reallocate_json(json, alloc_size))\
                 break;\
