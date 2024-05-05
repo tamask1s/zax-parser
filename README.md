@@ -318,6 +318,47 @@ std::cout << some_obj;
 
 ```
 
+#### Example11 - pretty print indentation:
+
+##### Code:
+
+```cpp
+struct inner_class
+{
+    int x = 11;
+    std::string name = "inner name";
+    ZAX_JSON_SERIALIZABLE(inner_class, JSON_PROPERTY(x), JSON_PROPERTY(name))
+};
+
+struct some_class
+{
+    int x = 9;
+    std::string name = "some name";
+    std::string inner;
+    ZAX_JSON_SERIALIZABLE(some_class, JSON_PROPERTY(x), JSON_PROPERTY(name), JSON_PROPERTY(inner))
+};
+
+ZaxJsonParser::set_indent(4);
+some_class some_obj;
+inner_class inner_obj;
+some_obj.inner = inner_obj.zax_to_json(1, true);
+std::cout << some_obj;
+
+```
+##### Result:
+
+```cpp
+
+{
+    "x":9,
+    "name":"some name",
+    "inner":{
+        "x":11,
+        "name":"inner name"
+    }
+}
+
+```
 
 [Please check the documentation](https://tamask1s.github.io/zax-parser/index.html)
 
