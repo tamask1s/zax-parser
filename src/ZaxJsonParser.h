@@ -619,6 +619,17 @@ class ZaxJsonParser
         return json;
     }
 
+    template <typename vtype>
+    static inline char* print_to_json_alloc(vtype* a_val, int a_deep)
+    {
+        uint32_t alloc_size = initial_alloc_size();
+        char* json = new char[alloc_size];
+        while (!a_val->zax_to_json(json, alloc_size - 1, a_deep))
+            if (reallocate_json(json, alloc_size))
+                break;
+        return json;
+    }
+
 public:
     static uint32_t initial_alloc_size();
     static uint32_t maximum_alloc_size();
@@ -850,8 +861,8 @@ public:
             a_vect.clear();
     }
 
-    template <template <typename, typename, typename... > class ct, class mt&, class cot>
-    static inline void parse(ct<std::string, mt&, cot>& a_map, const char* a_json, std::vector<std::string>* a_error_output)
+    template <template <typename, typename, typename... > class ct, class mt, class cot>
+    static inline void parse(ct<std::string, mt, cot>& a_map, const char* a_json, std::vector<std::string>* a_error_output)
     {
         a_map.clear();
         if (a_json)
