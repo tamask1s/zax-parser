@@ -850,8 +850,8 @@ public:
             a_vect.clear();
     }
 
-    template <template <typename, typename, typename... > class ct, class mt, class cot>
-    static inline void parse(ct<std::string, mt, cot>& a_map, const char* a_json, std::vector<std::string>* a_error_output)
+    template <template <typename, typename, typename... > class ct, class mt&, class cot>
+    static inline void parse(ct<std::string, mt&, cot>& a_map, const char* a_json, std::vector<std::string>* a_error_output)
     {
         a_map.clear();
         if (a_json)
