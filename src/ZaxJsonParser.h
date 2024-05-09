@@ -254,9 +254,12 @@ class ZaxJsonParser
     template <typename vtype>
     static inline int print_key_and_val(char* a_json, const char* a_json_buffer_end, const char* a_key, const vtype& a_val, int a_deep)
     {
-        char* json = print_to_json_alloc(a_val, a_deep);
-        int result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%s", a_key, json ? json : "");
-        delete[] json;
+        int result = 0;
+        if (char* json = print_to_json_alloc(a_val, a_deep))
+        {
+            result = snprintf(a_json, a_json_buffer_end - a_json, "\"%s\":%s", a_key, json ? json : "");
+            delete[] json;
+        }
         return result;
     }
 
@@ -622,6 +625,8 @@ class ZaxJsonParser
     template <typename vtype>
     static inline char* print_to_json_alloc(vtype* a_val, int a_deep)
     {
+        if (!a_val)
+            return 0;
         uint32_t alloc_size = initial_alloc_size();
         char* json = new char[alloc_size];
         while (!a_val->zax_to_json(json, alloc_size - 1, a_deep))
@@ -718,7 +723,7 @@ public:
                 if (i)
                     cat_comma_space(a_json, _result, a_deep);
                 int written = print_val(a_json, a_json_buffer_end, a_values[i], a_deep);
-                if (written <= 0)
+                if (written < 0)
                 {
                     _result = 0;
                     break;
@@ -743,7 +748,7 @@ public:
                 if (r != a_values.begin())
                     cat_comma_space(a_json, _result, a_deep);
                 int written = print_val(a_json, a_json_buffer_end, *r, a_deep);
-                if (written <= 0)
+                if (written < 0)
                 {
                     _result = 0;
                     break;
@@ -768,7 +773,7 @@ public:
                 if (r != a_values.begin())
                     cat_comma_space(a_json, _result, a_deep);
                 int written = print_val(a_json, a_json_buffer_end, **r, a_deep);
-                if (written <= 0)
+                if (written < 0)
                 {
                     _result = 0;
                     break;
@@ -794,7 +799,7 @@ public:
                 if (r != a_values.begin())
                     cat_comma_space(a_json, _result, a_deep);
                 int written = print_key_and_val(a_json, a_json_buffer_end, r->first.c_str(), r->second, a_deep);
-                if (written <= 0)
+                if (written < 0)
                 {
                     _result = 0;
                     break;
@@ -919,11 +924,11 @@ zax_to_json_(char* a_json, const char* a_json_buffer_end, int& a_result, std::tu
     }
 
     int l_result = ZaxJsonParser::append(a_json, a_json_buffer_end, std::get<I>(a_tuple).first, *std::get<I>(a_tuple).second, a_deep);
-    if (!l_result)
+    if (l_result < 0)
         return;
     a_json += l_result;
     a_result += l_result;
-    if (I < sizeof...(vt) - 1)
+    if (I < sizeof...(vt) - 1 && l_result)
         ZaxJsonParser::cat_comma_space(a_json, a_result, a_deep);
 
     zax_to_json_ < I + 1, vt... > (a_json, a_json_buffer_end, a_result, a_tuple, a_insert_object_trails, a_deep);
