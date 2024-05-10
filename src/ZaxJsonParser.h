@@ -1035,7 +1035,7 @@ zax_from_json_(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenizer* par
     virtual int zax_to_json(char* a_json, int a_alloc_size, int a_deep = 0) const {\
         return zax_convert_to_json_deep(a_json, a_alloc_size, *this, a_deep, ##__VA_ARGS__);\
     }\
-    virtual std::string zax_to_json(int a_deep = 0, bool as_obj = false) const {\
+    virtual std::string zax_to_json(int a_deep = 0, bool as_obj = false, size_t* strlen = 0) const {\
         uint32_t alloc_size = ZaxJsonParser::initial_alloc_size();\
         char* json = new char[alloc_size];\
         if (as_obj) {*json = JSON_OBJ_TRAIL_BYTE; ++json;}\
@@ -1044,9 +1044,12 @@ zax_from_json_(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenizer* par
                 break;\
         if (as_obj) --json;\
         std::string a_json = json ? json : "";\
+        strlen ? *strlen = a_json.length() : 0;\
         delete[] json;\
         return a_json;\
-    }
+    }\
+    virtual std::string zax_to_json(bool as_obj, size_t* strlen = 0) const { return zax_to_json(0, as_obj, strlen); }\
+    virtual std::string zax_to_json(size_t* strlen) const { return zax_to_json(0, false, strlen); }
 
 #define ZAX_JSON_SERIALIZABLE_WDC(class_name, ...)\
     ZAX_JSON_SERIALIZABLE_BASIC(__VA_ARGS__)\
