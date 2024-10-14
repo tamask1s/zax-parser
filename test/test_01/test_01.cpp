@@ -1,3 +1,6 @@
+#include <limits>
+#include <cstdio>
+#include <cstring>
 #include <iostream>
 #include <tuple>
 #include <map>
