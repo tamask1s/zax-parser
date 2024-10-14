@@ -1,6 +1,4 @@
-#include <limits>
-#include <cstdio>
-#include <cstring>
+#include <stdint.h>
 #include <iostream>
 #include <tuple>
 #include <map>
