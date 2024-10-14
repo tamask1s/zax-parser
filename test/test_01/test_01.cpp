@@ -430,7 +430,7 @@ void json_example_23()
     parse_and_print(some_obj, R"({"my_uint64":123, "my_uint16":f0018  })", errors);
 
     for (string e : errors)
-        cout << e;
+        cout << e << endl;
 }
 
 struct struct_with_int_types
@@ -454,7 +454,7 @@ void json_error_handling_1()
     struct_with_int_types some_obj;
     some_obj.zax_from_json(R"({"my_int8":-130, "my_int16":-32770, "my_uint16":-304, "my_int32":-2147483650, "my_uint32":-2, "my_int64":-9223372036854775810, "my_uint64":-5})", &errors);
     for (string e : errors)
-        cout << e;
+        cout << e << endl;
 }
 
 void json_error_handling_2()
@@ -464,7 +464,7 @@ void json_error_handling_2()
     struct_with_int_types some_obj;
     some_obj.zax_from_json(R"({"my_int8":"130", "my_int16":32770, "my_uint16":65539, "my_int32":2147483650, "my_uint32":4294967299, "my_int64":9223372036854775810, "my_uint64":18446744073709551620})", &errors);
     for (string e : errors)
-        cout << e;
+        cout << e << endl;
 }
 
 void json_error_handling_3()
@@ -476,7 +476,7 @@ void json_error_handling_3()
     cout << some_obj.my_int16 << " " << some_obj.my_uint16 << " " << some_obj.my_int32 << " " << some_obj.my_uint32
         << " " << some_obj.my_int64 << " " << some_obj.my_uint64 << endl;
     for (string e : errors)
-        cout << e;
+        cout << e << endl;
 }
 
 struct struct_with_other_types
@@ -496,7 +496,7 @@ void json_error_handling_4()
     some_obj.zax_from_json(R"({"my_float":13.24k, "my_double":32-770, "my_bool":notaboolean})", &errors);
     cout << some_obj.my_float << " " << some_obj.my_double << endl;
     for (string e : errors)
-        cout << e;
+        cout << e << endl;
 }
 
 int main()

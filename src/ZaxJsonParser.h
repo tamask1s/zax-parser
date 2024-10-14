@@ -293,7 +293,7 @@ class ZaxJsonParser
             if (errno == 0 && endptr != a_json)
                 a_dst = tmp;
             else
-                a_error_output->push_back(std::string("ERROR: error parsing int32_t in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing int32_t in JSON: '") + strerror(errno) + ": " + a_json + "'");
         }
         else
             a_dst = tmp;
@@ -312,7 +312,7 @@ class ZaxJsonParser
             if (errno == 0 && a_json[0] != '-' && endptr != a_json)
                 a_dst = tmp;
             else
-                a_error_output->push_back(std::string("ERROR: error parsing uint32_t in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing uint32_t in JSON: '") + strerror(errno) + ": " + a_json + "'");
         }
         else
             a_dst = tmp;
@@ -335,7 +335,7 @@ class ZaxJsonParser
                 }
             default:
                 if (a_error_output)
-                    a_error_output->push_back(std::string("ERROR: '") + a_json + "' is not a boolean\n");
+                    a_error_output->push_back(std::string("ERROR: '") + a_json + "' is not a boolean");
             }
         }
         else
@@ -356,10 +356,10 @@ class ZaxJsonParser
                 if (tmp <= INT8_MAX && tmp >= INT8_MIN)
                     a_dst = tmp;
                 else
-                    a_error_output->push_back(std::string("ERROR: error parsing int8_t in JSON, out of range: '") + a_json + "'\n");
+                    a_error_output->push_back(std::string("ERROR: error parsing int8_t in JSON, out of range: '") + a_json + "'");
             }
             else
-                a_error_output->push_back(std::string("ERROR: error parsing int8_t in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing int8_t in JSON: '") + strerror(errno) + ": " + a_json + "'");
         }
         else
             a_dst = tmp;
@@ -378,7 +378,7 @@ class ZaxJsonParser
             if (errno == 0 && endptr != a_json)
                 a_dst = tmp;
             else
-                a_error_output->push_back(std::string("ERROR: error parsing float in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing float in JSON: '") + strerror(errno) + ": " + a_json + "'");
         }
         else
             a_dst = tmp;
@@ -397,7 +397,7 @@ class ZaxJsonParser
             if (errno == 0 && endptr != a_json)
                 a_dst = tmp;
             else
-                a_error_output->push_back(std::string("ERROR: error parsing double in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing double in JSON: '") + strerror(errno) + ": " + a_json + "'");
         }
         else
             a_dst = tmp;
@@ -417,10 +417,10 @@ class ZaxJsonParser
                 if (tmp <= UINT16_MAX && tmp >= 0)
                     a_dst = tmp;
                 else
-                    a_error_output->push_back(std::string("ERROR: error parsing uint16_t in JSON, out of range: '") + a_json + "'\n");
+                    a_error_output->push_back(std::string("ERROR: error parsing uint16_t in JSON, out of range: '") + a_json + "'");
             }
             else
-                a_error_output->push_back(std::string("ERROR: error parsing uint16_t in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing uint16_t in JSON: '") + strerror(errno) + ": " + a_json + "'");
         }
         else
             a_dst = tmp;
@@ -440,10 +440,10 @@ class ZaxJsonParser
                 if (tmp <= UINT8_MAX && tmp >= 0)
                     a_dst = tmp;
                 else
-                    a_error_output->push_back(std::string("ERROR: error parsing uint8_t in JSON, out of range: '") + a_json + "'\n");
+                    a_error_output->push_back(std::string("ERROR: error parsing uint8_t in JSON, out of range: '") + a_json + "'");
             }
             else
-                a_error_output->push_back(std::string("ERROR: error parsing uint8_t in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing uint8_t in JSON: '") + strerror(errno) + ": " + a_json + "'");
         }
         else
             a_dst = tmp;
@@ -462,7 +462,7 @@ class ZaxJsonParser
             if (errno == 0 && endptr != a_json)
                 a_dst = tmp;
             else
-                a_error_output->push_back(std::string("ERROR: error parsing long long int in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing long long int in JSON: '") + strerror(errno) + ": " + a_json + "'");
         }
         else
             a_dst = tmp;
@@ -481,7 +481,7 @@ class ZaxJsonParser
             if (errno == 0 && endptr != a_json)
                 a_dst = tmp;
             else
-                a_error_output->push_back(std::string("ERROR: error parsing long int in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing long int in JSON: '") + strerror(errno) + ": " + a_json + "'");
         }
         else
             a_dst = tmp;
@@ -500,7 +500,7 @@ class ZaxJsonParser
             if (errno == 0 && a_json[0] != '-' && endptr != a_json)
                 a_dst = tmp;
             else
-                a_error_output->push_back(std::string("ERROR: error parsing long long unsigned int in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing long long unsigned int in JSON: '") + strerror(errno) + ": " + a_json + "'");
         }
         else
             a_dst = tmp;
@@ -519,7 +519,7 @@ class ZaxJsonParser
             if (errno == 0 && a_json[0] != '-' && endptr != a_json)
                 a_dst = tmp;
             else
-                a_error_output->push_back(std::string("ERROR: error parsing long unsigned int in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing long unsigned int in JSON: '") + strerror(errno) + ": " + a_json + "'");
         }
         else
             a_dst = tmp;
@@ -540,10 +540,10 @@ class ZaxJsonParser
                 if (tmp <= INT16_MAX && tmp >= INT16_MIN)
                     a_dst = tmp;
                 else
-                    a_error_output->push_back(std::string("ERROR: error parsing int16_t in JSON, out of range: '") + a_json + "'\n");
+                    a_error_output->push_back(std::string("ERROR: error parsing int16_t in JSON, out of range: '") + a_json + "'");
             }
             else
-                 a_error_output->push_back(std::string("ERROR: error parsing int16_t in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
+                 a_error_output->push_back(std::string("ERROR: error parsing int16_t in JSON: '") + strerror(errno) + ": " + a_json + "'");
         }
         else
             a_dst = tmp;
@@ -562,7 +562,7 @@ class ZaxJsonParser
             if (errno == 0 && endptr != a_json)
                 a_dst = tmp;
             else
-                a_error_output->push_back(std::string("ERROR: error parsing long double in JSON: '") + strerror(errno) + ": " + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing long double in JSON: '") + strerror(errno) + ": " + a_json + "'");
         }
         else
             a_dst = tmp;
@@ -838,7 +838,7 @@ public:
             bool success = false;
             ZaxJsonTopTokenizer vector_data(a_json, false, &success);
             if (!success && a_error_output)
-                a_error_output->push_back(std::string("ERROR: error parsing a vector in JSON: '") + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing a vector in JSON: '") + a_json + "'");
             uint32_t l_size = N > vector_data.m_list_values.size() ? vector_data.m_list_values.size() : N;
             for (uint32_t i = 0; i < l_size; ++i)
                 get_val(a_vect[i], vector_data.m_list_values[i], a_error_output);
@@ -856,7 +856,7 @@ public:
             bool success = false;
             ZaxJsonTopTokenizer vector_data(a_json, false, &success);
             if (!success && a_error_output)
-                a_error_output->push_back(std::string("ERROR: error parsing a vector in JSON: '") + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing a vector in JSON: '") + a_json + "'");
             a_vect.resize(vector_data.m_list_values.size());
             auto r = a_vect.begin();
             for (auto & m_list_value : vector_data.m_list_values)
@@ -875,7 +875,7 @@ public:
             bool success = false;
             ZaxJsonTopTokenizer vector_data(a_json, false, &success);
             if (!success && a_error_output)
-                a_error_output->push_back(std::string("ERROR: error parsing a map in JSON: '") + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing a map in JSON: '") + a_json + "'");
             for (auto & m_value : vector_data.m_values)
             {
                 if (!m_value.second)
@@ -980,7 +980,7 @@ zax_from_json_(const char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenize
             bool success = false;
             parsed_json = new ZaxJsonTopTokenizer(a_json, false, &success);
             if (!success && a_error_output)
-                a_error_output->push_back(std::string("ERROR: error parsing JSON: '") + a_json + "'\n");
+                a_error_output->push_back(std::string("ERROR: error parsing JSON: '") + a_json + "'");
         }
     }
     if (parsed_json && I < sizeof...(vt))
@@ -989,7 +989,7 @@ zax_from_json_(const char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenize
         if (it != parsed_json->m_values.end())
             ZaxJsonParser::parse(*std::get<I>(a_tuple).second, parsed_json->m_values[std::get<I>(a_tuple).first], a_error_output);
         else if (a_error_output && ZaxJsonParser::warnings_enabled())
-            a_error_output->push_back(std::string("WARNING: JSON property is missing: '") + std::get<I>(a_tuple).first + "'\n");
+            a_error_output->push_back(std::string("WARNING: JSON property is missing: '") + std::get<I>(a_tuple).first + "'");
     }
     zax_from_json_ < I + 1, vt... > (a_json, a_tuple, parsed_json, a_error_output);
     if (I == sizeof...(vt) - 1)
@@ -1010,7 +1010,7 @@ zax_from_json_(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenizer* par
         bool success = false;
         parsed_json = new ZaxJsonTopTokenizer(a_json, true, &success);
         if (!success && a_error_output)
-            a_error_output->push_back(std::string("ERROR: error parsing JSON: '") + a_json + "'\n");
+            a_error_output->push_back(std::string("ERROR: error parsing JSON: '") + a_json + "'");
     }
     if (I < sizeof...(vt))
     {
@@ -1018,7 +1018,7 @@ zax_from_json_(char* a_json, std::tuple<vt...> a_tuple, ZaxJsonTopTokenizer* par
         if (it != parsed_json->m_values.end())
             ZaxJsonParser::parse(*std::get<I>(a_tuple).second, parsed_json->m_values[std::get<I>(a_tuple).first], a_error_output);
         else if (a_error_output && ZaxJsonParser::warnings_enabled())
-            a_error_output->push_back(std::string("WARNING: JSON property is missing: '") + std::get<I>(a_tuple).first + "'\n");
+            a_error_output->push_back(std::string("WARNING: JSON property is missing: '") + std::get<I>(a_tuple).first + "'");
     }
     zax_from_json_ < I + 1, vt... > (a_json, a_tuple, parsed_json, a_error_output);
     if (I == sizeof...(vt) - 1)
