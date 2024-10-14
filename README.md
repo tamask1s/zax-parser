@@ -180,7 +180,6 @@ cout << some_class3() << endl;
 
 ```
 
-
 #### Example7:
 
 ##### Code:
