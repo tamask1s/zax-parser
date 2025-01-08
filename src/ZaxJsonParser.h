@@ -589,7 +589,10 @@ class ZaxJsonParser
     template <typename vtype>
     static inline void get_val(vtype*& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
-        a_dst->zax_from_json(a_json, a_error_output);
+        if (!a_dst)
+            a_dst = vtype::instanciate(a_json);
+        if (a_dst)
+            a_dst->zax_from_json(a_json, a_error_output);
     }
 
     static inline int json_begin(char* a_json, const char* a_json_buffer_end, const char* a_key, const char* a_brace)
@@ -772,14 +775,17 @@ public:
             {
                 if (r != a_values.begin())
                     cat_comma_space(a_json, _result, a_deep);
-                int written = print_val(a_json, a_json_buffer_end, **r, a_deep);
-                if (written < 0)
+                if (*r)
                 {
-                    _result = 0;
-                    break;
+                    int written = print_val(a_json, a_json_buffer_end, **r, a_deep);
+                    if (written < 0)
+                    {
+                        _result = 0;
+                        break;
+                    }
+                    a_json += written;
+                    _result += written;
                 }
-                a_json += written;
-                _result += written;
             }
             json_end(_result, a_json, a_json_buffer_end, "]");
         }
