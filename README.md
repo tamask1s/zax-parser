@@ -366,6 +366,96 @@ std::cout << inner;
 
 ```
 
+#### Example12 - polymorphism
+
+##### Code:
+
+```cpp
+
+struct i_name_generator
+{
+    string class_name;
+    virtual string get_name() const = 0;
+    ZAX_JSON_SERIALIZABLE(i_name_generator, JSON_PROPERTY(class_name))
+    virtual ~i_name_generator() = default;
+
+    static i_name_generator* instanciate(const char* json);
+};
+
+struct name_generator_class1: public i_name_generator
+{
+    std::string name1 = "John ";
+    std::string name2 = "Smith";
+    name_generator_class1()
+    {
+        class_name = "name_generator_class1";
+    }
+    virtual string get_name() const
+    {
+        return name1 + name2;
+    }
+    ZAX_JSON_SERIALIZABLE_WDC(name_generator_class1, JSON_PROPERTY(class_name), JSON_PROPERTY(name1), JSON_PROPERTY(name2))
+};
+
+struct name_generator_class2: public i_name_generator
+{
+    std::string name1 = "Just John";
+    name_generator_class2()
+    {
+        class_name = "name_generator_class2";
+    }
+    virtual string get_name() const
+    {
+        return name1;
+    }
+    ZAX_JSON_SERIALIZABLE_WDC(name_generator_class2, JSON_PROPERTY(class_name), JSON_PROPERTY(name1))
+};
+
+i_name_generator* i_name_generator::instanciate(const char* json)
+{
+    ZaxJsonTopTokenizer parsed_json(json);
+    const char* class_name = parsed_json.m_values["class_name"];
+    if (class_name && !strcmp(class_name, "name_generator_class1"))
+        return new name_generator_class1;
+    else if (class_name && !strcmp(class_name, "name_generator_class2"))
+        return new name_generator_class2;
+    else
+        return 0; /// a null pointer will be filled in the parent container, and not the size of it will be shorter
+}
+
+struct some_hierarchic_class
+{
+    std::vector<i_name_generator*> scorename_generators;
+    ZAX_JSON_SERIALIZABLE(some_hierarchic_class, JSON_PROPERTY(scorename_generators))
+    ~some_hierarchic_class()
+    {
+        for (i_name_generator* scorename_generator: scorename_generators)
+            delete scorename_generator;
+    }
+};
+
+some_hierarchic_class some_obj;
+some_obj.scorename_generators.push_back(new name_generator_class1);
+some_obj.scorename_generators.push_back(new name_generator_class1);
+some_obj.scorename_generators.push_back(new name_generator_class2);
+
+std::string some_json = some_obj;
+some_hierarchic_class some_obj2 = some_json;
+
+for (const auto& name_generator : some_obj2.scorename_generators)
+    cout << name_generator->get_name() << endl;
+
+```
+##### Result:
+
+```cpp
+
+John Smith
+John Smith
+Just John
+
+```
+
 [Please check the documentation](https://tamask1s.github.io/zax-parser/index.html)
 
 version 1.4
