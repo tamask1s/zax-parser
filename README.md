@@ -341,7 +341,10 @@ ZaxJsonParser::set_indent(4);
 some_class some_obj;
 inner_class inner_obj;
 some_obj.inner = inner_obj.zax_to_json(1, true);
-std::cout << some_obj;
+std::cout << some_obj << std::endl;
+
+inner_class inner = some_obj.inner;
+std::cout << inner;
 
 ```
 ##### Result:
@@ -355,6 +358,10 @@ std::cout << some_obj;
         "x":11,
         "name":"inner name"
     }
+}
+{
+    "x":11,
+    "name":"inner name"
 }
 
 ```
