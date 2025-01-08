@@ -112,6 +112,7 @@ struct CClassInside
 {
     int x = 11;
     int y = 7;
+    static CClassInside* instanciate(const char* json) { return new CClassInside; }
     ZAX_JSON_SERIALIZABLE_BASIC(JSON_PROPERTY(x), JSON_PROPERTY(y))
 };
 
