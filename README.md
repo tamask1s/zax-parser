@@ -425,24 +425,24 @@ i_name_generator* i_name_generator::instanciate(const char* json)
 
 struct some_hierarchic_class
 {
-    std::vector<i_name_generator*> scorename_generators;
-    ZAX_JSON_SERIALIZABLE(some_hierarchic_class, JSON_PROPERTY(scorename_generators))
+    std::vector<i_name_generator*> name_generators;
+    ZAX_JSON_SERIALIZABLE(some_hierarchic_class, JSON_PROPERTY(name_generators))
     ~some_hierarchic_class()
     {
-        for (i_name_generator* scorename_generator: scorename_generators)
-            delete scorename_generator;
+        for (i_name_generator* name_generator: name_generators)
+            delete name_generator;
     }
 };
 
 some_hierarchic_class some_obj;
-some_obj.scorename_generators.push_back(new name_generator_class1);
-some_obj.scorename_generators.push_back(new name_generator_class1);
-some_obj.scorename_generators.push_back(new name_generator_class2);
+some_obj.name_generators.push_back(new name_generator_class1);
+some_obj.name_generators.push_back(new name_generator_class1);
+some_obj.name_generators.push_back(new name_generator_class2);
 
 std::string some_json = some_obj;
 some_hierarchic_class some_obj2 = some_json;
 
-for (const auto& name_generator : some_obj2.scorename_generators)
+for (const auto& name_generator : some_obj2.name_generators)
     cout << name_generator->get_name() << endl;
 
 ```
