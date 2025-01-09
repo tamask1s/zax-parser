@@ -317,7 +317,10 @@ std::cout << some_obj;
 
 ```
 
-#### Example11 - using zax_to_json() to serialize into a special string which can be used to be serialized in an std::string as an object, using also indentation level:
+#### Example11 - using zax_to_json() to serialize into a special string which can be used to be serialized in an std::string as an object. 
+
+If you want to use this feature with your own custom string, then that string must have 2 trailing bytes: one in the end and one in the beginning. The trailing byte is defined as JSON_OBJ_TRAIL_BYTE.
+The example is using also indentation level.
 
 ##### Code:
 
