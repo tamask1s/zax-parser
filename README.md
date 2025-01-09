@@ -378,7 +378,7 @@ struct i_fruit_generator
     virtual string get_fruits() const = 0; /// some custom logic to be implemented
     virtual ~i_fruit_generator() = default;
 
-    /// factory function to instantiate fruit generators based on the json object passed as parameter
+    /// factory function to instantiate fruit generators based on the json string passed as parameter
     static i_fruit_generator* instantiate(const char* json);
 
     ZAX_JSON_SERIALIZABLE(i_fruit_generator, JSON_PROPERTY(class_name))
