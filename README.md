@@ -372,87 +372,110 @@ std::cout << inner;
 
 ```cpp
 
-struct i_name_generator
+struct i_fruit_generator
 {
-    string class_name;
-    virtual string get_name() const = 0;
-    ZAX_JSON_SERIALIZABLE(i_name_generator, JSON_PROPERTY(class_name))
-    virtual ~i_name_generator() = default;
+    string class_name; /// the class name to identify which class needs to be instantiated
+    virtual string get_fruits() const = 0; /// some custom logic to be implemented
+    virtual ~i_fruit_generator() = default;
 
-    static i_name_generator* instantiate(const char* json);
+    /// factory function to instantiate fruit generators based on the json object passed as parameter
+    static i_fruit_generator* instantiate(const char* json);
+
+    ZAX_JSON_SERIALIZABLE(i_fruit_generator, JSON_PROPERTY(class_name))
 };
 
-struct name_generator_class1: public i_name_generator
+struct fruit_generator_1: public i_fruit_generator
 {
-    std::string name1 = "John ";
-    std::string name2 = "Smith";
-    name_generator_class1()
+    std::string name1 = "Apple";
+    std::string name2 = "Peach";
+
+    fruit_generator_1()
     {
-        class_name = "name_generator_class1";
+        class_name = "fruit_generator_1";
     }
-    virtual string get_name() const
+    virtual string get_fruits() const
     {
-        return name1 + name2;
+        return name1 + ", " + name2;
     }
-    ZAX_JSON_SERIALIZABLE_WDC(name_generator_class1, JSON_PROPERTY(class_name), JSON_PROPERTY(name1), JSON_PROPERTY(name2))
+    ZAX_JSON_SERIALIZABLE_WDC(fruit_generator_1, JSON_PROPERTY(class_name), JSON_PROPERTY(name1), JSON_PROPERTY(name2))
 };
 
-struct name_generator_class2: public i_name_generator
+struct fruit_generator_2: public i_fruit_generator
 {
-    std::string name1 = "Just John";
-    name_generator_class2()
+    std::string name1 = "Just Apple";
+
+    fruit_generator_2()
     {
-        class_name = "name_generator_class2";
+        class_name = "fruit_generator_2";
     }
-    virtual string get_name() const
+    virtual string get_fruits() const
     {
         return name1;
     }
-    ZAX_JSON_SERIALIZABLE_WDC(name_generator_class2, JSON_PROPERTY(class_name), JSON_PROPERTY(name1))
+    ZAX_JSON_SERIALIZABLE_WDC(fruit_generator_2, JSON_PROPERTY(class_name), JSON_PROPERTY(name1))
 };
 
-i_name_generator* i_name_generator::instantiate(const char* json)
+i_fruit_generator* i_fruit_generator::instantiate(const char* json)
 {
-    ZaxJsonTopTokenizer parsed_json(json);
-    const char* class_name = parsed_json.m_values["class_name"];
-    if (class_name && !strcmp(class_name, "name_generator_class1"))
-        return new name_generator_class1;
-    else if (class_name && !strcmp(class_name, "name_generator_class2"))
-        return new name_generator_class2;
+    string class_name = ZaxJsonTopTokenizer(json).m_values["class_name"];
+    if (class_name == "fruit_generator_1")
+        return new fruit_generator_1;
+    if (class_name == "fruit_generator_2")
+        return new fruit_generator_2;
     else
         return 0; /// a null pointer will be filled in the parent container, and not the size of it will be shorter
 }
 
 struct some_hierarchic_class
 {
-    std::vector<i_name_generator*> name_generators;
-    ZAX_JSON_SERIALIZABLE(some_hierarchic_class, JSON_PROPERTY(name_generators))
+    std::vector<i_fruit_generator*> fruit_generators;
+
     ~some_hierarchic_class()
     {
-        for (i_name_generator* name_generator: name_generators)
-            delete name_generator;
+        for (i_fruit_generator* fruit_generator: fruit_generators)
+            delete fruit_generator;
     }
+    ZAX_JSON_SERIALIZABLE(some_hierarchic_class, JSON_PROPERTY(fruit_generators))
 };
 
+ZaxJsonParser::set_indent(4);
 some_hierarchic_class some_obj;
-some_obj.name_generators.push_back(new name_generator_class1);
-some_obj.name_generators.push_back(new name_generator_class1);
-some_obj.name_generators.push_back(new name_generator_class2);
+some_obj.fruit_generators.push_back(new fruit_generator_1);
+some_obj.fruit_generators.push_back(new fruit_generator_1);
+some_obj.fruit_generators.push_back(new fruit_generator_2);
 
 std::string some_json = some_obj;
+cout << some_json << endl << endl;
 some_hierarchic_class some_obj2 = some_json;
 
-for (const auto& name_generator : some_obj2.name_generators)
-    cout << name_generator->get_name() << endl;
+for (const auto& fruit_generator : some_obj2.fruit_generators)
+    cout << fruit_generator->get_fruits() << endl;
 
 ```
 ##### Result:
 
 ```cpp
 
-John Smith
-John Smith
-Just John
+{
+    "fruit_generators":[{
+        "class_name":"fruit_generator_1",
+        "name1":"Apple",
+        "name2":"Peach"
+    },
+    {
+        "class_name":"fruit_generator_1",
+        "name1":"Apple",
+        "name2":"Peach"
+    },
+    {
+        "class_name":"fruit_generator_2",
+        "name1":"Just Apple"
+    }]
+}
+
+Apple, Peach
+Apple, Peach
+Just Apple
 
 ```
 
