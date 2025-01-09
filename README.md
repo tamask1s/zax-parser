@@ -379,7 +379,7 @@ struct i_name_generator
     ZAX_JSON_SERIALIZABLE(i_name_generator, JSON_PROPERTY(class_name))
     virtual ~i_name_generator() = default;
 
-    static i_name_generator* instanciate(const char* json);
+    static i_name_generator* instantiate(const char* json);
 };
 
 struct name_generator_class1: public i_name_generator
@@ -411,7 +411,7 @@ struct name_generator_class2: public i_name_generator
     ZAX_JSON_SERIALIZABLE_WDC(name_generator_class2, JSON_PROPERTY(class_name), JSON_PROPERTY(name1))
 };
 
-i_name_generator* i_name_generator::instanciate(const char* json)
+i_name_generator* i_name_generator::instantiate(const char* json)
 {
     ZaxJsonTopTokenizer parsed_json(json);
     const char* class_name = parsed_json.m_values["class_name"];
