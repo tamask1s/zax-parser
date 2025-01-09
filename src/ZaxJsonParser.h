@@ -590,7 +590,7 @@ class ZaxJsonParser
     static inline void get_val(vtype*& a_dst, const char* a_json, std::vector<std::string>* a_error_output)
     {
         if (!a_dst)
-            a_dst = vtype::instanciate(a_json);
+            a_dst = vtype::instantiate(a_json);
         if (a_dst)
             a_dst->zax_from_json(a_json, a_error_output);
     }
