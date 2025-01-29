@@ -251,7 +251,7 @@ ZaxJsonTopTokenizer::~ZaxJsonTopTokenizer()
     delete[] m_own_buffer;
 }
 
-uint32_t ZaxJsonParser::initial_alloc_size_ = 10000000;
+uint32_t ZaxJsonParser::initial_alloc_size_ = 30000000;
 uint32_t ZaxJsonParser::maximum_alloc_size_ = 100000000;
 uint32_t ZaxJsonParser::nr_indent_ = 0;
 bool ZaxJsonParser::warnings_enabled_ = true;
